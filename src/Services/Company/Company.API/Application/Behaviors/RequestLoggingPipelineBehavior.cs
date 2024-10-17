@@ -2,7 +2,7 @@ using AWC.Shared.Kernel.Utilities;
 using MediatR;
 using Serilog.Context;
 
-namespace Awc.Dapr.Services.Company.API.Application.Behaviors
+namespace Awc.Services.Company.API.Application.Behaviors
 {
     internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(ILogger<RequestLoggingPipelineBehavior<TRequest, TResponse>> logger)
         : IPipelineBehavior<TRequest, TResponse>

@@ -1,13 +1,13 @@
-using Awc.Dapr.Services.Company.API.Model.Person;
+using Awc.Services.Company.API.Model.Person;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Person;
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Person;
 
-internal class PersonModelConfig : IEntityTypeConfiguration<Awc.Dapr.Services.Company.API.Model.Person.Person>
+internal class PersonModelConfig : IEntityTypeConfiguration<Awc.Services.Company.API.Model.Person.Person>
 {
-    public void Configure(EntityTypeBuilder<Awc.Dapr.Services.Company.API.Model.Person.Person> entity)
+    public void Configure(EntityTypeBuilder<Awc.Services.Company.API.Model.Person.Person> entity)
     {
         entity.ToTable("Person", schema: "Person");
         entity.HasKey(e => e.BusinessEntityID);

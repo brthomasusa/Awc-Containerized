@@ -1,4 +1,4 @@
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Company
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Company
 {
     internal class DepartmentConfig : IEntityTypeConfiguration<Department>
     {

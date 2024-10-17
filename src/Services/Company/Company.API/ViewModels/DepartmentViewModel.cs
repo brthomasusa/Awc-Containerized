@@ -1,4 +1,4 @@
-namespace Awc.Dapr.Services.Company.API.ViewModels
+namespace Awc.Services.Company.API.ViewModels
 {
     public class DepartmentViewModel
     {

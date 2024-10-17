@@ -6,14 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..\..</DockerfileContext>
-    <RootNamespace>Awc.Dapr.Services.Company.API</RootNamespace>    
+    <RootNamespace>Awc.Services.Company.API</RootNamespace>    
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
-    <PackageReference Include="Dapr.AspNetCore" Version="1.13.1" />
-    <PackageReference Include="Dapr.Extensions.Configuration" Version="1.13.1" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
@@ -41,8 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBus.csproj" />
-    <ProjectReference Include="../../../BuildingBlocks/Healthchecks/Healthchecks.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBus/EventBus.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/Shared.Kernel/Shared.Kernel.csproj" />
   </ItemGroup>
 

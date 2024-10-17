@@ -1,4 +1,4 @@
-namespace Awc.Dapr.Services.Company.API.Model.Company
+namespace Awc.Services.Company.API.Model.Company
 {
     public sealed class Company
     {

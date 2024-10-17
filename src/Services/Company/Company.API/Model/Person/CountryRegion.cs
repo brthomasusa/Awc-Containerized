@@ -1,4 +1,4 @@
-namespace Awc.Dapr.Services.Company.API.Model.Person
+namespace Awc.Services.Company.API.Model.Person
 {
     public sealed class CountryRegion
     {

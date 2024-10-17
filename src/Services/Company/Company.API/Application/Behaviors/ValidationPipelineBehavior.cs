@@ -5,7 +5,7 @@ using System.Linq;
 using AWC.Shared.Kernel.Utilities;
 using FluentValidation;
 
-namespace Awc.Dapr.Services.Company.API.Application.Behaviors
+namespace Awc.Services.Company.API.Application.Behaviors
 {
     internal sealed class ValidationPipelineBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators)
         : IPipelineBehavior<TRequest, TResponse>

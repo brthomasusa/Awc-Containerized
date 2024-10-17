@@ -1,9 +1,9 @@
 using System.Data;
 using Dapper;
 using AWC.Shared.Kernel.Utilities;
-using Awc.Dapr.Services.Company.API.ViewModels;
+using Awc.Services.Company.API.ViewModels;
 
-namespace Awc.Dapr.Services.Company.API.Services
+namespace Awc.Services.Company.API.Services
 {
     public sealed class CompanyService(DapperContext dapperContext, ILogger<CompanyService> logger) : ICompanyService
     {

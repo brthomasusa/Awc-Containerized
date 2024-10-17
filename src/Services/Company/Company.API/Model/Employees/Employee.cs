@@ -1,4 +1,4 @@
-namespace Awc.Dapr.Services.Company.API.Model.Employees
+namespace Awc.Services.Company.API.Model.Employees
 {
     public class Employee
     {

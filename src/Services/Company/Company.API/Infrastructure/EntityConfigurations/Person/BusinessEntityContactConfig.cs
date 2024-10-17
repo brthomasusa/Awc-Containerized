@@ -1,8 +1,8 @@
-using Awc.Dapr.Services.Company.API.Model.Person;
+using Awc.Services.Company.API.Model.Person;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Person;
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Person;
 
 internal class BusinessEntityContactConfig : IEntityTypeConfiguration<BusinessEntityContact>
 {
@@ -10,7 +10,7 @@ internal class BusinessEntityContactConfig : IEntityTypeConfiguration<BusinessEn
     {
         entity.ToTable("BusinessEntityContact", schema: "Person");
         entity.HasKey(e => new { e.BusinessEntityID, e.PersonID, e.ContactTypeID });
-        entity.HasOne<Awc.Dapr.Services.Company.API.Model.Person.Person>()
+        entity.HasOne<Awc.Services.Company.API.Model.Person.Person>()
             .WithMany()
             .HasForeignKey(p => p.PersonID)
             .IsRequired();

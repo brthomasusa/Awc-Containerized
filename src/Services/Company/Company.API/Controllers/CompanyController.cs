@@ -1,8 +1,8 @@
-using Awc.Dapr.Services.Company.API.Application.Features.GetCompanyById;
-using Awc.Dapr.Services.Company.API.ViewModels;
+using Awc.Services.Company.API.Application.Features.GetCompanyById;
+using Awc.Services.Company.API.ViewModels;
 using MediatR;
 
-namespace Awc.Dapr.Services.Company.API.Controllers
+namespace Awc.Services.Company.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]

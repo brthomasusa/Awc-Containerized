@@ -2,7 +2,7 @@
 
 using System.Reflection;
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure;
+namespace Awc.Services.Company.API.Infrastructure;
 
 public class CompanyDbContext(DbContextOptions options) : DbContext(options)
 {
@@ -20,7 +20,7 @@ public class CompanyDbContext(DbContextOptions options) : DbContext(options)
     public virtual DbSet<PhoneNumberType>? PhoneNumberType { get; set; }
     public virtual DbSet<StateProvince>? StateProvince { get; set; }
 
-    public virtual DbSet<Awc.Dapr.Services.Company.API.Model.Company.Company>? Company { get; set; }
+    public virtual DbSet<Awc.Services.Company.API.Model.Company.Company>? Company { get; set; }
     public virtual DbSet<Department>? Department { get; set; }
     public virtual DbSet<Shift>? Shift { get; set; }
 

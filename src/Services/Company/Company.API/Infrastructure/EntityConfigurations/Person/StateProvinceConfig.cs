@@ -1,8 +1,8 @@
-using Awc.Dapr.Services.Company.API.Model.Person;
+using Awc.Services.Company.API.Model.Person;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Person;
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Person;
 
 internal class StateProvinceConfig : IEntityTypeConfiguration<StateProvince>
 {

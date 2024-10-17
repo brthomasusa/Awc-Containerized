@@ -1,7 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure;
+namespace Awc.Services.Company.API.Infrastructure;
 
 public class DapperContext(string connStr)
 {

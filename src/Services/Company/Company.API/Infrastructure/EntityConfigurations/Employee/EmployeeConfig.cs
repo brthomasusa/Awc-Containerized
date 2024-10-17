@@ -1,8 +1,8 @@
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Employee
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Employee
 {
-    internal class EmployeeConfig : IEntityTypeConfiguration<Awc.Dapr.Services.Company.API.Model.Employees.Employee>
+    internal class EmployeeConfig : IEntityTypeConfiguration<Awc.Services.Company.API.Model.Employees.Employee>
     {
-        public void Configure(EntityTypeBuilder<Awc.Dapr.Services.Company.API.Model.Employees.Employee> entity)
+        public void Configure(EntityTypeBuilder<Awc.Services.Company.API.Model.Employees.Employee> entity)
         {
             entity.ToTable("Employee", schema: "HumanResources");
             entity.HasKey(e => e.BusinessEntityID);

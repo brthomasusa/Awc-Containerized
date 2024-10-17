@@ -10,13 +10,10 @@ try
 {
     // builder.AddCustomConfiguration();
     builder.AddCustomSwagger();
-    builder.AddCustomHealthChecks();
-    builder.AddCustomApplicationServices();
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
     builder.AddCustomDatabase();
 
-    builder.Services.AddDaprClient();
     builder.Services.AddControllers();
 
     var app = builder.Build();
@@ -33,12 +30,8 @@ try
         app.UsePathBase(pathBase);
     }
 
-    app.UseCloudEvents();
-
     app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
     app.MapControllers();
-    app.MapSubscribeHandler();
-    app.MapCustomHealthChecks("/hc", "/liveness", UIResponseWriter.WriteHealthCheckUIResponse);
 
         // app.Logger.LogInformation("Applying database migration ({ApplicationName})...", appName);
 
@@ -56,7 +49,7 @@ finally
     Serilog.Log.CloseAndFlush();
 }
 
-namespace Awc.Dapr.Services.Company.API
+namespace Awc.Services.Company.API
 {
     public partial class Program;
 }

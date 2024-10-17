@@ -1,8 +1,8 @@
-using Awc.Dapr.Services.Company.API.Model.Person;
+using Awc.Services.Company.API.Model.Person;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Person;
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Person;
 
 internal class BusinessEntityConfig : IEntityTypeConfiguration<BusinessEntity>
 {
@@ -12,7 +12,7 @@ internal class BusinessEntityConfig : IEntityTypeConfiguration<BusinessEntity>
         entity.HasKey(e => e.BusinessEntityID);
         entity.HasOne(p => p.PersonModel)
             .WithOne()
-            .HasForeignKey<Awc.Dapr.Services.Company.API.Model.Person.Person>(p => p.BusinessEntityID)
+            .HasForeignKey<Awc.Services.Company.API.Model.Person.Person>(p => p.BusinessEntityID)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

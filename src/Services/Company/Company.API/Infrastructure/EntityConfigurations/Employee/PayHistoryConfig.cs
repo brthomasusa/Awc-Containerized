@@ -1,4 +1,4 @@
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Employee
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Employee
 {
     internal class PayHistoryConfig : IEntityTypeConfiguration<EmployeePayHistory>
     {

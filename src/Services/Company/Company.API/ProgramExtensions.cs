@@ -1,13 +1,12 @@
-using Awc.Dapr.Services.Company.API.Application.Behaviors;
-using Awc.Dapr.Services.Company.API.Services;
+using Awc.Services.Company.API.Application.Behaviors;
+using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
 
-namespace Awc.Dapr.Services.Company.API
+namespace Awc.Services.Company.API
 {
     public static class ProgramExtensions
     {
         private const string AppName = "Company API";
-        private static readonly string[] tags = ["companydb"];
 
         public static void AddCustomSwagger(this WebApplicationBuilder builder) =>
             builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = $"AwcDapr - {AppName}", Version = "v1" }));
@@ -17,26 +16,6 @@ namespace Awc.Dapr.Services.Company.API
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{AppName} V1"));
         }
-
-        public static void AddCustomHealthChecks(this WebApplicationBuilder builder)
-        {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyApi");
-            Guard.Against.NullOrEmpty(connectionString!); 
-
-            builder.Services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
-                .AddDapr()
-                .AddSqlServer(
-                    connectionString!,
-                    name: "CompanyAPI-check",
-                    tags: tags);            
-        }
-
-        public static void AddCustomApplicationServices(this WebApplicationBuilder builder)
-        {
-            builder.Services.AddScoped<IEventBus, DaprEventBus>();
-        }
-
 
         public static void AddMediatr(this IServiceCollection services)
         {

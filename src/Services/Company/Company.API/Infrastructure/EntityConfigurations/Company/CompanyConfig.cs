@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Awc.Dapr.Services.Company.API.Infrastructure.EntityConfigurations.Company
+namespace Awc.Services.Company.API.Infrastructure.EntityConfigurations.Company
 {
-    internal class CompanyConfig : IEntityTypeConfiguration<Awc.Dapr.Services.Company.API.Model.Company.Company>
+    internal class CompanyConfig : IEntityTypeConfiguration<Awc.Services.Company.API.Model.Company.Company>
     {
-        public void Configure(EntityTypeBuilder<Awc.Dapr.Services.Company.API.Model.Company.Company> entity)
+        public void Configure(EntityTypeBuilder<Awc.Services.Company.API.Model.Company.Company> entity)
         {
             entity.ToTable("Company", schema: "Person");
             entity.HasKey(e => e.CompanyID);

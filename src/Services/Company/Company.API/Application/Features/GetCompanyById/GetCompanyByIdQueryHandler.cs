@@ -1,8 +1,8 @@
-using Awc.Dapr.Services.Company.API.Application.Abstractions.Messaging;
-using Awc.Dapr.Services.Company.API.ViewModels;
-using Awc.Dapr.Services.Company.API.Services;
+using Awc.Services.Company.API.Application.Abstractions.Messaging;
+using Awc.Services.Company.API.ViewModels;
+using Awc.Services.Company.API.Services;
 
-namespace Awc.Dapr.Services.Company.API.Application.Features.GetCompanyById
+namespace Awc.Services.Company.API.Application.Features.GetCompanyById
 {
     public sealed class GetCompanyByIdQueryHandler
     (

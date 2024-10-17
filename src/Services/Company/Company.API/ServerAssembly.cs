@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Awc.Dapr.Services.Company.API
+namespace Awc.Services.Company.API
 {
     public static class ServerAssembly
     {

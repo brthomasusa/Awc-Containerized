@@ -1,7 +1,7 @@
 using MediatR;
 using AWC.Shared.Kernel.Utilities;
 
-namespace Awc.Dapr.Services.Company.API.Application.Abstractions.Messaging;
+namespace Awc.Services.Company.API.Application.Abstractions.Messaging;
 
 public interface ICommandHandler<TCommand> : IRequestHandler<TCommand, Result>
     where TCommand : ICommand;
