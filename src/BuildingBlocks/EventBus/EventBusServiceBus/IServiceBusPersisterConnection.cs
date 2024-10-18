@@ -1,4 +1,4 @@
-namespace Awc.BuildingBlocks.EventBusServiceBus;
+namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusServiceBus;
 
 public interface IServiceBusPersisterConnection : IAsyncDisposable
 {

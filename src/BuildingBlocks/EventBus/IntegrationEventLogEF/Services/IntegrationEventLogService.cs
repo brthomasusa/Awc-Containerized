@@ -28,7 +28,7 @@ public class IntegrationEventLogService : IIntegrationEventLogService, IDisposab
         var result = await _integrationEventLogContext.IntegrationEventLogs
             .Where(e => e.TransactionId == tid && e.State == EventStateEnum.NotPublished).ToListAsync();
 
-        if (result.Any())
+        if (result.Count != 0)
         {
             return result.OrderBy(o => o.CreationTime)
                 .Select(e => e.DeserializeJsonContent(_eventTypes.Find(t => t.Name == e.EventTypeShortName)));
@@ -39,7 +39,7 @@ public class IntegrationEventLogService : IIntegrationEventLogService, IDisposab
 
     public Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
     {
-        if (transaction == null) throw new ArgumentNullException(nameof(transaction));
+        ArgumentNullException.ThrowIfNull(transaction);
 
         var eventLogEntry = new IntegrationEventLogEntry(@event, transaction.TransactionId);
 
@@ -64,7 +64,7 @@ public class IntegrationEventLogService : IIntegrationEventLogService, IDisposab
         return UpdateEventStatus(eventId, EventStateEnum.PublishedFailed);
     }
 
-    private Task UpdateEventStatus(Guid eventId, EventStateEnum status)
+    private Task<int> UpdateEventStatus(Guid eventId, EventStateEnum status)
     {
         var eventLogEntry = _integrationEventLogContext.IntegrationEventLogs.Single(ie => ie.EventId == eventId);
         eventLogEntry.State = status;

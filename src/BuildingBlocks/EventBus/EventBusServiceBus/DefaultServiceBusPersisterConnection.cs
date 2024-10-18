@@ -1,17 +1,16 @@
-﻿namespace Awc.BuildingBlocks.EventBusServiceBus;
+﻿namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusServiceBus;
 
 public class DefaultServiceBusPersisterConnection : IServiceBusPersisterConnection
 {
     private readonly string _serviceBusConnectionString;
     private ServiceBusClient _topicClient;
-    private ServiceBusAdministrationClient _subscriptionClient;
 
     bool _disposed;
 
     public DefaultServiceBusPersisterConnection(string serviceBusConnectionString)
     {
         _serviceBusConnectionString = serviceBusConnectionString;
-        _subscriptionClient = new ServiceBusAdministrationClient(_serviceBusConnectionString);
+        AdministrationClient = new ServiceBusAdministrationClient(_serviceBusConnectionString);
         _topicClient = new ServiceBusClient(_serviceBusConnectionString);
     }
 
@@ -27,8 +26,7 @@ public class DefaultServiceBusPersisterConnection : IServiceBusPersisterConnecti
         }
     }
 
-    public ServiceBusAdministrationClient AdministrationClient => 
-        _subscriptionClient;
+    public ServiceBusAdministrationClient AdministrationClient { get; }
 
     public ServiceBusClient CreateModel()
     {
@@ -46,5 +44,6 @@ public class DefaultServiceBusPersisterConnection : IServiceBusPersisterConnecti
 
         _disposed = true;
         await _topicClient.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 }

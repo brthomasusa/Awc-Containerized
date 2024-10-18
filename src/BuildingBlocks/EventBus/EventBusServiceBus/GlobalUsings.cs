@@ -1,6 +1,6 @@
-﻿global using Awc.BuildingBlocks.EventBus.Abstractions;
-global using Awc.BuildingBlocks.EventBus.Events;
-global using static Awc.BuildingBlocks.EventBus.InMemoryEventBusSubscriptionsManager;
+﻿global using Awc.BuildingBlocks.EventBus.EventBus.Abstractions;
+global using Awc.BuildingBlocks.EventBus.EventBus.Events;
+global using static Awc.BuildingBlocks.EventBus.EventBus.InMemoryEventBusSubscriptionsManager;
 global using System.Collections.Generic;
 global using System.Linq;
 global using System.Text.Json.Serialization;
@@ -13,7 +13,6 @@ global using System.Text;
 global using System.Text.Json;
 global using Azure.Messaging.ServiceBus;
 global using Azure.Messaging.ServiceBus.Administration;
-global using System;
 
 
 

@@ -1,11 +1,7 @@
 ﻿namespace Awc.BuildingBlocks.IntegrationEventLogEF;
 
-public class IntegrationEventLogContext : DbContext
+public class IntegrationEventLogContext(DbContextOptions<IntegrationEventLogContext> options) : DbContext(options)
 {
-    public IntegrationEventLogContext(DbContextOptions<IntegrationEventLogContext> options) : base(options)
-    {
-    }
-
     public DbSet<IntegrationEventLogEntry> IntegrationEventLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

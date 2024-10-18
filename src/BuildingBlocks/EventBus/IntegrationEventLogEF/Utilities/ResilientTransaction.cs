@@ -1,6 +1,6 @@
 ﻿namespace Awc.BuildingBlocks.IntegrationEventLogEF.Utilities;
 
-public class ResilientTransaction
+public sealed class ResilientTransaction
 {
     private readonly DbContext _context;
     private ResilientTransaction(DbContext context) =>

@@ -1,9 +1,9 @@
-﻿namespace Awc.BuildingBlocks.EventBusRabbitMQ;
+﻿namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
 
 public class EventBusRabbitMQ : IEventBus, IDisposable
 {
-    const string BROKER_NAME = "eshop_event_bus";
-    const string AUTOFAC_SCOPE_NAME = "eshop_event_bus";
+    const string BROKER_NAME = "awc_event_bus";
+    const string AUTOFAC_SCOPE_NAME = "awc_event_bus";
 
     private readonly IRabbitMQPersistentConnection _persistentConnection;
     private readonly ILogger<EventBusRabbitMQ> _logger;
@@ -55,10 +55,7 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
 
         var policy = RetryPolicy.Handle<BrokerUnreachableException>()
             .Or<SocketException>()
-            .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
-            {
-                _logger.LogWarning(ex, "Could not publish event: {EventId} after {Timeout}s ({ExceptionMessage})", @event.Id, $"{time.TotalSeconds:n1}", ex.Message);
-            });
+            .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) => _logger.LogWarning(ex, "Could not publish event: {EventId} after {Timeout}s ({ExceptionMessage})", @event.Id, $"{time.TotalSeconds:n1}", ex.Message));
 
         var eventName = @event.GetType().Name;
 
@@ -69,10 +66,7 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
 
         channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
 
-        var body = JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType(), new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
+        var body = JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType(), s_writeOptions);
 
         policy.Execute(() =>
         {
@@ -148,12 +142,11 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
 
     public void Dispose()
     {
-        if (_consumerChannel != null)
-        {
-            _consumerChannel.Dispose();
-        }
+        _consumerChannel?.Dispose();
 
         _subsManager.Clear();
+
+        GC.SuppressFinalize(this);
     }
 
     private void StartBasicConsume()
@@ -184,7 +177,7 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
 
         try
         {
-            if (message.ToLowerInvariant().Contains("throw-fake-exception"))
+            if (message.Contains("throw-fake-exception", StringComparison.InvariantCultureIgnoreCase))
             {
                 throw new InvalidOperationException($"Fake exception requested: \"{message}\"");
             }
@@ -256,11 +249,11 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
                     var handler = scope.ResolveOptional(subscription.HandlerType);
                     if (handler == null) continue;
                     var eventType = _subsManager.GetEventTypeByName(eventName);
-                    var integrationEvent = JsonSerializer.Deserialize(message, eventType, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                    var integrationEvent = JsonSerializer.Deserialize(message, eventType, s_writeOptions);
                     var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
 
                     await Task.Yield();
-                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
+                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, [integrationEvent]);
                 }
             }
         }
@@ -269,4 +262,9 @@ public class EventBusRabbitMQ : IEventBus, IDisposable
             _logger.LogWarning("No subscription for RabbitMQ event: {EventName}", eventName);
         }
     }
+
+    private static readonly JsonSerializerOptions s_writeOptions = new()
+    {
+        WriteIndented = true
+    };    
 }

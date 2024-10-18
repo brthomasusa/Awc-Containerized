@@ -36,7 +36,7 @@ namespace EventBus.Tests
         {
             bool raised = false;
             var manager = new InMemoryEventBusSubscriptionsManager();
-            manager.OnEventRemoved += (o, e) => raised = true;
+            manager.OnEventRemoved += (_, __) => raised = true;
             manager.AddSubscription<TestIntegrationEvent, TestIntegrationEventHandler>();
             manager.RemoveSubscription<TestIntegrationEvent, TestIntegrationEventHandler>();
             Assert.True(raised);

@@ -1,22 +1,15 @@
-﻿namespace Awc.BuildingBlocks.EventBusRabbitMQ;
+﻿namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
 
-public class DefaultRabbitMQPersistentConnection
-    : IRabbitMQPersistentConnection
+public class DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFactory, ILogger<DefaultRabbitMQPersistentConnection> logger, int retryCount = 5)
+        : IRabbitMQPersistentConnection
 {
-    private readonly IConnectionFactory _connectionFactory;
-    private readonly ILogger<DefaultRabbitMQPersistentConnection> _logger;
-    private readonly int _retryCount;
+    private readonly IConnectionFactory _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+    private readonly ILogger<DefaultRabbitMQPersistentConnection> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly int _retryCount = retryCount;
     private IConnection _connection;
     public bool Disposed;
 
     readonly object _syncRoot = new();
-
-    public DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFactory, ILogger<DefaultRabbitMQPersistentConnection> logger, int retryCount = 5)
-    {
-        _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _retryCount = retryCount;
-    }
 
     public bool IsConnected => _connection is { IsOpen: true } && !Disposed;
 
@@ -35,6 +28,7 @@ public class DefaultRabbitMQPersistentConnection
         if (Disposed) return;
 
         Disposed = true;
+        GC.SuppressFinalize(this);
 
         try
         {
@@ -45,7 +39,7 @@ public class DefaultRabbitMQPersistentConnection
         }
         catch (IOException ex)
         {
-            _logger.LogCritical(ex.ToString());
+            _logger.LogCritical(ex, "{Message}", ex.ToString());
         }
     }
 
@@ -57,10 +51,7 @@ public class DefaultRabbitMQPersistentConnection
         {
             var policy = RetryPolicy.Handle<SocketException>()
                 .Or<BrokerUnreachableException>()
-                .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
-                {
-                    _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
-                }
+                .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) => _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message)
             );
 
             policy.Execute(() =>

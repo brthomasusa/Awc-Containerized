@@ -1,4 +1,4 @@
-namespace Awc.BuildingBlocks.EventBusServiceBus;
+namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusServiceBus;
 
 public class EventBusServiceBus : IEventBus, IAsyncDisposable
 {
@@ -22,7 +22,7 @@ public class EventBusServiceBus : IEventBus, IAsyncDisposable
         _autofac = autofac;
         _subscriptionName = subscriptionClientName;
         _sender = _serviceBusPersisterConnection.TopicClient.CreateSender(_topicName);
-        ServiceBusProcessorOptions options = new ServiceBusProcessorOptions { MaxConcurrentCalls = 10, AutoCompleteMessages = false };
+        ServiceBusProcessorOptions options = new() { MaxConcurrentCalls = 10, AutoCompleteMessages = false };
         _processor = _serviceBusPersisterConnection.TopicClient.CreateProcessor(_topicName, _subscriptionName, options);
 
         RemoveDefaultRule();
@@ -146,7 +146,6 @@ public class EventBusServiceBus : IEventBus, IAsyncDisposable
 
     private async Task<bool> ProcessEvent(string eventName, string message)
     {
-        var processed = false;
         if (_subsManager.HasSubscriptionsForEvent(eventName))
         {
             var scope = _autofac.BeginLifetimeScope(AUTOFAC_SCOPE_NAME);
@@ -167,11 +166,11 @@ public class EventBusServiceBus : IEventBus, IAsyncDisposable
                     var eventType = _subsManager.GetEventTypeByName(eventName);
                     var integrationEvent = JsonSerializer.Deserialize(message, eventType);
                     var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, new[] { integrationEvent });
+                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, [integrationEvent]);
                 }
             }
         }
-        processed = true;
+        const bool processed = true;
         return processed;
     }
 
@@ -195,5 +194,6 @@ public class EventBusServiceBus : IEventBus, IAsyncDisposable
     {
         _subsManager.Clear();
         await _processor.CloseAsync();
+        GC.SuppressFinalize(this);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Awc.BuildingBlocks.EventBusRabbitMQ;
+﻿namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
 
 public interface IRabbitMQPersistentConnection
     : IDisposable
