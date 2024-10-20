@@ -28,3 +28,5 @@ global using MapsterMapper;
 global using Polly;
 global using System.Net;
 global using Serilog;
+global using System.Data;
+global using Microsoft.Data.SqlClient;

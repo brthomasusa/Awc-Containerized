@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Builder;
+using HealthChecks.UI.Configuration;
 
-var appName = "Company API";
+var appName = "Company API Service";
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
@@ -8,7 +8,8 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 
 try
 {
-    // builder.AddCustomConfiguration();
+    // builder.Services.AddCustomHealthChecks();
+    builder.Services.ConfigureHealthChecks();    
     builder.AddCustomSwagger();
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
@@ -34,10 +35,33 @@ try
     app.MapControllers();
 
         // app.Logger.LogInformation("Applying database migration ({ApplicationName})...", appName);
-
         // app.ApplyDatabaseMigration();
 
         app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
+
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
+        app.UseHealthChecksUI((Options options) =>
+        {
+            options.UIPath = "/hc-ui";
+            // options.AddCustomStylesheet("./healthchecksui.css");
+
+        });
+
+
+
+
+        // app.UseHealthChecks("/hc", new HealthCheckOptions()
+        // {
+        //     Predicate = _ => true,
+        //     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        // });
+        // app.UseHealthChecksUI(options => options.UIPath = "/hc-ui");
+
         app.Run();
     }
 catch (Exception ex)

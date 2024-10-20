@@ -6,7 +6,7 @@ public class EventBusServiceBus : IEventBus, IAsyncDisposable
     private readonly ILogger<EventBusServiceBus> _logger;
     private readonly IEventBusSubscriptionsManager _subsManager;
     private readonly ILifetimeScope _autofac;
-    private readonly string _topicName = "eshop_event_bus";
+    private readonly string _topicName = "awc_event_bus";
     private readonly string _subscriptionName;
     private readonly ServiceBusSender _sender;
     private readonly ServiceBusProcessor _processor;

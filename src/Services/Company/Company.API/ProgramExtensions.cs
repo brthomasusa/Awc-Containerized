@@ -6,10 +6,38 @@ namespace Awc.Services.Company.API
 {
     public static class ProgramExtensions
     {
-        private const string AppName = "Company API";
+        private const string AppName = "Company API Service";
+        private static readonly string[] tagsArray = ["Feedback", "Company API Db"];
+    
+        public static void ConfigureHealthChecks(this IServiceCollection services)
+        {
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyApi");
+            Guard.Against.NullOrEmpty(connectionString!);
+
+            services.AddHealthChecks()
+                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddSqlServer(
+                    connectionString!, 
+                    healthQuery: "select 1", 
+                    name: "Company API Db-check", 
+                    failureStatus: HealthStatus.Unhealthy, 
+                    tags: tagsArray
+                );
+
+            services.AddHealthChecksUI(opt =>
+            {
+                opt.SetEvaluationTimeInSeconds(10); //time in seconds between check    
+                opt.MaximumHistoryEntriesPerEndpoint(60); //maximum history of checks    
+                opt.SetApiMaxActiveRequests(1); //api requests concurrency    
+                opt.AddHealthCheckEndpoint("feedback api", "/hc"); //map health check api    
+
+            })
+            .AddInMemoryStorage();                
+        }
+
 
         public static void AddCustomSwagger(this WebApplicationBuilder builder) =>
-            builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = $"AwcDapr - {AppName}", Version = "v1" }));
+            builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Adventure Works Cycles - {AppName}", Version = "v1" }));
 
         public static void UseCustomSwagger(this WebApplication app)
         {
