@@ -9,6 +9,14 @@ namespace Awc.Services.Company.API
         private const string AppName = "Company API Service";
         private static readonly string[] tagsArray = ["Feedback", "Company API Db"];
     
+        public static IServiceCollection AddAppInsight(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddApplicationInsightsTelemetry(configuration);
+            services.AddApplicationInsightsKubernetesEnricher();
+
+            return services;
+        }
+
         public static void ConfigureHealthChecks(this IServiceCollection services)
         {
             string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyApi");

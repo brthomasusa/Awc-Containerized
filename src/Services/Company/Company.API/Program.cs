@@ -1,3 +1,4 @@
+using AWC.Shared.Kernel.Guards;
 using HealthChecks.UI.Configuration;
 
 var appName = "Company API Service";
@@ -8,7 +9,10 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 
 try
 {
-    // builder.Services.AddCustomHealthChecks();
+    string? appKey = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
+    Console.WriteLine($"App key: {appKey}");
+
+    builder.Services.AddApplicationInsightsTelemetry();
     builder.Services.ConfigureHealthChecks();    
     builder.AddCustomSwagger();
     builder.Services.AddMappings();
@@ -45,22 +49,12 @@ try
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        app.UseHealthChecksUI((Options options) =>
-        {
-            options.UIPath = "/hc-ui";
-            // options.AddCustomStylesheet("./healthchecksui.css");
-
-        });
-
-
-
-
-        // app.UseHealthChecks("/hc", new HealthCheckOptions()
+        // app.UseHealthChecksUI((Options options) =>
         // {
-        //     Predicate = _ => true,
-        //     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        //     options.UIPath = "/hc-ui";
+        //     // options.AddCustomStylesheet("./healthchecksui.css");
+
         // });
-        // app.UseHealthChecksUI(options => options.UIPath = "/hc-ui");
 
         app.Run();
     }
