@@ -34,9 +34,14 @@ charset = utf-8
 trim_trailing_whitespace = false
 insert_final_newline = false
 
+dotnet_diagnostic.RCS0012.severity = silent
+dotnet_diagnostic.RCS0013.severity = silent
+dotnet_diagnostic.RCS0044.severity = silent
+dotnet_diagnostic.RCS0054.severity = silent
 dotnet_diagnostic.RCS1036.severity = silent
 dotnet_diagnostic.RCS1037.severity = silent
 dotnet_diagnostic.RCS1158.severity = silent
 dotnet_diagnostic.RCS1175.severity = silent
+dotnet_diagnostic.RCS1223.severity = silent
 dotnet_diagnostic.xUnit1004.severity = silent
 dotnet_diagnostic.IDE0060.severity = silent

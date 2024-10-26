@@ -8,27 +8,27 @@ namespace Awc.Services.Company.API
     {
         private const string AppName = "Company API Service";
         private static readonly string[] tagsArray = ["Feedback", "Company API Db"];
-    
+
         public static IServiceCollection AddAppInsight(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddApplicationInsightsTelemetry(configuration);
-            services.AddApplicationInsightsKubernetesEnricher();
+            // services.AddApplicationInsightsKubernetesEnricher();
 
             return services;
         }
 
         public static void ConfigureHealthChecks(this IServiceCollection services)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyApi");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AwcDb");
             Guard.Against.NullOrEmpty(connectionString!);
 
             services.AddHealthChecks()
                 .AddCheck("self", () => HealthCheckResult.Healthy())
                 .AddSqlServer(
-                    connectionString!, 
-                    healthQuery: "select 1", 
-                    name: "Company API Db-check", 
-                    failureStatus: HealthStatus.Unhealthy, 
+                    connectionString!,
+                    healthQuery: "select 1",
+                    name: "Company API Db-check",
+                    failureStatus: HealthStatus.Unhealthy,
                     tags: tagsArray
                 );
 
@@ -39,13 +39,14 @@ namespace Awc.Services.Company.API
                 opt.SetApiMaxActiveRequests(1); //api requests concurrency    
                 opt.AddHealthCheckEndpoint("feedback api", "/hc"); //map health check api    
 
-            })
-            .AddInMemoryStorage();                
+            }).AddInMemoryStorage();
         }
 
 
         public static void AddCustomSwagger(this WebApplicationBuilder builder) =>
-            builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Adventure Works Cycles - {AppName}", Version = "v1" }));
+            builder.Services.AddSwaggerGen(c =>
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Adventure Works Cycles - {AppName}", Version = "v1" })
+            );
 
         public static void UseCustomSwagger(this WebApplication app)
         {
@@ -71,24 +72,24 @@ namespace Awc.Services.Company.API
 
             services.AddSingleton(config);
             services.AddScoped<IMapper, ServiceMapper>();
-        } 
+        }
 
         public static void AddCustomDatabase(this WebApplicationBuilder builder)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyApi");
-            Guard.Against.NullOrEmpty(connectionString!);            
-            
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AwcDb");
+            Guard.Against.NullOrEmpty(connectionString!);
+
             builder.Services.AddDbContext<CompanyDbContext>(options =>
                 options.UseSqlServer(
                     connectionString,
                     x => x.UseHierarchyId()
                 )
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
+                    .EnableSensitiveDataLogging()
+                    .EnableDetailedErrors()
             );
 
             builder.Services.AddSingleton<DapperContext>(_ => new DapperContext(connectionString!));
-                
+
             builder.Services.AddScoped<ICompanyService, CompanyService>();
 
             // builder.Services.AddMemoryCache();
@@ -118,6 +119,6 @@ namespace Awc.Services.Company.API
 
             // services.AddMemoryCache();
             // services.AddSingleton<ICacheService, CacheService>();
-        }               
+        }
     }
 }

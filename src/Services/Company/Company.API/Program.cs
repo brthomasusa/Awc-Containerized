@@ -1,5 +1,5 @@
-using AWC.Shared.Kernel.Guards;
-using HealthChecks.UI.Configuration;
+using System.Text.Json;
+using System.Text;
 
 var appName = "Company API Service";
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +10,9 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 try
 {
     string? appKey = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
-    Console.WriteLine($"App key: {appKey}");
 
     builder.Services.AddApplicationInsightsTelemetry();
-    builder.Services.ConfigureHealthChecks();    
+    builder.Services.ConfigureHealthChecks();
     builder.AddCustomSwagger();
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
@@ -29,35 +28,94 @@ try
         app.UseCustomSwagger();
     }
 
-    var pathBase = builder.Configuration["PATH_BASE"];
-    if (!string.IsNullOrEmpty(pathBase))
-    {
-        app.UsePathBase(pathBase);
-    }
+    // var pathBase = builder.Configuration["PATH_BASE"];
+    // if (!string.IsNullOrEmpty(pathBase))
+    // {
+    //     app.UsePathBase(pathBase);
+    // }
 
     app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
     app.MapControllers();
 
-        // app.Logger.LogInformation("Applying database migration ({ApplicationName})...", appName);
-        // app.ApplyDatabaseMigration();
+    // app.Logger.LogInformation("Applying database migration ({ApplicationName})...", appName);
+    // app.ApplyDatabaseMigration();
 
-        app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
+    app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
 
-        app.MapHealthChecks("/hc", new HealthCheckOptions()
+    app.MapHealthChecks(
+        "/hc",
+        new HealthCheckOptions
         {
-            Predicate = _ => true,
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            AllowCachingResponses = false,
+            ResultStatusCodes =
+            {
+                [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+                [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                [HealthStatus.Degraded] = StatusCodes.Status200OK,
+            },
+            ResponseWriter = JsonResponse
         });
 
-        // app.UseHealthChecksUI((Options options) =>
-        // {
-        //     options.UIPath = "/hc-ui";
-        //     // options.AddCustomStylesheet("./healthchecksui.css");
+    // app.UseHealthChecksUI((Options options) =>
+    // {
+    //     options.UIPath = "/hc-ui";
+    //     // options.AddCustomStylesheet("./healthchecksui.css");
 
-        // });
+    // });
 
-        app.Run();
+    app.Run();
+
+    static async Task JsonResponse(HttpContext context, HealthReport healthReport)
+    {
+        context.Response.ContentType = "application/json; charset=utf-8";
+        var options = new JsonWriterOptions { Indented = true };
+
+        await using var memoryStream = new MemoryStream();
+
+        await using (var jsonWriter = new Utf8JsonWriter(memoryStream, options))
+        {
+            jsonWriter.WriteStartObject();
+            jsonWriter.WriteString("status", healthReport.Status.ToString());
+            jsonWriter.WriteStartObject("results");
+
+            foreach (var healthReportEntry in healthReport.Entries)
+            {
+                jsonWriter.WriteStartObject(healthReportEntry.Key);
+                jsonWriter.WriteString(
+                    "status",
+                    healthReportEntry.Value.Status.ToString()
+                );
+                jsonWriter.WriteString(
+                    "description",
+                    healthReportEntry.Value.Description
+                );
+                jsonWriter.WriteStartObject("data");
+
+                foreach (var item in healthReportEntry.Value.Data)
+                {
+                    jsonWriter.WritePropertyName(item.Key);
+
+                    JsonSerializer.Serialize(
+                        jsonWriter,
+                        item.Value,
+                        item.Value?.GetType() ?? typeof(object)
+                    );
+                }
+
+                jsonWriter.WriteEndObject();
+                jsonWriter.WriteEndObject();
+            }
+
+            jsonWriter.WriteEndObject();
+            jsonWriter.WriteEndObject();
+        }
+
+        await context.Response.WriteAsync(
+            Encoding.UTF8.GetString(memoryStream.ToArray()));
     }
+
+
+}
 catch (Exception ex)
 {
     Serilog.Log.Fatal(ex, "Company API microservice terminated unexpectedly with message {ex.Message}.", ex.Message);
