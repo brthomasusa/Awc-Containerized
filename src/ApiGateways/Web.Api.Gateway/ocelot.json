@@ -1,7 +1,7 @@
 {
     "Routes": [
         {
-            "DownstreamPathTemplate": "/api/v1/Company",
+            "DownstreamPathTemplate": "/api/v1/Company/{id}",
             "DownstreamScheme": "http",
             "DownstreamHostAndPorts": [
                 {
@@ -9,7 +9,7 @@
                     "Port": 5052
                 }
             ],
-            "UpstreamPathTemplate": "/Company",
+            "UpstreamPathTemplate": "/Company/{id}",
             "UpstreamHttpMethod": [
                 "GET"
             ],
@@ -24,10 +24,10 @@
     ],
     "FileCacheOptions": {
         "TtlSeconds": 20,
-        "Region": "SomeRegionName"
+        "Region": "West US 3"
     },
     "GlobalConfiguration": {
-        "BaseUrl": "http://localhost:5093",
+        "BaseUrl": "http://localhost:5259",
         "RateLimitOptions": {
             "DisableRateLimitHeaders": false,
             "QuotaExceededMessage": "Too many requests!!!",

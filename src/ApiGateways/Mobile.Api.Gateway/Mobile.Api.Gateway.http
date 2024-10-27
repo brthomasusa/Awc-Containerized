@@ -1,0 +1,6 @@
+@Mobile.Api.Gateway_HostAddress = http://localhost:5087
+
+GET {{Mobile.Api.Gateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
