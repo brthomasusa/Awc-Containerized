@@ -1,6 +1,8 @@
 using Awc.Services.Company.API.Application.Behaviors;
 using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Awc.Services.Company.API
 {
@@ -23,13 +25,13 @@ namespace Awc.Services.Company.API
             Guard.Against.NullOrEmpty(connectionString!);
 
             services.AddHealthChecks()
-                .AddCheck("self", () => HealthCheckResult.Healthy())
+                .AddCheck("Company API", () => HealthCheckResult.Healthy(), tags: new[] { "live" })
                 .AddSqlServer(
                     connectionString!,
                     healthQuery: "select 1",
-                    name: "Company API Db-check",
+                    name: "Company API database-check",
                     failureStatus: HealthStatus.Unhealthy,
-                    tags: tagsArray
+                    tags: new[] { "ready" }
                 );
 
             services.AddHealthChecksUI(opt =>
