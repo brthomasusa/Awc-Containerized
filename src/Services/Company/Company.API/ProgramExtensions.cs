@@ -34,14 +34,14 @@ namespace Awc.Services.Company.API
                     tags: new[] { "ready" }
                 );
 
-            services.AddHealthChecksUI(opt =>
-            {
-                opt.SetEvaluationTimeInSeconds(10); //time in seconds between check    
-                opt.MaximumHistoryEntriesPerEndpoint(60); //maximum history of checks    
-                opt.SetApiMaxActiveRequests(1); //api requests concurrency    
-                opt.AddHealthCheckEndpoint("feedback api", "/hc"); //map health check api    
+            // services.AddHealthChecksUI(opt =>
+            // {
+            //     opt.SetEvaluationTimeInSeconds(10); //time in seconds between check    
+            //     opt.MaximumHistoryEntriesPerEndpoint(60); //maximum history of checks    
+            //     opt.SetApiMaxActiveRequests(1); //api requests concurrency    
+            //     opt.AddHealthCheckEndpoint("feedback api", "/hc"); //map health check api    
 
-            }).AddInMemoryStorage();
+            // }).AddInMemoryStorage();
         }
 
 

@@ -1,16 +1,16 @@
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
+using Awc.Services.Company.API.Middleware;
 
-var appName = "Company API Service";
+const string appName = "Company API Service";
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context, loggerConfig) =>
-    loggerConfig.ReadFrom.Configuration(context.Configuration));
+builder.Host.UseSerilog((ctx, lc) => lc
+    .ReadFrom.Configuration(ctx.Configuration));
 
 try
 {
-    string? appKey = builder.Configuration.GetValue<string>("ApplicationInsights:ConnectionString");
-
     builder.Services.AddApplicationInsightsTelemetry();
     builder.Services.ConfigureHealthChecks();
     builder.AddCustomSwagger();
@@ -27,12 +27,6 @@ try
         app.UseDeveloperExceptionPage();
         app.UseCustomSwagger();
     }
-
-    // var pathBase = builder.Configuration["PATH_BASE"];
-    // if (!string.IsNullOrEmpty(pathBase))
-    // {
-    //     app.UsePathBase(pathBase);
-    // }
 
     app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
     app.MapControllers();
@@ -62,6 +56,9 @@ try
     //     // options.AddCustomStylesheet("./healthchecksui.css");
 
     // });
+
+    app.UseSerilogRequestLogging();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     app.Run();
 

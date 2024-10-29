@@ -1,20 +1,45 @@
+using Awc.ApiGateways.Web.Api.Gateway.Middleware;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+builder.Host.UseSerilog(
+    (ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)
+);
 
-builder.Services.AddOcelot()
-    .AddCacheManager(x => x.WithDictionaryHandle());
+try
+{
+    const string appName = "Web Api Gateway";
 
-var app = builder.Build();
+    builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 
-// if (app.Environment.IsDevelopment())
-// {}
+    builder.Services.AddOcelot()
+        .AddCacheManager(x => x.WithDictionaryHandle());
 
-await app.UseOcelot();
-app.UseHttpsRedirection();
+    var app = builder.Build();
 
-app.Run();
+    await app.UseOcelot();
+    app.UseHttpsRedirection();
+
+    app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Serilog.Log.Fatal(ex, "Web.Api.Gateway terminated unexpectedly with message {ex.Message}.", ex.Message);
+}
+finally
+{
+    Serilog.Log.CloseAndFlush();
+}
+
+namespace Awc.ApiGateways.Web.Api.Gateway
+{
+    public partial class Program;
+}
+
