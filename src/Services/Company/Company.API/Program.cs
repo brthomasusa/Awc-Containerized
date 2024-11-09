@@ -1,6 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using Awc.Services.Company.API.Middleware;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 const string appName = "Company API Service";
 
@@ -11,6 +13,43 @@ builder.Host.UseSerilog((ctx, lc) => lc
 
 try
 {
+    builder.Services.AddOpenTelemetryTracing((builder) =>
+        builder
+            .AddAspNetCoreInstrumentation(o =>
+            {
+                o.EnrichWithHttpRequest = (
+                    activity,
+                    httpRequest) =>
+                {
+                    activity.SetTag(
+                        "requestProtocol",
+                        httpRequest.Protocol);
+                };
+                o.EnrichWithHttpResponse = (
+                    activity,
+                    httpResponse) =>
+                {
+                    activity.SetTag(
+                        "responseLength",
+                        httpResponse.ContentLength);
+                };
+                o.EnrichWithException = (
+                    activity,
+                    exception) =>
+                {
+                    activity.SetTag(
+                        "exceptionType",
+                        exception.GetType().ToString());
+                };
+            })
+            .AddJaegerExporter()
+    );
+
+
+
+
+
+
     builder.Services.AddApplicationInsightsTelemetry();
     builder.Services.ConfigureHealthChecks();
     builder.AddCustomSwagger();
@@ -28,11 +67,11 @@ try
         app.UseCustomSwagger();
     }
 
+    app.UseSerilogRequestLogging();
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+
     app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
     app.MapControllers();
-
-    // app.Logger.LogInformation("Applying database migration ({ApplicationName})...", appName);
-    // app.ApplyDatabaseMigration();
 
     app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
 
@@ -56,9 +95,6 @@ try
     //     // options.AddCustomStylesheet("./healthchecksui.css");
 
     // });
-
-    app.UseSerilogRequestLogging();
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     app.Run();
 
