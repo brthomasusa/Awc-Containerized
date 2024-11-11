@@ -1,8 +1,8 @@
 using System.Text;
 using System.Text.Json;
 using Awc.Services.Company.API.Middleware;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
+// using OpenTelemetry.Resources;
+// using OpenTelemetry.Trace;
 
 const string appName = "Company API Service";
 
@@ -13,37 +13,37 @@ builder.Host.UseSerilog((ctx, lc) => lc
 
 try
 {
-    builder.Services.AddOpenTelemetryTracing((builder) =>
-        builder
-            .AddAspNetCoreInstrumentation(o =>
-            {
-                o.EnrichWithHttpRequest = (
-                    activity,
-                    httpRequest) =>
-                {
-                    activity.SetTag(
-                        "requestProtocol",
-                        httpRequest.Protocol);
-                };
-                o.EnrichWithHttpResponse = (
-                    activity,
-                    httpResponse) =>
-                {
-                    activity.SetTag(
-                        "responseLength",
-                        httpResponse.ContentLength);
-                };
-                o.EnrichWithException = (
-                    activity,
-                    exception) =>
-                {
-                    activity.SetTag(
-                        "exceptionType",
-                        exception.GetType().ToString());
-                };
-            })
-            .AddJaegerExporter()
-    );
+    // builder.Services.AddOpenTelemetryTracing((builder) =>
+    //     builder
+    //         .AddAspNetCoreInstrumentation(o =>
+    //         {
+    //             o.EnrichWithHttpRequest = (
+    //                 activity,
+    //                 httpRequest) =>
+    //             {
+    //                 activity.SetTag(
+    //                     "requestProtocol",
+    //                     httpRequest.Protocol);
+    //             };
+    //             o.EnrichWithHttpResponse = (
+    //                 activity,
+    //                 httpResponse) =>
+    //             {
+    //                 activity.SetTag(
+    //                     "responseLength",
+    //                     httpResponse.ContentLength);
+    //             };
+    //             o.EnrichWithException = (
+    //                 activity,
+    //                 exception) =>
+    //             {
+    //                 activity.SetTag(
+    //                     "exceptionType",
+    //                     exception.GetType().ToString());
+    //             };
+    //         })
+    //         .AddJaegerExporter()
+    // );
 
 
 
