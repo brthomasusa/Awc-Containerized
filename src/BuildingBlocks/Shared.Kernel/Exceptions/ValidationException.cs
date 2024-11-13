@@ -1,14 +1,10 @@
-﻿namespace AWC.Shared.Kernel.Exceptions;
+﻿#pragma warning disable RCS1194
 
-public class ValidationException : Exception
+namespace AWC.Shared.Kernel.Exceptions;
+
+public class ValidationException(IReadOnlyCollection<ValidationError> errors) : Exception("Validation failed")
 {
-    public ValidationException(IReadOnlyCollection<ValidationError> errors)
-        : base("Validation failed")
-    {
-        Errors = errors;
-    }
-
-    public IReadOnlyCollection<ValidationError> Errors { get; }
+    public IReadOnlyCollection<ValidationError> Errors { get; } = errors;
 }
 
 

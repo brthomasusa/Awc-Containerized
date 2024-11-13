@@ -1,3 +1,5 @@
+#pragma warning disable CA1861
+
 using Awc.Services.Company.API.Application.Behaviors;
 using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
@@ -9,7 +11,6 @@ namespace Awc.Services.Company.API
     public static class ProgramExtensions
     {
         private const string AppName = "Company API Service";
-        private static readonly string[] tagsArray = ["Feedback", "Company API Db"];
 
         public static IServiceCollection AddAppInsight(this IServiceCollection services, IConfiguration configuration)
         {
@@ -21,7 +22,7 @@ namespace Awc.Services.Company.API
 
         public static void ConfigureHealthChecks(this IServiceCollection services)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AwcDb");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDb");
             Guard.Against.NullOrEmpty(connectionString!);
 
             services.AddHealthChecks()
@@ -33,15 +34,6 @@ namespace Awc.Services.Company.API
                     failureStatus: HealthStatus.Unhealthy,
                     tags: new[] { "ready" }
                 );
-
-            // services.AddHealthChecksUI(opt =>
-            // {
-            //     opt.SetEvaluationTimeInSeconds(10); //time in seconds between check    
-            //     opt.MaximumHistoryEntriesPerEndpoint(60); //maximum history of checks    
-            //     opt.SetApiMaxActiveRequests(1); //api requests concurrency    
-            //     opt.AddHealthCheckEndpoint("feedback api", "/hc"); //map health check api    
-
-            // }).AddInMemoryStorage();
         }
 
 
@@ -78,7 +70,7 @@ namespace Awc.Services.Company.API
 
         public static void AddCustomDatabase(this WebApplicationBuilder builder)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AwcDb");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDb");
             Guard.Against.NullOrEmpty(connectionString!);
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>

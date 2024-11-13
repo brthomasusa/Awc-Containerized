@@ -34,7 +34,7 @@ try
     app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
     app.MapControllers();
 
-    app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
+    Serilog.Log.Information("Starting web host {ApplicationName}...", appName);
 
     app.MapHealthChecks(
         "/hc",
@@ -49,13 +49,6 @@ try
             },
             ResponseWriter = JsonResponse
         });
-
-    // app.UseHealthChecksUI((Options options) =>
-    // {
-    //     options.UIPath = "/hc-ui";
-    //     // options.AddCustomStylesheet("./healthchecksui.css");
-
-    // });
 
     app.Run();
 
@@ -112,7 +105,7 @@ try
 }
 catch (Exception ex)
 {
-    Serilog.Log.Fatal(ex, "Company API microservice terminated unexpectedly with message {ex.Message}.", ex.Message);
+    Console.WriteLine($"Company API microservice terminated unexpectedly with message: {ex.Message}");
 }
 finally
 {
