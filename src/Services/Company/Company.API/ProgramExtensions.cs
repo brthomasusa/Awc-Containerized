@@ -12,14 +12,6 @@ namespace Awc.Services.Company.API
     {
         private const string AppName = "Company API Service";
 
-        public static IServiceCollection AddAppInsight(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddApplicationInsightsTelemetry(configuration);
-            // services.AddApplicationInsightsKubernetesEnricher();
-
-            return services;
-        }
-
         public static void ConfigureHealthChecks(this IServiceCollection services)
         {
             string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDb");

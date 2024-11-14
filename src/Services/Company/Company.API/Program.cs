@@ -11,7 +11,6 @@ builder.Host.UseSerilog((ctx, lc) => lc
 
 try
 {
-    builder.Services.AddApplicationInsightsTelemetry();
     builder.Services.ConfigureHealthChecks();
     builder.AddCustomSwagger();
     builder.Services.AddMappings();
