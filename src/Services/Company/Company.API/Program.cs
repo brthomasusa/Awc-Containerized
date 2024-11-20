@@ -1,16 +1,34 @@
 using System.Text;
 using System.Text.Json;
 using Awc.Services.Company.API.Middleware;
+using Serilog.Sinks.OpenTelemetry;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
 
 const string appName = "Company API Service";
+const string serviceName = "companyApi";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((ctx, lc) => lc
-    .ReadFrom.Configuration(ctx.Configuration));
-
 try
 {
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console()
+        .WriteTo.OpenTelemetry(options => {
+            options.Endpoint = "http://localhost:4317";
+            options.Protocol = OtlpProtocol.Grpc; 
+            options.ResourceAttributes = new Dictionary<string, object>
+            {
+                ["service.name"] = serviceName,
+                ["index"] = 10,
+                ["flag"] = true,
+                ["value"] = 3.14
+            };                   
+        })
+        .ReadFrom.Configuration(ctx.Configuration));
+
     builder.Services.ConfigureHealthChecks();
     builder.AddCustomSwagger();
     builder.Services.AddMappings();
@@ -18,6 +36,23 @@ try
     builder.AddCustomDatabase();
 
     builder.Services.AddControllers();
+
+    builder.Services.AddOpenTelemetry()
+        .ConfigureResource(resource => resource.AddService(serviceName))
+        .WithMetrics(metrics =>
+            metrics
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddOtlpExporter()
+        )
+        .WithTracing(tracing =>
+            tracing
+                .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
+                .AddSqlClientInstrumentation()
+                .AddConsoleExporter()
+                .AddOtlpExporter(opts => opts.Endpoint = new Uri("http://localhost:4317"))
+        );
 
     var app = builder.Build();
 

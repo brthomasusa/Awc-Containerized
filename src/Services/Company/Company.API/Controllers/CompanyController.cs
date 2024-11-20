@@ -19,10 +19,13 @@ namespace Awc.Services.Company.API.Controllers
         {
             try
             {
+
                 Result<CompanyViewModel> result = await _sender.Send(new GetCompanyByIdQuery(CompanyId: id));
 
                 if (result.IsSuccess)
+                {
                     return Ok(result.Value);
+                }
 
                 return NotFound(result.Error.Message);
             }
