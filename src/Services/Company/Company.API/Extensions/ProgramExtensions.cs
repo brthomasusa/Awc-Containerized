@@ -3,12 +3,56 @@
 using Awc.Services.Company.API.Application.Behaviors;
 using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
+using Serilog.Sinks.OpenTelemetry;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Resources;
 
 namespace Awc.Services.Company.API.Extentions
 {
     public static class ProgramExtensions
     {
         private const string AppName = "Company API Service";
+        private const string serviceName = "companyApi";
+
+        public static void ConfigureSerilog(this WebApplicationBuilder builder)
+        {
+            builder.Host.UseSerilog((ctx, lc) => lc
+                .WriteTo.Console()
+                .WriteTo.OpenTelemetry(options => {
+                    options.Endpoint = "http://localhost:4317";
+                    options.Protocol = OtlpProtocol.Grpc; 
+                    options.ResourceAttributes = new Dictionary<string, object>
+                    {
+                        ["service.name"] = serviceName,
+                        ["index"] = 10,
+                        ["flag"] = true,
+                        ["value"] = 3.14
+                    };                   
+                })
+                .ReadFrom.Configuration(ctx.Configuration));
+        }
+
+        public static void ConfigureOpenTelemetry(this IServiceCollection services)
+        {
+            services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService(serviceName))
+                .WithMetrics(metrics =>
+                    metrics
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddOtlpExporter()
+                )
+                .WithTracing(tracing =>
+                    tracing
+                        .AddAspNetCoreInstrumentation()
+                        .AddHttpClientInstrumentation()
+                        .AddSqlClientInstrumentation()
+                        .AddConsoleExporter()
+                        .AddOtlpExporter(opts => opts.Endpoint = new Uri("http://localhost:4317"))
+                );            
+        }
 
         public static void ConfigureHealthChecks(this IServiceCollection services)
         {
