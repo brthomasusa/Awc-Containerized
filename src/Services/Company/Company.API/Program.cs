@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using Awc.Services.Company.API.Middleware;
@@ -6,6 +7,8 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
+using Awc.Services.Company.API.Extentions;
+using Serilog.Debugging;
 
 const string appName = "Company API Service";
 const string serviceName = "companyApi";
@@ -13,7 +16,7 @@ const string serviceName = "companyApi";
 var builder = WebApplication.CreateBuilder(args);
 
 try
-{
+{    
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console()
         .WriteTo.OpenTelemetry(options => {
@@ -28,9 +31,10 @@ try
             };                   
         })
         .ReadFrom.Configuration(ctx.Configuration));
-
+    
+    builder.Services.AddApplicationInsightsTelemetry();
     builder.Services.ConfigureHealthChecks();
-    builder.AddCustomSwagger();
+    builder.Services.AddCustomSwagger();
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
     builder.AddCustomDatabase();
@@ -134,7 +138,6 @@ try
         await context.Response.WriteAsync(
             Encoding.UTF8.GetString(memoryStream.ToArray()));
     }
-
 
 }
 catch (Exception ex)

@@ -3,10 +3,8 @@
 using Awc.Services.Company.API.Application.Behaviors;
 using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Awc.Services.Company.API
+namespace Awc.Services.Company.API.Extentions
 {
     public static class ProgramExtensions
     {
@@ -29,8 +27,8 @@ namespace Awc.Services.Company.API
         }
 
 
-        public static void AddCustomSwagger(this WebApplicationBuilder builder) =>
-            builder.Services.AddSwaggerGen(c =>
+        public static void AddCustomSwagger(this IServiceCollection services) =>
+            services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Adventure Works Cycles - {AppName}", Version = "v1" })
             );
 
@@ -70,8 +68,8 @@ namespace Awc.Services.Company.API
                     connectionString,
                     x => x.UseHierarchyId()
                 )
-                    .EnableSensitiveDataLogging()
-                    .EnableDetailedErrors()
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors()
             );
 
             builder.Services.AddSingleton<DapperContext>(_ => new DapperContext(connectionString!));
@@ -81,30 +79,6 @@ namespace Awc.Services.Company.API
             // builder.Services.AddMemoryCache();
             // builder.Services.AddSingleton<ICacheService, CacheService>();
 
-        }
-
-        public static void AddPersistence(this IServiceCollection services)
-        {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyApi");
-            Guard.Against.NullOrEmpty(connectionString!);
-
-            services.AddDbContext<CompanyDbContext>(options =>
-                options.UseSqlServer(
-                    connectionString,
-                    x => x.UseHierarchyId()
-                )
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors()
-            );
-
-            services.AddSingleton<DapperContext>(_ => new DapperContext(connectionString!));
-            services.AddScoped<ICompanyService, CompanyService>();
-
-            // services.AddScoped<ICompanyService>(sp =>
-            //     sp.GetRequiredService<CompanyService>());
-
-            // services.AddMemoryCache();
-            // services.AddSingleton<ICacheService, CacheService>();
         }
     }
 }

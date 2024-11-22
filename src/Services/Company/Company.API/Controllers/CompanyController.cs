@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Awc.Services.Company.API.Application.Features.GetCompanyById;
 using Awc.Services.Company.API.ViewModels;
 using MediatR;
@@ -36,6 +37,6 @@ namespace Awc.Services.Company.API.Controllers
 
                 return StatusCode(500, errMsg);
             }
-        }         
+        }                
     }
 }
