@@ -1,5 +1,4 @@
-﻿global using HealthChecks.UI.Client;
-global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+﻿global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;

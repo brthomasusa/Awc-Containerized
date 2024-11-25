@@ -1,4 +1,6 @@
-﻿namespace Awc.BuildingBlocks.IntegrationEventLogEF;
+﻿#pragma warning disable CS8601, CS8603, CS8618
+
+namespace Awc.BuildingBlocks.IntegrationEventLogEF;
 
 public class IntegrationEventLogEntry
 {

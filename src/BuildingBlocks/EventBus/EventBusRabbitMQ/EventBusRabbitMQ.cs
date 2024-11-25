@@ -1,4 +1,6 @@
-﻿namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
+﻿#pragma warning disable CS8600, CS8602, CS8622, CS8625
+
+namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
 
 public class EventBusRabbitMQ : IEventBus, IDisposable
 {

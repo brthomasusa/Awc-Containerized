@@ -12,7 +12,7 @@ try
 
     builder.ConfigureSerilog();
     builder.Services.ConfigureOpenTelemetry();
-    builder.Services.AddApplicationInsightsTelemetry();
+    // builder.Services.AddApplicationInsightsTelemetry();
     builder.Services.ConfigureHealthChecks();
     builder.Services.AddCustomSwagger();
     builder.Services.AddMappings();

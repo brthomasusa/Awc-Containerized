@@ -1,3 +1,5 @@
+#pragma warning disable CS8602
+
 namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusServiceBus;
 
 public class EventBusServiceBus : IEventBus, IAsyncDisposable
@@ -166,7 +168,7 @@ public class EventBusServiceBus : IEventBus, IAsyncDisposable
                     var eventType = _subsManager.GetEventTypeByName(eventName);
                     var integrationEvent = JsonSerializer.Deserialize(message, eventType);
                     var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
-                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, [integrationEvent]);
+                    await (Task?)concreteType.GetMethod("Handle").Invoke(handler, [integrationEvent]);
                 }
             }
         }

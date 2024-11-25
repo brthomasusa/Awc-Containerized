@@ -1,4 +1,6 @@
-﻿namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
+﻿#pragma warning disable CS8602, CS8622
+
+namespace Awc.BuildingBlocks.EventBus.EventBus.EventBusRabbitMQ;
 
 public class DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFactory, ILogger<DefaultRabbitMQPersistentConnection> logger, int retryCount = 5)
         : IRabbitMQPersistentConnection
@@ -6,7 +8,7 @@ public class DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFa
     private readonly IConnectionFactory _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
     private readonly ILogger<DefaultRabbitMQPersistentConnection> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly int _retryCount = retryCount;
-    private IConnection _connection;
+    private IConnection? _connection;
     public bool Disposed;
 
     readonly object _syncRoot = new();
@@ -20,7 +22,7 @@ public class DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFa
             throw new InvalidOperationException("No RabbitMQ connections are available to perform this action");
         }
 
-        return _connection.CreateModel();
+        return _connection!.CreateModel();
     }
 
     public void Dispose()
@@ -32,7 +34,7 @@ public class DefaultRabbitMQPersistentConnection(IConnectionFactory connectionFa
 
         try
         {
-            _connection.ConnectionShutdown -= OnConnectionShutdown;
+            _connection!.ConnectionShutdown -= OnConnectionShutdown;
             _connection.CallbackException -= OnCallbackException;
             _connection.ConnectionBlocked -= OnConnectionBlocked;
             _connection.Dispose();

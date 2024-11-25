@@ -1,4 +1,6 @@
-﻿namespace Awc.BuildingBlocks.IntegrationEventLogEF;
+﻿#pragma warning disable CS8618
+
+namespace Awc.BuildingBlocks.IntegrationEventLogEF;
 
 public class IntegrationEventLogContext(DbContextOptions<IntegrationEventLogContext> options) : DbContext(options)
 {

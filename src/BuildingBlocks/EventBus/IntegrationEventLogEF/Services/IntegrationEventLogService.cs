@@ -1,4 +1,6 @@
-﻿namespace Awc.BuildingBlocks.IntegrationEventLogEF.Services;
+﻿#pragma warning disable CS8602, 8604
+
+namespace Awc.BuildingBlocks.IntegrationEventLogEF.Services;
 
 public class IntegrationEventLogService : IIntegrationEventLogService, IDisposable
 {
