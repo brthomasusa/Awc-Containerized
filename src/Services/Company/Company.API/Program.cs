@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 try
 {    
+    // More git testing
     builder.ConfigureSerilog();
     builder.Services.ConfigureOpenTelemetry();
     builder.Services.ConfigureHealthChecks();
