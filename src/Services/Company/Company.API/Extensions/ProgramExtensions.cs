@@ -49,6 +49,7 @@ namespace Awc.Services.Company.API.Extentions
                         .AddAspNetCoreInstrumentation()
                         .AddHttpClientInstrumentation()
                         .AddSqlClientInstrumentation()
+                        .AddEntityFrameworkCoreInstrumentation()
                         .AddConsoleExporter()
                         .AddOtlpExporter(opts => opts.Endpoint = new Uri("http://localhost:4317"))
                 );            

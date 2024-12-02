@@ -43,7 +43,11 @@ namespace Awc.BuildingBlocks.Observability
                 tracing
                     .SetErrorStatusOnException()
                     .SetSampler(new AlwaysOnSampler())
-                    .AddAspNetCoreInstrumentation(options => options.RecordException = true);
+                    .AddAspNetCoreInstrumentation(options => options.RecordException = true)
+                    .AddHttpClientInstrumentation(options => options.RecordException = true)
+                    .AddSqlClientInstrumentation(options => options.RecordException = true)
+                    .AddEntityFrameworkCoreInstrumentation()
+                    .AddSource("observabilityOptions.ServiceName");                    
 
                 tracing
                     .AddOtlpExporter(_ =>
