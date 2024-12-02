@@ -2,16 +2,22 @@ using System.Text;
 using System.Text.Json;
 using Awc.Services.Company.API.Middleware;
 using Awc.Services.Company.API.Extentions;
+using Awc.BuildingBlocks.Observability;
 
 const string appName = "Company API Service";
 
 var builder = WebApplication.CreateBuilder(args);
 
 try
-{    
-    // More git testing
-    builder.ConfigureSerilog();
-    builder.Services.ConfigureOpenTelemetry();
+{ 
+    builder.Configuration
+           .SetBasePath(builder.Environment.ContentRootPath)
+           .AddJsonFile("appsettings.json", false, true)
+           .AddEnvironmentVariables()
+           .AddCommandLine(args);    
+
+    builder.AddObservability();        
+
     builder.Services.ConfigureHealthChecks();
     builder.Services.AddCustomSwagger();
     builder.Services.AddMappings();

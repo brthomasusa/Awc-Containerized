@@ -43,10 +43,14 @@
     <PackageVersion Include="Grpc.Tools" Version="2.59.0" PrivateAssets="All" /> -->
 
     <!-- Serilog -->
-    <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageVersion Include="Serilog" Version="4.1.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="8.0.4" />
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
     <PackageVersion Include="Serilog.Sinks.OpenTelemetry" Version="4.1.1" />
-    <PackageVersion Include="Serilog.Sinks.Seq" Version="6.0.0" />
+    <PackageVersion Include="Serilog.Sinks.PeriodicBatching" Version="5.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Seq" Version="8.0.0" />
 
     <!-- Miscellaneous -->
     <PackageVersion Include="Polly" Version="8.4.1" />
@@ -79,25 +83,11 @@
     <PackageVersion Include="Ocelot" Version="23.3.4" />
     <PackageVersion Include="Ocelot.Cache.CacheManager" Version="23.3.4" />
 
-    <!-- Roslynator -->
-    <PackageVersion Include="Roslynator.Analyzers" Version="4.12.9">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>    
-    </PackageVersion>
-    <PackageVersion Include="Roslynator.Formatting.Analyzers" Version="4.12.9">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageVersion>
-    <PackageVersion Include="Roslynator.CodeAnalysis.Analyzers" Version="4.12.9">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageVersion>
-
     <!-- Project EventBusRabbitMQ -->
     <PackageVersion Include="Autofac" Version="6.5.0" />
     <PackageVersion Include="Microsoft.CSharp" Version="4.7.0" />        
     <PackageVersion Include="RabbitMQ.Client" Version="6.4.0" />
-
+    
     <!-- Project EventBusServiceBus -->
     <PackageVersion Include="Azure.Messaging.ServiceBus" Version="7.11.1" />
 
