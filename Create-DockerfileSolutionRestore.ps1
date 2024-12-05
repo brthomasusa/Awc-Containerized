@@ -1,5 +1,5 @@
 param (
-  [string]$solution = "AWC.Dapr.sln"
+  [string]$solution = "Awc.Containerized.sln"
 )
 
 $outfile = "DockerfileSolutionRestore.txt"

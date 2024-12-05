@@ -1,6 +1,8 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 ARG NET_IMAGE=8.0
 FROM mcr.microsoft.com/dotnet/aspnet:${NET_IMAGE} AS base
+
+EXPOSE 80
+EXPOSE 443
 
 WORKDIR /app
 
@@ -27,12 +29,12 @@ COPY ["Awc.Containerized.sln", "./"]
 RUN dotnet restore "Awc.Containerized.sln"
 
 COPY . .
-WORKDIR "/src/src/Services/Company/Company.API"
+WORKDIR "/src/src/ApiGateways/Web.Api.Gateway"
 
 FROM build AS publish
-RUN dotnet publish --no-restore "Company.API.csproj" -c Release -o /app/publish
+RUN dotnet publish --no-restore "Web.Api.Gateway.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Company.API.dll"]
+ENTRYPOINT ["dotnet", "Web.Api.Gateway.dll"]
