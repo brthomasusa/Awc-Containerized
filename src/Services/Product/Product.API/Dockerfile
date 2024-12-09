@@ -1,8 +1,6 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 ARG NET_IMAGE=8.0
 FROM mcr.microsoft.com/dotnet/aspnet:${NET_IMAGE} AS base
-
-EXPOSE 80
-EXPOSE 443
 
 WORKDIR /app
 
@@ -10,6 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:${NET_IMAGE} AS build
 WORKDIR /src
 
 # Create this "restore-solution" section by running ./Create-DockerfileSolutionRestore.ps1, to optimize build cache reuse
+
 COPY ["src/ApiGateways/Mobile.Api.Gateway/Mobile.Api.Gateway.csproj", "src/ApiGateways/Mobile.Api.Gateway/"]
 COPY ["src/ApiGateways/Web.Api.Gateway/Web.Api.Gateway.csproj", "src/ApiGateways/Web.Api.Gateway/"]
 COPY ["src/BuildingBlocks/Devspaces.Support/Devspaces.Support.csproj", "src/BuildingBlocks/Devspaces.Support/"]
@@ -30,12 +29,12 @@ COPY ["Awc.Containerized.sln", "./"]
 RUN dotnet restore "Awc.Containerized.sln"
 
 COPY . .
-WORKDIR "/src/src/ApiGateways/Web.Api.Gateway"
+WORKDIR "/src/src/Services/Product/Product.API"
 
 FROM build AS publish
-RUN dotnet publish --no-restore "Web.Api.Gateway.csproj" -c Release -o /app/publish
+RUN dotnet publish --no-restore "Product.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Web.Api.Gateway.dll"]
+ENTRYPOINT ["dotnet", "Product.API.dll"]

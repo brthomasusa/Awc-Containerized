@@ -1,14 +1,22 @@
 # The default docker-compose.override file can use the "localhost" as the external name for testing web apps within the same dev machine.
 
 services:
-
+    
   company.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://0.0.0.0:5052     
-      - ConnectionStrings__CompanyDb=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+      - ASPNETCORE_HTTP_PORTS=3000        
+      - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
-      - "5052:80"
+      - "3000:80"           
+
+  product.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=3001         
+      - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+    ports:
+      - "3001:80"
 
   web.gateway:
     environment:

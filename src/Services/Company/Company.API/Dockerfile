@@ -20,6 +20,7 @@ COPY ["src/BuildingBlocks/Observability/Observability.csproj", "src/BuildingBloc
 COPY ["src/BuildingBlocks/Shared.Kernel/Shared.Kernel.csproj", "src/BuildingBlocks/Shared.Kernel/"]
 COPY ["src/BuildingBlocks/WebHostCustomization/WebHost.Customization/WebHost.Customization.csproj", "src/BuildingBlocks/WebHostCustomization/WebHost.Customization/"]
 COPY ["src/Services/Company/Company.API/Company.API.csproj", "src/Services/Company/Company.API/"]
+COPY ["src/Services/Product/Product.API/Product.API.csproj", "src/Services/Product/Product.API/"]
 COPY ["Directory.Build.props", "./"]
 COPY ["Directory.Packages.props", "./"]
 COPY ["Awc.Containerized.sln", "./"]

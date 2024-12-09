@@ -1,12 +1,12 @@
 using System.Text;
 using System.Text.Json;
-using Awc.Services.Company.API.Middleware;
-using Awc.Services.Company.API.Extentions;
+using Awc.Services.Product.Product.API.Middleware;
+using Awc.Services.Product.Product.API.Extentions;
 using Awc.BuildingBlocks.Observability;
 
-const string appName = "Company API Service";
+const string appName = "Product API Service";
 
-WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 try
 { 
@@ -20,14 +20,10 @@ try
 
     builder.Services.ConfigureHealthChecks();
     builder.Services.AddCustomSwagger();
-    builder.Services.AddMappings();
-    builder.Services.AddMediatr();
-    builder.AddCustomDatabase();
 
     builder.Services.AddControllers();
 
-    WebApplication
-     app = builder.Build();
+    var app = builder.Build();
 
     if (app.Environment.IsDevelopment())
     {
@@ -55,7 +51,14 @@ try
                 [HealthStatus.Degraded] = StatusCodes.Status200OK,
             },
             ResponseWriter = JsonResponse
-        });
+        }
+    )
+    .WithName("HealthCheck")
+    .WithOpenApi();
+
+    app.MapGet("/hello-world", () => "Hello, World!")
+    .WithName("GetGreeting")
+    .WithOpenApi();
 
     app.Run();
 
@@ -118,7 +121,7 @@ finally
     Serilog.Log.CloseAndFlush();
 }
 
-namespace Awc.Services.Company.API
+namespace Awc.Services.Product.Product.API
 {
     public partial class Program;
 }

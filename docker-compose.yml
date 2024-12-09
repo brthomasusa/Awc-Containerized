@@ -6,12 +6,19 @@ services:
       context: .
       dockerfile: src/Services/Company/Company.API/Dockerfile     
 
+  product.api:
+    image: product.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Product/Product.API/Dockerfile
+
   web.gateway:
     image: web-gateway:${TAG:-latest}
     build:
       context: .
       dockerfile: src/ApiGateways/Web.Api.Gateway/Dockerfile     
     depends_on:
-      - company.api  
+      - company.api
+      - product.api  
      
      
