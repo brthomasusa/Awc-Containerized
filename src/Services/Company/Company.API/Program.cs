@@ -3,6 +3,7 @@ using System.Text.Json;
 using Awc.Services.Company.API.Middleware;
 using Awc.Services.Company.API.Extentions;
 using Awc.BuildingBlocks.Observability;
+using Awc.BuildingBlocks.Observability.Options;
 
 const string appName = "Company API Service";
 
@@ -10,15 +11,25 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 try
 { 
+    builder.Configuration.Sources.Clear();
     builder.Configuration
-           .SetBasePath(builder.Environment.ContentRootPath)
-           .AddJsonFile("appsettings.json", false, true)
-           .AddEnvironmentVariables()
-           .AddCommandLine(args);    
+        .AddJsonFile("appsettings.json", false, true)
+        .AddEnvironmentVariables();
+
+    ObservabilityOptions observabilityOptions = new();
+
+    builder.Configuration
+        .GetRequiredSection(nameof(ObservabilityOptions))
+        .Bind(observabilityOptions);
+
+    string? connectionString = builder.Configuration["ConnectionStrings:AdventureWorksCycles"] 
+        ?? ArgumentNullException("Connection string from environment is null.");
+
+    observabilityOptions.DbConnectionString = connectionString!;    
 
     builder.AddObservability();        
 
-    builder.Services.ConfigureHealthChecks();
+    builder.Services.ConfigureHealthChecks(observabilityOptions);
     builder.Services.AddCustomSwagger();
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
@@ -26,22 +37,18 @@ try
 
     builder.Services.AddControllers();
 
-    WebApplication
-     app = builder.Build();
+    WebApplication app = builder.Build();
 
     if (app.Environment.IsDevelopment())
     {
-        app.UseDeveloperExceptionPage();
         app.UseCustomSwagger();
     }
 
     app.UseSerilogRequestLogging();
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-    app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
+    app.UseMiddleware<ExceptionHandlingMiddleware>();    
     app.MapControllers();
-
-    Serilog.Log.Information("Starting web host {ApplicationName}...", appName);
+    
+    app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
 
     app.MapHealthChecks(
         "/hc",
@@ -56,6 +63,8 @@ try
             },
             ResponseWriter = JsonResponse
         });
+
+    Serilog.Log.Information("Starting web host {ApplicationName}...", appName);
 
     app.Run();
 
@@ -116,6 +125,11 @@ catch (Exception ex)
 finally
 {
     Serilog.Log.CloseAndFlush();
+}
+
+string? ArgumentNullException(string v)
+{
+    throw new NotImplementedException();
 }
 
 namespace Awc.Services.Company.API

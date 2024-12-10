@@ -14,6 +14,7 @@ namespace Awc.BuildingBlocks.Observability.Options
 
         public Uri CollectorUri => new(this.CollectorUrl);
 
-        public string OtlpLogsCollectorUrl => $"{this.CollectorUrl}/v1/logs";        
+        public string OtlpLogsCollectorUrl => $"{this.CollectorUrl}/v1/logs";
+        public string DbConnectionString { get; set; } = string.Empty;       
     }
 }

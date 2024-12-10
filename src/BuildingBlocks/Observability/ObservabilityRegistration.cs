@@ -9,7 +9,6 @@ using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Settings.Configuration;
 using Serilog.Sinks.OpenTelemetry;
-using Serilog.Sinks.Seq;
 
 namespace Awc.BuildingBlocks.Observability
 {
@@ -34,6 +33,7 @@ namespace Awc.BuildingBlocks.Observability
 
             return builder;
         }
+        
         private static OpenTelemetryBuilder AddTracing(this OpenTelemetryBuilder builder, ObservabilityOptions observabilityOptions)
         {
             if (!observabilityOptions.EnabledTracing) return builder;

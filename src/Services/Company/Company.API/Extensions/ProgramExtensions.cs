@@ -1,5 +1,6 @@
 #pragma warning disable CA1861
 
+using Awc.BuildingBlocks.Observability.Options;
 using Awc.Services.Company.API.Application.Behaviors;
 using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
@@ -9,23 +10,6 @@ namespace Awc.Services.Company.API.Extentions
     public static class ProgramExtensions
     {
         private const string AppName = "Company API Service";
-
-        public static void ConfigureHealthChecks(this IServiceCollection services)
-        {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AdventureWorksCycles");
-            Guard.Against.NullOrEmpty(connectionString!);
-
-            services.AddHealthChecks()
-                .AddCheck("Company API", () => HealthCheckResult.Healthy(), tags: new[] { "live" })
-                .AddSqlServer(
-                    connectionString!,
-                    healthQuery: "select 1",
-                    name: "Company API database-check",
-                    failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "ready" }
-                );
-        }
-
 
         public static void AddCustomSwagger(this IServiceCollection services) =>
             services.AddSwaggerGen(c =>

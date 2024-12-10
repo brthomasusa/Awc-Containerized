@@ -13,22 +13,6 @@ namespace Awc.Services.Product.Product.API.Extentions
     {
         private const string AppName = "Product API Service";
 
-        public static void ConfigureHealthChecks(this IServiceCollection services)
-        {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AdventureWorksCycles");
-            Guard.Against.NullOrEmpty(connectionString!);
-
-            services.AddHealthChecks()
-                .AddCheck("Product API", () => HealthCheckResult.Healthy(), tags: new[] { "live" })
-                .AddSqlServer(
-                    connectionString!,
-                    healthQuery: "select 1",
-                    name: "Product API database-check",
-                    failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "ready" }
-                );
-        }
-
         public static void AddCustomSwagger(this IServiceCollection services) =>
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Adventure Works Cycles - {AppName}", Version = "v1" })

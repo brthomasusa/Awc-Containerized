@@ -1,5 +1,4 @@
 using AWC.Shared.Kernel.Exceptions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Awc.Services.Company.API.Middleware;
 
