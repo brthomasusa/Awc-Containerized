@@ -6,7 +6,7 @@ namespace Awc.BuildingBlocks.Observability
 {
     public static class HealthCheckRegistration
     {
-        public static void ConfigureHealthChecks(this IServiceCollection services, ObservabilityOptions observabilityOptions)
+        public static void AddHealthChecks(this IServiceCollection services, ObservabilityOptions observabilityOptions)
         {
             services.AddHealthChecks()
                 .AddCheck(observabilityOptions.ServiceName, () => HealthCheckResult.Healthy(), tags: ["live"])

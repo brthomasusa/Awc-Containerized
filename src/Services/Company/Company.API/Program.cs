@@ -28,8 +28,7 @@ try
     observabilityOptions.DbConnectionString = connectionString!;    
 
     builder.AddObservability();        
-
-    builder.Services.ConfigureHealthChecks(observabilityOptions);
+    builder.Services.AddHealthChecks(observabilityOptions);
     builder.Services.AddCustomSwagger();
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
@@ -44,7 +43,13 @@ try
         app.UseCustomSwagger();
     }
 
-    app.UseSerilogRequestLogging();
+    app.UseSerilogRequestLogging(opts => 
+        {
+            opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
+            opts.GetLevel = LogHelper.ExcludeHealthChecks;
+        }
+    );
+            
     app.UseMiddleware<ExceptionHandlingMiddleware>();    
     app.MapControllers();
     

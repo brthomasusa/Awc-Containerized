@@ -1,5 +1,5 @@
-using AWC.Shared.Kernel.Utilities;
 using MediatR;
+using Serilog;
 using Serilog.Context;
 
 namespace Awc.Services.Company.API.Application.Behaviors
