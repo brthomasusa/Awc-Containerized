@@ -8,7 +8,9 @@ services:
       - ASPNETCORE_HTTP_PORTS=3000        
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
-      - "3000:80"           
+      - "3000:80"
+    hostname: "company-api-svc"
+    container_name: "company-api-svc"             
 
   product.api:
     environment:
@@ -17,6 +19,8 @@ services:
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
       - "3001:80"
+    hostname: "product-api-svc"
+    container_name: "product-api-svc"      
 
   web.gateway:
     environment:
@@ -27,6 +31,8 @@ services:
     ports:
       - "5259:80"
       - "7125:443"
+    hostname: "web-gateway"
+    container_name: "web-gateway"      
     volumes:
       - ~/.aspnet/https:/https:ro      
 
