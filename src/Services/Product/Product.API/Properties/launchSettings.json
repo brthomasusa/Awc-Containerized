@@ -9,24 +9,13 @@
     }
   },
   "profiles": {
-    "http": {
+    "Product.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "externalUrlConfiguration": true,
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:3100",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "externalUrlConfiguration": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7100;http://localhost:3100",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -38,6 +27,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    }
+    },
+    "Docker": {
+        "commandName": "Docker",
+        "launchBrowser": true,
+        "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+        "publishAllPorts": true,
+        "useSSL": false
+      }    
   }
 }

@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Polly" />
-    <PackageReference Include="Yarp.ReverseProxy" />
-    <PackageReference Include="LettuceEncrypt" />             
+    <PackageReference Include="Yarp.ReverseProxy" />          
   </ItemGroup>
 
   <ItemGroup>

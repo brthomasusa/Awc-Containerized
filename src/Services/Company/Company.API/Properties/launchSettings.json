@@ -8,19 +8,8 @@
       "sslPort": 44325
     }
   },
-  "profiles": {
-    "https": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "externalUrlConfiguration": true,
-        "launchUrl": "swagger",
-        "applicationUrl": "https://localhost:7000;http://localhost:3000",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
-        }
-      },    
-    "http": {
+  "profiles": {    
+    "Company.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
@@ -38,6 +27,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
-    }
+    },
+    "Docker": {
+        "commandName": "Docker",
+        "launchBrowser": true,
+        "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+        "publishAllPorts": true,
+        "useSSL": false
+      }    
   }
 }
