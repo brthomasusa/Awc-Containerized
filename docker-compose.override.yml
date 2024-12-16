@@ -9,6 +9,8 @@ services:
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
       - "3000:80"
+    extra_hosts:
+      - "ubuntu-2404:192.168.1.16"      
     hostname: "company-api-svc"
     container_name: "company-api-svc"             
 
@@ -19,6 +21,8 @@ services:
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
       - "3001:80"
+    extra_hosts:
+      - "ubuntu-2404:192.168.1.16"       
     hostname: "product-api-svc"
     container_name: "product-api-svc"      
 
