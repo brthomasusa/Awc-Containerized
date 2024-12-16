@@ -9,14 +9,12 @@ namespace Awc.BuildingBlocks.Observability
         public static void AddHealthChecks(this IServiceCollection services, ObservabilityOptions observabilityOptions)
         {
             services.AddHealthChecks()
-                .AddCheck(observabilityOptions.ServiceName, () => HealthCheckResult.Healthy(), tags: ["live"])
-                .AddSqlServer(
-                    observabilityOptions.DbConnectionString,
-                    healthQuery: "select 1",
-                    name: $"{observabilityOptions.ServiceName} database-check",
-                    failureStatus: HealthStatus.Unhealthy,
-                    tags: ["ready"]
-                );
+                // Add a health check for a SQL Server database
+                .AddCheck(
+                    $"{observabilityOptions.ServiceName} database-check",
+                    new SqlConnectionHealthCheck(observabilityOptions.DbConnectionString),
+                    HealthStatus.Unhealthy,
+                    ["companydb"]);            
         }        
     }
 }
