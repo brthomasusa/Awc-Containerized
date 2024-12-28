@@ -47,12 +47,14 @@
   </ItemGroup>
 
 <ItemGroup>
+    <ProjectReference Include="../../../BuildingBlocks/Devspaces.Support/Devspaces.Support.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBus/EventBus.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/IntegrationEventLogEF/IntegrationEventLogEF.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/Shared.Kernel/Shared.Kernel.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/Observability/Observability.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/WebHostCustomization/WebHost.Customization/WebHost.Customization.csproj" />
 </ItemGroup>
 
 </Project>

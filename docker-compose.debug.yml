@@ -1,0 +1,65 @@
+services:
+
+  company.api:
+    image: company.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Company/Company.API/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - "3000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=3000        
+      - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+    extra_hosts:
+      - "ubuntu-2404:192.168.1.16"      
+    hostname: "company-api-svc"
+    container_name: "company-api-svc"      
+
+  product.api:
+    image: product.api:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Services/Product/Product.API/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - "3100:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=3100        
+      - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+    extra_hosts:
+      - "ubuntu-2404:192.168.1.16"      
+    hostname: "product-api-svc"
+    container_name: "product-api-svc" 
+
+  web.gateway:
+    image: web-gateway:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/ApiGateways/Web.Api.Gateway/Dockerfile
+      args:
+        - configuration=Debug
+    ports:
+      - "5259:80"
+      - "7125:443"
+    hostname: "web-gateway"
+    container_name: "web-gateway"      
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Info99Gum
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+      - ~/.aspnet/https:/https:ro
+    depends_on:
+      - company.api
+      - product.api                  

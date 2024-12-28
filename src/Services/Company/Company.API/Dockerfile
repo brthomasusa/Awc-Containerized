@@ -31,7 +31,7 @@ COPY . .
 WORKDIR "/src/src/Services/Company/Company.API"
 
 FROM build AS publish
-RUN dotnet publish --no-restore "Company.API.csproj" -c Release -o /app/publish
+RUN dotnet publish --no-restore "Company.API.csproj" -c Debug -o /app/publish
 
 FROM base AS final
 WORKDIR /app

@@ -17,10 +17,10 @@ services:
   product.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=3001         
+      - ASPNETCORE_HTTP_PORTS=3100         
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
-      - "3001:80"
+      - "3100:80"
     extra_hosts:
       - "ubuntu-2404:192.168.1.16"       
     hostname: "product-api-svc"

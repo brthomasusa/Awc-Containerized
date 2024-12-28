@@ -5,6 +5,7 @@ using Awc.Services.Company.API.Extentions;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
 
+
 const string appName = "Company API Service";
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -141,3 +142,4 @@ namespace Awc.Services.Company.API
 {
     public partial class Program;
 }
+

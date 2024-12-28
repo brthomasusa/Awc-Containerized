@@ -33,7 +33,7 @@ COPY . .
 WORKDIR "/src/src/ApiGateways/Web.Api.Gateway"
 
 FROM build AS publish
-RUN dotnet publish --no-restore "Web.Api.Gateway.csproj" -c Release -o /app/publish
+RUN dotnet publish --no-restore "Web.Api.Gateway.csproj" -c Debug -o /app/publish
 
 FROM base AS final
 WORKDIR /app
