@@ -1,5 +1,6 @@
 using Awc.BuildingBlocks.Observability.Options;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
@@ -43,7 +44,7 @@ namespace Awc.BuildingBlocks.Observability
                 tracing
                     .SetErrorStatusOnException()
                     .SetSampler(new AlwaysOnSampler())
-                    .AddAspNetCoreInstrumentation(options => options.RecordException = true)
+                    .AddAspNetCoreInstrumentation(options => options.RecordException = true)                                                                   
                     .AddHttpClientInstrumentation(options => options.RecordException = true)
                     .AddSqlClientInstrumentation(options => options.RecordException = true)
                     .AddEntityFrameworkCoreInstrumentation()

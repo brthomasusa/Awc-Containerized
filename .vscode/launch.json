@@ -11,7 +11,8 @@
             "platform": "netCore",
             "sourceFileMap": {
                 "/src": "${workspaceFolder}"
-            }           
+            },
+            "containerName": "company-api-svc"           
         },
         {
             "name": ".NET Core Launch (web)",
