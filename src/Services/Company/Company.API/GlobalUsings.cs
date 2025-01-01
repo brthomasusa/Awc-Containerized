@@ -24,6 +24,7 @@ global using Microsoft.Extensions.Hosting;
 global using Microsoft.OpenApi.Models;
 global using Mapster;
 global using MapsterMapper;
+global using MediatR;
 global using Polly;
 global using System.Net;
 global using Serilog;

@@ -1,10 +1,11 @@
+using Asp.Versioning.Builder;
+using Asp.Versioning;
 using System.Text;
 using System.Text.Json;
-using Awc.Services.Company.API.Middleware;
 using Awc.Services.Company.API.Extentions;
+using Awc.Services.Company.API.Middleware;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
-
 
 const string appName = "Company API Service";
 
@@ -30,31 +31,51 @@ try
 
     builder.AddObservability();        
     builder.Services.AddHealthChecks(observabilityOptions);
-    builder.Services.AddCustomSwagger();
+
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1);
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    }).AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });    
+    builder.Services.AddEndpoints(typeof(Program).Assembly);
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
     builder.AddCustomDatabase();
 
-    builder.Services.AddControllers();
-
     WebApplication app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseCustomSwagger();
-    }
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     app.UseSerilogRequestLogging(opts => 
         {
             opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
             opts.GetLevel = LogHelper.ExcludeHealthChecks;
         }
-    );
-            
-    app.UseMiddleware<ExceptionHandlingMiddleware>();    
-    app.MapControllers();
-    
-    app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
+    );             
+
+    ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+        .HasApiVersion(new ApiVersion(1))
+        .ReportApiVersions()
+        .Build();
+
+    RouteGroupBuilder versionedGroup = app
+        .MapGroup("api/v{version:apiVersion}")
+        .WithApiVersionSet(apiVersionSet);
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.MapEndpoints(versionedGroup);
 
     app.MapHealthChecks(
         "/hc",

@@ -34,11 +34,11 @@ namespace Awc.Services.Company.API.Application.Features.GetCompanyById
             }
             catch (Exception ex)
             {
-                string errMsg = Helpers.GetExceptionMessage(ex);
+                string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
 
                 return Result<CompanyViewModel>.Failure<CompanyViewModel>(
-                    new Error("GetCompanyByIdQueryHandler.Handle", Helpers.GetExceptionMessage(ex))
+                    new Error("GetCompanyByIdQueryHandler.Handle", Helpers.GetInnerExceptionMessage(ex))
                 );
             }                          
         }

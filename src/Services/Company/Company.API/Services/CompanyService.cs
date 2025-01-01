@@ -75,10 +75,10 @@ namespace Awc.Services.Company.API.Services
             }
             catch(Exception ex)
             {
-                string errMsg = Helpers.GetExceptionMessage(ex);
+                string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
                 return Result<CompanyViewModel>.Failure<CompanyViewModel>(
-                    new Error("CompanyService.GetCompanyById", Helpers.GetExceptionMessage(ex))
+                    new Error("CompanyService.GetCompanyById", Helpers.GetInnerExceptionMessage(ex))
                 );
             }
         }
@@ -100,10 +100,10 @@ namespace Awc.Services.Company.API.Services
             }
             catch(Exception ex)
             {
-                string errMsg = Helpers.GetExceptionMessage(ex);
+                string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
                 return Result<List<DepartmentViewModel>>.Failure<List<DepartmentViewModel>>(
-                    new Error("CompanyService.GetDepartments", Helpers.GetExceptionMessage(ex))
+                    new Error("CompanyService.GetDepartments", Helpers.GetInnerExceptionMessage(ex))
                 );
             }                
         }
@@ -125,10 +125,10 @@ namespace Awc.Services.Company.API.Services
             }
             catch(Exception ex)
             {
-                string errMsg = Helpers.GetExceptionMessage(ex);
+                string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
                 return Result<List<ShiftViewModel>>.Failure<List<ShiftViewModel>>(
-                    new Error("CompanyService.GetDepartments", Helpers.GetExceptionMessage(ex))
+                    new Error("CompanyService.GetDepartments", Helpers.GetInnerExceptionMessage(ex))
                 );
             }
         }          

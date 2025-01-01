@@ -2,7 +2,7 @@ namespace AWC.Shared.Kernel.Utilities;
 
 public static class Helpers
 {
-    public static string GetExceptionMessage(Exception ex)
+    public static string GetInnerExceptionMessage(Exception ex)
         => ex.InnerException == null ? ex.Message : ex.InnerException.Message;
 
     public static Dictionary<string, int> LoadMetaData(MetaData data)

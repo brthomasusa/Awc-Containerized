@@ -1,9 +1,11 @@
 #pragma warning disable CA1861
 
-using Awc.BuildingBlocks.Observability.Options;
 using Awc.Services.Company.API.Application.Behaviors;
+using Awc.Services.Company.API.Endpoints;
 using Awc.Services.Company.API.Services;
 using AWC.Shared.Kernel.Guards;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Reflection;
 
 namespace Awc.Services.Company.API.Extentions
 {
@@ -11,16 +13,33 @@ namespace Awc.Services.Company.API.Extentions
     {
         private const string AppName = "Company API Service";
 
-        public static void AddCustomSwagger(this IServiceCollection services) =>
-            services.AddSwaggerGen(c =>
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = $"Adventure Works Cycles - {AppName}", Version = "v1" })
-            );
-
-        public static void UseCustomSwagger(this WebApplication app)
+        public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{AppName} V1"));
+            ServiceDescriptor[] serviceDescriptors = assembly
+                .DefinedTypes
+                .Where(type => type is { IsAbstract: false, IsInterface: false } &&
+                            type.IsAssignableTo(typeof(IEndpoint)))
+                .Select(type => ServiceDescriptor.Transient(typeof(IEndpoint), type))
+                .ToArray();
+
+            services.TryAddEnumerable(serviceDescriptors);
+
+            return services;
         }
+
+        public static IApplicationBuilder MapEndpoints(this WebApplication app, RouteGroupBuilder? routeGroupBuilder = null)
+        {
+            IEnumerable<IEndpoint> endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
+
+            IEndpointRouteBuilder builder = routeGroupBuilder is null ? app : routeGroupBuilder;
+
+            foreach (IEndpoint endpoint in endpoints)
+            {
+                endpoint.MapEndpoint(builder);
+            }
+
+            return app;
+        } 
 
         public static void AddMediatr(this IServiceCollection services)
         {
