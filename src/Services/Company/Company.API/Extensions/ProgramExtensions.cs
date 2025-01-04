@@ -78,6 +78,7 @@ namespace Awc.Services.Company.API.Extentions
             builder.Services.AddSingleton<DapperContext>(_ => new DapperContext(connectionString!));
 
             builder.Services.AddScoped<ICompanyService, CompanyService>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             // builder.Services.AddMemoryCache();
             // builder.Services.AddSingleton<ICacheService, CacheService>();

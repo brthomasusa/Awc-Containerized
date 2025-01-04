@@ -2,7 +2,7 @@ using Awc.Services.Company.API.Application.Features.GetCompanyById;
 using Awc.Services.Company.API.Extentions;
 using Awc.Services.Company.API.ViewModels;
 
-namespace Awc.Services.Company.API.Endpoints
+namespace Awc.Services.Company.API.Endpoints.Company
 {
     public class CompanyById : IEndpoint
     {

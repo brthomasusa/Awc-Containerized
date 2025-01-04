@@ -1,4 +1,3 @@
-using AWC.Shared.Kernel.Utilities;
 using Awc.Services.Company.API.ViewModels;
 
 namespace Awc.Services.Company.API.Services

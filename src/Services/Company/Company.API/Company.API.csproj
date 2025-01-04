@@ -44,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Company.API.IntegrationTests" />
+    <InternalsVisibleTo Include="Company.FunctionalTests" />
   </ItemGroup>
 
 <ItemGroup>
