@@ -7,7 +7,7 @@ namespace Company.FunctionalTests
     {
         protected readonly ApiWebApplicationFactory _factory;
         protected readonly HttpClient _client;
-        protected readonly string _urlRoot = "api/people/";
+        protected readonly string _urlRoot = "api/v1/";
         protected readonly JsonSerializerOptions _options;
 
         protected IntegrationTestBase(ApiWebApplicationFactory fixture)

@@ -1,6 +1,6 @@
 namespace Awc.Services.Company.API.ViewModels
 {
-    public sealed class EmployeeViewModel
+    public sealed class EmployeeDetailViewModel
     {
         public int BusinessEntityID { get; set; }
         public string? NameStyle { get; set; }

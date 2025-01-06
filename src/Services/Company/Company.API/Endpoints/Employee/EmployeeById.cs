@@ -1,22 +1,22 @@
-using Awc.Services.Company.API.Application.Features.GetCompanyById;
+using Awc.Services.Company.API.Application.Features.GetEmployeeById;
 using Awc.Services.Company.API.Extentions;
 
-namespace Awc.Services.Company.API.Endpoints.Company
+namespace Awc.Services.Company.API.Endpoints.Employee
 {
-    public class CompanyById : IEndpoint
+    public class EmployeeById : IEndpoint
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("companies/{companyId:int}", GetCompanyById); 
+            app.MapGet("employees/{employeeId:int}", GetEmployeeId); 
         }
 
-        public static async Task<IResult> GetCompanyById(int companyId, ISender sender, ILogger<CompanyById> logger)
+        public static async Task<IResult> GetEmployeeId(int employeeId, ISender sender, ILogger<EmployeeById> logger)
         {  
-            Result<CompanyViewModel>? result = null;
+            Result<EmployeeDetailViewModel>? result = null;
 
             try
             {
-                result = await sender.Send(new GetCompanyByIdQuery(CompanyId: companyId));
+                result = await sender.Send(new GetEmployeeByIdQuery(EmployeeId: employeeId));
                         
                 return result.IsSuccess ? Results.Ok(result.Value) : result.ToNotFoundProblemDetails();
             }
@@ -25,6 +25,6 @@ namespace Awc.Services.Company.API.Endpoints.Company
                 logger.LogError(ex, "{Message}", Helpers.GetInnerExceptionMessage(ex));
                 return result!.ToInternalServerErrorProblemDetails(ex.Message);
             }
-        }        
+        } 
     }
 }

@@ -13,7 +13,7 @@ namespace Company.FunctionalTests.Services.Queries
             int employeeId = 1;
 
             // Act
-            Result<EmployeeViewModel> result = await GetEmployeeViewModelQuery.DoQuery(_dapperCtx, employeeId);
+            Result<EmployeeDetailViewModel> result = await GetEmployeeViewModelQuery.DoQuery(_dapperCtx, employeeId);
 
             // Assert            
             Assert.True(result.IsSuccess);
@@ -26,7 +26,7 @@ namespace Company.FunctionalTests.Services.Queries
             int employeeId = -1;
 
             // Act
-            Result<EmployeeViewModel> result = await GetEmployeeViewModelQuery.DoQuery(_dapperCtx, employeeId);
+            Result<EmployeeDetailViewModel> result = await GetEmployeeViewModelQuery.DoQuery(_dapperCtx, employeeId);
 
             // Assert            
             Assert.True(result.IsFailure);

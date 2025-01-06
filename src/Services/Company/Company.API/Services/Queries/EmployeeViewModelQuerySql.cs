@@ -10,8 +10,7 @@ namespace Awc.Services.Company.API.Services.Queries
                 ,StartDate
                 ,EndDate
             FROM HumanResources.vDepartmentHistoryViewModel
-            WHERE BusinessEntityID = (@ID)
-            ";  
+            WHERE BusinessEntityID = (@ID)";  
 
         public const string GetPayHistoryViewModel =
             @"SELECT
@@ -19,7 +18,26 @@ namespace Awc.Services.Company.API.Services.Queries
                 ,RateChangeDate
                 ,PayRate
             FROM HumanResources.vPayHistoryViewModel
-            WHERE BusinessEntityID = (@ID)
-            ";                  
+            WHERE BusinessEntityID = (@ID)"; 
+
+        public const string GetEmployeeListItems =
+        @"SELECT 
+            BusinessEntityID           
+            ,LastName
+            ,FirstName
+            ,MiddleName
+            ,JobTitle
+            ,Department 
+            ,JobTitle
+            ,Department
+            ,Shift
+            ,ManagerName 
+            ,EmploymentStatus                      
+        FROM HumanResources.vEmployeeListItems"; 
+
+        public const string GetEmployeeListItemsCount =
+        @"SELECT 
+            COUNT(*)               
+        FROM HumanResources.vEmployeeListItems";                                    
     }
 }

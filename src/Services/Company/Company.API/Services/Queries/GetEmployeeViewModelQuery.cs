@@ -5,7 +5,7 @@ namespace Awc.Services.Company.API.Services.Queries
 {
     public class GetEmployeeViewModelQuery
     {
-        public async static Task<Result<EmployeeViewModel>> DoQuery(DapperContext context, int employeeId)
+        public async static Task<Result<EmployeeDetailViewModel>> DoQuery(DapperContext context, int employeeId)
         {
             Serilog.ILogger log = Log.ForContext<GetEmployeeViewModelQuery>();
 
@@ -16,7 +16,7 @@ namespace Awc.Services.Company.API.Services.Queries
                 parameters.Add("EmployeeID", employeeId, DbType.Int32);
 
                 using var conn = context.CreateConnection();
-                var model = await conn.QueryFirstOrDefaultAsync<EmployeeViewModel>("HumanResources.spGetEmployeeDetails", 
+                var model = await conn.QueryFirstOrDefaultAsync<EmployeeDetailViewModel>("HumanResources.spGetEmployeeDetails", 
                                                                                    parameters, 
                                                                                    commandType: CommandType.StoredProcedure);
 
@@ -25,7 +25,7 @@ namespace Awc.Services.Company.API.Services.Queries
                     string errMsg = $"Unable to retrieve employee details for employee with ID: {employeeId}.";
                     log.Warning(errMsg, employeeId);
 
-                    return Result<EmployeeViewModel>.Failure<EmployeeViewModel>(
+                    return Result<EmployeeDetailViewModel>.Failure<EmployeeDetailViewModel>(
                         new Error("GetEmployeeViewModelQuery.DoQuery", errMsg)
                     );
                 }
@@ -35,7 +35,7 @@ namespace Awc.Services.Company.API.Services.Queries
             catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred: {ErrorMessage}", Helpers.GetInnerExceptionMessage(ex));
-                return Result<EmployeeViewModel>.Failure<EmployeeViewModel>(
+                return Result<EmployeeDetailViewModel>.Failure<EmployeeDetailViewModel>(
                     new Error("GetEmployeeViewModelQuery.DoQuery", Helpers.GetInnerExceptionMessage(ex))
                 );                
             }

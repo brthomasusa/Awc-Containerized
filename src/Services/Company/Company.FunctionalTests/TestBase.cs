@@ -25,7 +25,8 @@ namespace Company.FunctionalTests
             _dbContext = new CompanyDbContext(optionsBuilder.Options);
             _dapperCtx = new DapperContext(connectionString!);
 
-            _dbContext.Database.ExecuteSqlRaw("EXEC dbo.usp_InitializeTestDb");
+            // Company.FunctionalTests is only testing queries so no need to reset the database.
+            // _dbContext.Database.ExecuteSqlRaw("EXEC dbo.usp_InitializeTestDb");
         }
 
         public void Dispose()

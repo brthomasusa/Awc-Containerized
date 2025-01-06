@@ -1,3 +1,4 @@
+using Awc.Services.Company.API.Application.Features.GetEmployees;
 using Awc.Services.Company.API.ViewModels;
 using Awc.Services.Company.API.Services;
 
@@ -13,7 +14,7 @@ namespace Company.FunctionalTests.Services
             EmployeeService service = new(_dapperCtx, new NullLogger<EmployeeService>());
 
             // Act
-            Result<EmployeeViewModel> result = await service.GetEmployeeViewModelWithChildren(employeeId);
+            Result<EmployeeDetailViewModel> result = await service.GetEmployeeViewModelWithChildren(employeeId);
 
             // Assert
             Assert.True(result.IsSuccess);
@@ -29,10 +30,44 @@ namespace Company.FunctionalTests.Services
             EmployeeService service = new(_dapperCtx, new NullLogger<EmployeeService>());
 
             // Act
-            Result<EmployeeViewModel> result = await service.GetEmployeeViewModelWithChildren(employeeId);
+            Result<EmployeeDetailViewModel> result = await service.GetEmployeeViewModelWithChildren(employeeId);
 
             // Assert
             Assert.True(result.IsFailure);
-        }        
+        }
+
+        [Fact]
+        public async Task GetEmployeeListItems_EmployeeService_ValidCriteria_ShouldSucceed()
+        {
+            // Arrange
+            StringSearchCriteria criteria = new("[LastName]", "Du", "[LastName]", 1, 10, 0, 10);
+            EmployeeService service = new(_dapperCtx, new NullLogger<EmployeeService>());
+
+            // Act
+            Result<PagedList<EmployeeListItemViewModel>> result = await service.GetEmployeeListItems(criteria);
+
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            int employees = result.Value.Count;
+            Assert.Equal(1, employees);            
+        } 
+
+        [Fact]
+        public async Task GetEmployeeListItems_EmployeeService_NoSearchCriteria_ShouldSucceed()
+        {
+            // Arrange
+            StringSearchCriteria criteria = new("[LastName]", string.Empty, "[LastName]", 1, 10, 0, 10);
+            EmployeeService service = new(_dapperCtx, new NullLogger<EmployeeService>());
+
+            // Act
+            Result<PagedList<EmployeeListItemViewModel>> result = await service.GetEmployeeListItems(criteria);
+
+
+            // Assert
+            Assert.True(result.IsSuccess);
+            int employees = result.Value.Count;
+            Assert.Equal(7, employees);            
+        }                        
     }
 }
