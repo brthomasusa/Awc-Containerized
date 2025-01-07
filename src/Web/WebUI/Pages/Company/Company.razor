@@ -1,0 +1,94 @@
+@page "/company/company"
+
+<PageTitle>Company Data</PageTitle>
+
+<h4>@_company!.CompanyName</h4>
+
+<style>
+    :root {
+        --datagrid-hover-color: lightyellow;
+    }
+</style>
+
+@if (_company is not null)
+{
+    <FluentStack Style="margin-bottom: 24px;" VerticalAlignment="VerticalAlignment.Center">
+    <FluentGrid Spacing="3" OnBreakpointEnter="@OnBreakpointEnterHandler" AdaptiveRendering="true"
+        Justify="JustifyContent.FlexStart"
+        Style="width: 100%; background-color: var(--neutral-layer-3); padding: 4px; ">
+
+            @* Row one        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField Name="companyName" @bind-Value="_company!.CompanyName" Label="Company Name"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField Name="legalName" @bind-Value="_company!.LegalName" Label="Legal Name"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField Name="ein" @bind-Value="_company!.EIN" Label="Employer Identification Number"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+            @* Row two        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField Name="websiteUrl" @bind-Value="_company!.WebsiteUrl" Label="Website URL"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField Name="telephone" @bind-Value="_company!.Telephone" Label="Telephone"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField Name="fax" @bind-Value="_company!.Fax" Label="Fax" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+            @* Row three        *@ 
+        <FluentGridItem xs="12" lg="6">
+            <div class="card">
+                <FluentTextField Name="mailAddress" @bind-Value="FullMailAddress" Label="Mail Address"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem xs="12" lg="6">
+            <div class="card">
+                <FluentTextField Name="deliveryAddress" @bind-Value="FullDeliveryAddress" Label="Delivery Address"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+            @* Row four        *@
+        <FluentGridItem xs="12" lg="6">
+            <FluentCard style="height: 250px">
+                <FluentDataGrid Items="@_departments" pagination="@pagination" Id="departmentGrid" ShowHover="true">
+                    <PropertyColumn Title="Department" Property="@(p => p.Name)" Sortable="true" />
+                    <PropertyColumn Title="Group Name" Property="@(p => p.GroupName)" Sortable="false" />
+                </FluentDataGrid>
+                <FluentPaginator State="@pagination" />
+            </FluentCard>
+        </FluentGridItem>
+        <FluentGridItem xs="12" lg="6">
+            <FluentCard style="height: 250px">
+                <FluentDataGrid Items="@_shifts" Id="shiftGrid" ShowHover="true">
+                    <PropertyColumn Title="Shift" Property="@(p => p.Name)" Sortable="false" />
+                    <PropertyColumn Title="Start Time" Property="@(p => p.StartTime.ToString("t"))" Sortable="false" />
+                    <PropertyColumn Title="End Time" Property="@(p => p.EndTime.ToString("t"))" Sortable="false" />
+                </FluentDataGrid>
+            </FluentCard>
+        </FluentGridItem>
+    </FluentGrid>
+</FluentStack>
+}

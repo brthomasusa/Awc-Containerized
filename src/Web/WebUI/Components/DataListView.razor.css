@@ -1,0 +1,16 @@
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    pad: 5px;
+    border: 0.5px solid #a3a3a3;
+}
+
+.grid-container .grid-item {
+    margin: 4px;
+    cursor: pointer;
+}
+
+.grid-container .empty-collection-title {
+    text-align: center;
+    margin-top: 10px;
+}

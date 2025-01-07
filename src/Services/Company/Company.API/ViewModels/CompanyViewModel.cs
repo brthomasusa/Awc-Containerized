@@ -20,6 +20,6 @@ namespace Awc.Services.Company.API.ViewModels
         public string? Telephone { get; set; }
         public string? Fax { get; set; }
         public List<DepartmentViewModel> Departments { get; set; } = [];
-        public List<ShiftViewModel> Shifts { get; set; } = [];       
+        public List<ShiftViewModel> Shifts { get; set; } = [];
     }
 }
