@@ -23,7 +23,7 @@ namespace Awc.Services.Company.API.Services
             {
                 return Result<CompanyViewModel>.Failure<CompanyViewModel>(
                     new Error("CompanyService.GetCompanyById", getShifts.Error.Message)
-                );                
+                );
             }
 
             Result<CompanyViewModel> getCompany = await GetCompanyById(id);
@@ -43,24 +43,24 @@ namespace Awc.Services.Company.API.Services
 
         private async Task<Result<CompanyViewModel>> GetCompanyById(int id)
         {
-            const string sql =    
+            const string sql =
                 @"SELECT 
-                    CompanyID, LegalName, EIN, WebsiteUrl,
+                    CompanyID, CompanyName, LegalName, EIN, WebsiteUrl,
                     MailAddressLine1, MailAddressLine2, MailCity, province.StateProvinceCode AS MailState, MailPostalCode,
                     DeliveryAddressLine1, DeliveryAddressLine2, DeliveryPostalCode, province.StateProvinceCode AS DeliveryState, DeliveryPostalCode,
                     Telephone, Fax  
                 FROM Person.Company company
                 INNER JOIN Person.StateProvince province ON province.StateProvinceID = company.MailStateProvinceID
-                WHERE CompanyID = @ID";                
-            
+                WHERE CompanyID = @ID";
+
             try
             {
                 var parameters = new DynamicParameters();
-                parameters.Add("ID", id, DbType.Int32);            
-                
+                parameters.Add("ID", id, DbType.Int32);
+
                 using var connection = _dapperContext.CreateConnection();
-                CompanyViewModel? detail = await connection.QueryFirstOrDefaultAsync<CompanyViewModel>(sql, parameters);            
-                
+                CompanyViewModel? detail = await connection.QueryFirstOrDefaultAsync<CompanyViewModel>(sql, parameters);
+
                 if (detail is null)
                 {
                     string errMsg = $"Unable to retrieve company details for company with ID: {id}.";
@@ -69,11 +69,11 @@ namespace Awc.Services.Company.API.Services
                     return Result<CompanyViewModel>.Failure<CompanyViewModel>(
                         new Error("CompanyService.GetCompanyById", errMsg)
                     );
-                }            
-                
+                }
+
                 return detail;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
@@ -85,45 +85,45 @@ namespace Awc.Services.Company.API.Services
 
         private async Task<Result<List<DepartmentViewModel>>> GetDepartments()
         {
-            const string sql =    
+            const string sql =
                 @"SELECT 
                     DepartmentID, Name, GroupName 
                 FROM HumanResources.Department
-                ORDER BY Name"; 
+                ORDER BY Name";
 
             try
             {
                 using var connection = _dapperContext.CreateConnection();
                 var departments = await connection.QueryAsync<DepartmentViewModel>(sql);
 
-                return departments.ToList(); 
+                return departments.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
                 return Result<List<DepartmentViewModel>>.Failure<List<DepartmentViewModel>>(
                     new Error("CompanyService.GetDepartments", Helpers.GetInnerExceptionMessage(ex))
                 );
-            }                
+            }
         }
 
         private async Task<Result<List<ShiftViewModel>>> GetShifts()
         {
-            const string sql =    
+            const string sql =
                 @"SELECT 
                     ShiftID, Name, StartTime, EndTime 
                 FROM HumanResources.Shift
-                ORDER BY Name"; 
+                ORDER BY Name";
 
             try
             {
                 using var connection = _dapperContext.CreateConnection();
                 var shifts = await connection.QueryAsync<ShiftViewModel>(sql);
 
-                return shifts.ToList(); 
+                return shifts.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 string errMsg = Helpers.GetInnerExceptionMessage(ex);
                 _logger.LogError(ex, "{Message}", errMsg);
@@ -131,6 +131,6 @@ namespace Awc.Services.Company.API.Services
                     new Error("CompanyService.GetDepartments", Helpers.GetInnerExceptionMessage(ex))
                 );
             }
-        }          
+        }
     }
 }

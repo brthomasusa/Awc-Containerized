@@ -6,7 +6,16 @@ namespace WebUI.Services.Repositories.Company
     public interface ICompanyService
     {
         Task<EmployeeDetailViewModel> GetEmployeeByIdAsync(int employeeId);
-        Task<DocumentPage<EmployeeListItemViewModel>> GetEmployeesFilteredByNameAsync(string lastName, int pageNumber, int pageSize);
+        Task<DocumentPage<EmployeeListItemViewModel>> GetEmployeesFilteredByNameAsync
+        (
+            string searchField,
+            string searchCriteria,
+            string orderBy,
+            int pageNumber,
+            int pageSize,
+            int skip,
+            int take
+        );
         Task<CompanyViewModel> GetCompanyByIdAsync(int companyId);
     }
 }

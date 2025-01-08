@@ -17,7 +17,7 @@
         Justify="JustifyContent.FlexStart"
         Style="width: 100%; background-color: var(--neutral-layer-3); padding: 4px; ">
 
-            @* Row one        *@
+                @* Row one        *@
         <FluentGridItem sm="12" lg="4">
             <div class="card">
                 <FluentTextField Name="companyName" @bind-Value="_company!.CompanyName" Label="Company Name"
@@ -37,7 +37,7 @@
             </div>
         </FluentGridItem>
 
-            @* Row two        *@
+                @* Row two        *@
         <FluentGridItem sm="12" lg="4">
             <div class="card">
                 <FluentTextField Name="websiteUrl" @bind-Value="_company!.WebsiteUrl" Label="Website URL"
@@ -56,7 +56,7 @@
             </div>
         </FluentGridItem>
 
-            @* Row three        *@ 
+                @* Row three        *@ 
         <FluentGridItem xs="12" lg="6">
             <div class="card">
                 <FluentTextField Name="mailAddress" @bind-Value="FullMailAddress" Label="Mail Address"
@@ -70,7 +70,7 @@
             </div>
         </FluentGridItem>
 
-            @* Row four        *@
+                @* Row four        *@
         <FluentGridItem xs="12" lg="6">
             <FluentCard style="height: 250px">
                 <FluentDataGrid Items="@_departments" pagination="@pagination" Id="departmentGrid" ShowHover="true">

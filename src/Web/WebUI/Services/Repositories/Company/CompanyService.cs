@@ -1,5 +1,6 @@
 #pragma warning disable CS8603
 
+using System.Text.Json;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using WebUI.Exceptions;
@@ -11,12 +12,13 @@ namespace WebUI.Services.Repositories.Company
     public sealed class CompanyService(HttpClient httpClient) : ICompanyService
     {
         private readonly HttpClient _httpClient = httpClient;
+        private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
         public async Task<EmployeeDetailViewModel> GetEmployeeByIdAsync(int employeeId)
         {
-            var response = await _httpClient.GetAsync($"api/employee/getbyid/{employeeId}");
+            var response = await _httpClient.GetAsync($"employees/{employeeId}");
 
-            if (response.IsSuccessStatusCode) // if response status code is 2XX
+            if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<EmployeeDetailViewModel>();
             }
@@ -36,16 +38,29 @@ namespace WebUI.Services.Repositories.Company
             }
         }
 
-        public async Task<DocumentPage<EmployeeListItemViewModel>> GetEmployeesFilteredByNameAsync(string lastName, int pageNumber, int pageSize)
+        public async Task<DocumentPage<EmployeeListItemViewModel>> GetEmployeesFilteredByNameAsync
+        (
+            string searchField,
+            string searchCriteria,
+            string orderBy,
+            int pageNumber,
+            int pageSize,
+            int skip,
+            int take
+        )
         {
             var queryParams = new Dictionary<string, string?>
             {
-                ["lastName"] = lastName,
+                ["searchField"] = searchField,
+                ["searchCriteria"] = searchCriteria,
+                ["orderBy"] = orderBy,
                 ["pageNumber"] = pageNumber.ToString(),
-                ["pageSize"] = pageSize.ToString()
+                ["pageSize"] = pageSize.ToString(),
+                ["skip"] = skip.ToString(),
+                ["take"] = take.ToString()
             };
 
-            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString("api/employee/getbyname", queryParams));
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString("employees", queryParams));
 
             if (response.IsSuccessStatusCode)
             {
@@ -65,20 +80,24 @@ namespace WebUI.Services.Repositories.Company
 
         public async Task<CompanyViewModel> GetCompanyByIdAsync(int companyId)
         {
-            var response = await _httpClient.GetAsync($"api/company/{companyId}");
+            var response = await _httpClient.GetAsync($"companies/{companyId}");
 
-            if (response.IsSuccessStatusCode) // if response status code is 2XX
+            if (response.IsSuccessStatusCode)
             {
                 return await response.Content.ReadFromJsonAsync<CompanyViewModel>();
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                var error = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
-                throw new ApiResponseException(error!);
+                string errorMsg = $"We are sorry, but we could not find a company with Id: {companyId}!";
+                throw new ApiResponseException(new ApiErrorResponse(errorMsg));
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+            {
+                string errorMsg = $"We are sorry, the api server was unable to process this request due to an internal error.!";
+                throw new Exception(errorMsg);
             }
             else
             {
-                // Throw exception for other failure responses 
                 throw new Exception("Opps! Something went wrong");
             }
         }

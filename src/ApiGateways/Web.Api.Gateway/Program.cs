@@ -4,19 +4,28 @@ using Awc.BuildingBlocks.Observability;
 var builder = WebApplication.CreateBuilder(args);
 
 try
-{       
-    const string appName = "Web Api Gateway"; 
- 
-     builder.Configuration
-           .SetBasePath(builder.Environment.ContentRootPath)
-           .AddJsonFile("appsettings.json", false, true)
-           .AddEnvironmentVariables()
-           .AddCommandLine(args);    
+{
+    const string appName = "Web Api Gateway";
 
-    builder.AddObservability(); 
+    builder.Configuration
+          .SetBasePath(builder.Environment.ContentRootPath)
+          .AddJsonFile("appsettings.json", false, true)
+          .AddEnvironmentVariables()
+          .AddCommandLine(args);
+
+    builder.AddObservability();
 
     builder.Services.AddReverseProxy()
         .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", builder =>
+            builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+            );
+    });
 
     var app = builder.Build();
 
@@ -24,6 +33,7 @@ try
 
     app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
     app.UseMiddleware<ExceptionHandlingMiddleware>();
+    app.UseCors("CorsPolicy");
     app.MapReverseProxy();
 
     app.Run();

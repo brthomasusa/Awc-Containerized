@@ -10,12 +10,12 @@ namespace Awc.Services.Company.API.ViewModels
         public string? MailAddressLine1 { get; set; }
         public string? MailAddressLine2 { get; set; }
         public string? MailCity { get; set; }
-        public int MailStateProvinceID { get; set; }
+        public string? MailState { get; set; }
         public string? MailPostalCode { get; set; }
         public string? DeliveryAddressLine1 { get; set; }
         public string? DeliveryAddressLine2 { get; set; }
         public string? DeliveryCity { get; set; }
-        public int DeliveryStateProvinceID { get; set; }
+        public string? DeliveryState { get; set; }
         public string? DeliveryPostalCode { get; set; }
         public string? Telephone { get; set; }
         public string? Fax { get; set; }

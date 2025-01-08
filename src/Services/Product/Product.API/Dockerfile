@@ -11,6 +11,7 @@ WORKDIR /src
 
 COPY ["src/ApiGateways/Mobile.Api.Gateway/Mobile.Api.Gateway.csproj", "src/ApiGateways/Mobile.Api.Gateway/"]
 COPY ["src/ApiGateways/Web.Api.Gateway/Web.Api.Gateway.csproj", "src/ApiGateways/Web.Api.Gateway/"]
+COPY ["src/Web/WebUI/WebUI.csproj", "src/Web/WebUI/"]
 COPY ["src/BuildingBlocks/Devspaces.Support/Devspaces.Support.csproj", "src/BuildingBlocks/Devspaces.Support/"]
 COPY ["src/BuildingBlocks/EventBus/EventBus.Tests/EventBus.Tests.csproj", "src/BuildingBlocks/EventBus/EventBus.Tests/"]
 COPY ["src/BuildingBlocks/EventBus/EventBus/EventBus.csproj", "src/BuildingBlocks/EventBus/EventBus/"]

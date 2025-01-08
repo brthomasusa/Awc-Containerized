@@ -7,9 +7,9 @@ namespace WebUI.Layout
         [Inject] private NavigationManager? Navigation { get; set; }
 
         private void NavigateToViewCompanyDetails()
-            => Navigation?.NavigateTo("/companydata/company");
+            => Navigation?.NavigateTo("/company/company");
 
         private void NavigateToViewEmployeeList()
-            => Navigation?.NavigateTo("/companydata/employeelist");
+            => Navigation?.NavigateTo("/company/employeelist");
     }
 }
