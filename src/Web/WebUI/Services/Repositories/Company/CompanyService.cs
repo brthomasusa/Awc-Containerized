@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using WebUI.Exceptions;
 using WebUI.Models;
 using WebUI.Models.CompanyApi;
+using WebUI.Utilities;
 
 namespace WebUI.Services.Repositories.Company
 {
@@ -24,8 +25,8 @@ namespace WebUI.Services.Repositories.Company
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                var error = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
-                throw new ApiResponseException(error!);
+                var error = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new ApiResponseException(new ApiErrorResponse(error!.Detail!));
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
@@ -88,8 +89,8 @@ namespace WebUI.Services.Repositories.Company
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                string errorMsg = $"We are sorry, but we could not find a company with Id: {companyId}!";
-                throw new ApiResponseException(new ApiErrorResponse(errorMsg));
+                var errorResponse = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new ApiResponseException(new ApiErrorResponse(errorResponse!.Detail!));
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
             {
