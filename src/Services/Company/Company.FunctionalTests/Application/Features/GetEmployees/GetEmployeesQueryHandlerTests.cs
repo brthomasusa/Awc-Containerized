@@ -15,7 +15,7 @@ namespace Company.FunctionalTests.Application.Features.GetEmployees
         public async Task Handle_GetEmployeesQueryHandler_ValidSearchCriteria_ShouldSucceed()
         {
             // Arrange
-            StringSearchCriteria criteria = new("[LastName]", "Du", "[LastName]", 1, 10, 0, 10);
+            StringSearchCriteria criteria = new("[LastName]", "Du", "[LastName]", 0, 10);
             GetEmployeesQuery request = new(criteria);
             GetEmployeesQueryHandler handler = new(_service);
 
@@ -24,15 +24,15 @@ namespace Company.FunctionalTests.Application.Features.GetEmployees
 
             // Assert
             Assert.True(result.IsSuccess);
-            int employees = result.Value.Count;
-            Assert.Equal(1, employees);            
+            int employees = result.Value.Data.Count;
+            Assert.Equal(1, employees);
         }
 
         [Fact]
         public async Task Handle_GetEmployeesQueryHandler_InvalidSearchCriteria_ShouldReturnZeroEmployees()
         {
             // Arrange
-            StringSearchCriteria criteria = new("[LastName]", "Q", "[LastName]", 1, 10, 0, 10);
+            StringSearchCriteria criteria = new("[LastName]", "Q", "[LastName]", 0, 10);
             GetEmployeesQuery request = new(criteria);
             GetEmployeesQueryHandler handler = new(_service);
 
@@ -41,15 +41,15 @@ namespace Company.FunctionalTests.Application.Features.GetEmployees
 
             // Assert
             Assert.True(result.IsSuccess);
-            int employees = result.Value.Count;
-            Assert.Equal(0, employees);            
+            int employees = result.Value.Data.Count;
+            Assert.Equal(0, employees);
         }
 
         [Fact]
         public async Task Handle_GetEmployeesQueryHandler_EmptySearchCriteria_ShouldReturnSevenEmployees()
         {
             // Arrange
-            StringSearchCriteria criteria = new("[LastName]", string.Empty, "[LastName]", 1, 10, 0, 10);
+            StringSearchCriteria criteria = new("[LastName]", string.Empty, "[LastName]", 0, 10);
             GetEmployeesQuery request = new(criteria);
             GetEmployeesQueryHandler handler = new(_service);
 
@@ -58,8 +58,8 @@ namespace Company.FunctionalTests.Application.Features.GetEmployees
 
             // Assert
             Assert.True(result.IsSuccess);
-            int employees = result.Value.Count;
-            Assert.Equal(7, employees);            
-        }        
+            int employees = result.Value.Data.Count;
+            Assert.Equal(7, employees);
+        }
     }
 }

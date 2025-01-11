@@ -15,9 +15,11 @@ namespace WebUI.Models.CompanyApi
         public string? LoginID { get; set; }
         public string? FullAddress { get; set; }
         public DateTime BirthDate { get; set; }
+        public string? BirthDateAsString { get; set; }
         public string? MaritalStatus { get; set; }
         public string? Gender { get; set; }
         public DateTime HireDate { get; set; }
+        public string? HireDateAsString { get; set; }
         public string? JobClassification { get; set; }
         public int VacationHours { get; set; }
         public int SickLeaveHours { get; set; }

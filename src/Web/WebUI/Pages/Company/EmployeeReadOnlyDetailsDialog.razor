@@ -1,0 +1,157 @@
+<FluentStack Style="margin-bottom: 24px;" VerticalAlignment="VerticalAlignment.Center">
+    <FluentGrid Spacing="3" AdaptiveRendering="true" Justify="JustifyContent.FlexStart"
+        Style="width: 100%; background-color: var(--neutral-layer-3); padding: 4px; ">
+
+        @* Row one        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.EmployeeName" Label="Name" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.EmployeeName" Label="Middle Name" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.EmployeeName" Label="Last Name" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row two        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.Title" Label="Title" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.NameStyle" Label="Name Stype" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.Suffix" Label="Suffix" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row three        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.NationalIDNumber" Label="National Id Number" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.LoginID" Label="Login Id" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.EmailAddress" Label="Email Address" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row four        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.JobTitle" Label="Job Title" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.BirthDateAsString" Label="Birthday" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.MaritalStatus" Label="Marital Status" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row five        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.Gender" Label="Gender" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.HireDateAsString" Label="Date Employed" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.PhoneNumber" Label="Phone Number" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row six        *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.JobClassification" Label="Job Classification"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentNumberField @bind-Value="Content.VacationHours" Label="Vacation Hours" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentNumberField @bind-Value="Content.SickLeaveHours" Label="Sick Leave Hours" Style="width: 100%;"
+                    ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row seven       *@
+        <FluentGridItem sm="12" lg="4">
+            <div class="card">
+                <FluentTextField @bind-Value="@Content.EmploymentStatus" Label="Employeement Status"
+                    Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+        <FluentGridItem sm="12" lg="8">
+            <div class="card">
+                <FluentTextField @bind-Value="Content.FullAddress" Label="Address" Style="width: 100%;" ReadOnly />
+            </div>
+        </FluentGridItem>
+
+        @* Row eight        *@
+        <FluentGridItem xs="12">
+            <FluentCard style="height: 150px">
+                <label for="deptHistoryGrid">Department History</label>
+                <FluentDataGrid Items="@Content.DepartmentHistories!.AsQueryable()" TGridItem=DepartmentHistoryViewModel
+                    Id="deptHistoryGrid" ShowHover="true">
+                    <PropertyColumn Title="Department" Property="@(p => p.Department)" Sortable="false" />
+                    <PropertyColumn Title="Shift" Property="@(p => p.Shift)" Sortable="false" />
+                    <PropertyColumn Title="Start Date" Property="@(p => p.StartDate.ToShortDateString())"
+                        Sortable="false" />
+                    <PropertyColumn Title="End Date" Property="@(p => p.EndDate)" Sortable="false" />
+                </FluentDataGrid>
+            </FluentCard>
+        </FluentGridItem>
+
+        @* Row nine        *@
+        <FluentGridItem xs="12">
+            <FluentCard style="height: 150px">
+                <label for="payHistoryGrid">Pay History</label>
+                <FluentDataGrid Items="@Content.PayHistories!.AsQueryable()" TGridItem=PayHistoryViewModel
+                    Id="payHistoryGrid" ShowHover="true">
+                    <PropertyColumn Title="Rate" Property="@(p => p.PayRate.ToString("C2"))" Sortable="false" />
+                    <PropertyColumn Title="Rate Change Date" Property="@(p => p.RateChangeDate.ToShortDateString())"
+                        Sortable="false" />
+                </FluentDataGrid>
+            </FluentCard>
+        </FluentGridItem>
+    </FluentGrid>
+</FluentStack>

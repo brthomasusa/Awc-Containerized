@@ -7,16 +7,16 @@ namespace Awc.Services.Company.API.Endpoints.Employee
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("employees", GetEmployees); 
+            app.MapGet("employees", GetEmployees);
         }
 
         public static async Task<IResult> GetEmployees
         (
-            QueryParameters.FilterByFieldNameParameters parameters, 
-            ISender sender, 
+            QueryParameters.FilterByFieldNameParameters parameters,
+            ISender sender,
             ILogger<EmployeesByLastName> logger
         )
-        {  
+        {
             Result<PagedList<EmployeeListItemViewModel>>? result = null;
 
             try
@@ -25,9 +25,7 @@ namespace Awc.Services.Company.API.Endpoints.Employee
                 (
                     parameters.SearchField,
                     parameters.SearchCriteria,
-                    parameters.OrderBy,
-                    parameters.PageNumber,
-                    parameters.PageSize,
+                    string.IsNullOrEmpty(parameters.OrderBy) ? "[LastName]" : parameters.OrderBy,
                     parameters.Skip,
                     parameters.Take
                 );
@@ -35,8 +33,8 @@ namespace Awc.Services.Company.API.Endpoints.Employee
                 GetEmployeesQuery request = new(SearchCriteria: criteria);
 
                 result = await sender.Send(request);
-                        
-                return result.IsSuccess ? Results.Ok(result.Value) : 
+
+                return result.IsSuccess ? Results.Ok(result.Value) :
                                           result.ToInternalServerErrorProblemDetails(result.Error.Message);
             }
             catch (Exception ex)

@@ -21,7 +21,7 @@ namespace Awc.Services.Company.API.Services.Queries
                 {
                     sb.Append(" WHERE ")
                       .Append(criteria.SearchField)
-                      .Append(" LIKE CONCAT('%',@Criteria,'%') ");
+                      .Append(" LIKE CONCAT('%',@CRITERIA,'%') ");
                 }
 
                 if (!string.IsNullOrEmpty(criteria.OrderBy))
@@ -29,11 +29,11 @@ namespace Awc.Services.Company.API.Services.Queries
                 else
                     sb.Append(" ORDER BY LastName, FirstName, MiddleName");
 
-                sb.Append(" OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY");
+                sb.Append(" OFFSET @SKIP ROWS FETCH NEXT @TAKE ROWS ONLY");
 
-                parameters.Add("Criteria", criteria.SearchCriteria, DbType.String);
-                parameters.Add("Offset", criteria.Skip, DbType.Int32);
-                parameters.Add("PageSize", criteria.Take, DbType.Int32);
+                parameters.Add("CRITERIA", criteria.SearchCriteria, DbType.String);
+                parameters.Add("SKIP", criteria.Skip, DbType.Int32);
+                parameters.Add("TAKE", criteria.Take, DbType.Int32);
 
                 string countSql = !string.IsNullOrEmpty(criteria.SearchCriteria) &&
                                   !string.IsNullOrEmpty(criteria.SearchField) ?
@@ -42,21 +42,20 @@ namespace Awc.Services.Company.API.Services.Queries
 
                 using var connection = context.CreateConnection();
 
-                var items = await connection.QueryAsync<EmployeeListItemViewModel>(sb.ToString(), parameters);
+                var items = (await connection.QueryAsync<EmployeeListItemViewModel>(sb.ToString(), parameters)).ToList();
                 int count = connection.ExecuteScalar<int>(countSql, parameters);
 
-                var pagedList = PagedList<EmployeeListItemViewModel>.CreatePagedList(
-                        items.ToList(), count, criteria.PageNumber, criteria.PageSize
-                    );
+                MetaData metaData = new(criteria.Skip, criteria.Take, count);
+                PagedList<EmployeeListItemViewModel> pagedList = new(metaData, items);
 
                 return pagedList;
             }
-            catch (Exception ex)    
+            catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred: {ErrorMessage}", Helpers.GetInnerExceptionMessage(ex));
                 return Result<PagedList<EmployeeListItemViewModel>>.Failure<PagedList<EmployeeListItemViewModel>>(
                     new Error("GetEmployeeListItemsQuery.DoQuery", Helpers.GetInnerExceptionMessage(ex))
-                );                
+                );
             }
         }
     }

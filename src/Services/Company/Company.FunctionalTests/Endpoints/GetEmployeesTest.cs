@@ -13,38 +13,53 @@ namespace Company.FunctionalTests.Endpoints
                 ["searchField"] = "LastName",
                 ["searchCriteria"] = "Du",
                 ["orderBy"] = "LastName",
-                ["pageNumber"] = "0",
-                ["pageSize"] = "0",
                 ["skip"] = "0",
                 ["take"] = "10"
             };
 
-            List<EmployeeListItemViewModel>? response = await _client
-                .GetFromJsonAsync<List<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employees", queryParams));
+            PagedList<EmployeeListItemViewModel>? response = await _client
+                .GetFromJsonAsync<PagedList<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employees", queryParams));
 
-            int count = response!.Count;
+            int count = response!.Data.Count;
             Assert.Equal(1, count);
         }
 
         [Fact]
-        public async Task GetEmployeesByLastNameTest_EmployeesByLastName_ValidCriteria_ShouldSucceed()
+        public async Task GetEmployeesByLastNameTest_EmployeesByLastName_EmptySearchCriteria_ShouldReturnSevenRecords()
         {
             var queryParams = new Dictionary<string, string?>
             {
                 ["searchField"] = "LastName",
-                ["searchCriteria"] = "Du",
+                ["searchCriteria"] = string.Empty,
                 ["orderBy"] = "LastName",
-                ["pageNumber"] = "0",
-                ["pageSize"] = "0",
                 ["skip"] = "0",
                 ["take"] = "10"
             };
 
-            List<EmployeeListItemViewModel>? response = await _client
-                .GetFromJsonAsync<List<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employeestest", queryParams));
+            PagedList<EmployeeListItemViewModel>? response = await _client
+                .GetFromJsonAsync<PagedList<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employees", queryParams));
 
-            int count = response!.Count;
-            Assert.Equal(1, count);
-        }        
+            int count = response!.Data.Count;
+            Assert.Equal(7, count);
+        }
+
+        [Fact]
+        public async Task GetEmployeesByLastNameTest_EmployeesByLastName_EmptySearchCriteria_ShouldReturnFourRecords()
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["searchField"] = "LastName",
+                ["searchCriteria"] = string.Empty,
+                ["orderBy"] = "LastName",
+                ["skip"] = "0",
+                ["take"] = "4"
+            };
+
+            PagedList<EmployeeListItemViewModel>? response = await _client
+                .GetFromJsonAsync<PagedList<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employees", queryParams));
+
+            int count = response!.Data.Count;
+            Assert.Equal(4, count);
+        }
     }
 }

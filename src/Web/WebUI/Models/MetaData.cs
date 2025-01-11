@@ -1,4 +1,4 @@
-namespace AWC.Shared.Kernel.Utilities;
+namespace WebUI.Models;
 
 public class MetaData
 {

@@ -7,7 +7,7 @@ namespace Awc.Services.Company.API.Endpoints.Employee
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("employeestest", GetEmployees); 
+            app.MapGet("employeestest", GetEmployees);
         }
 
         public static async Task<IResult> GetEmployees
@@ -19,10 +19,10 @@ namespace Awc.Services.Company.API.Endpoints.Employee
             [FromQuery] int PageSize,
             [FromQuery] int Skip,
             [FromQuery] int Take,
-            ISender sender, 
+            ISender sender,
             ILogger<EmployeesByLastName> logger
         )
-        {  
+        {
             Result<PagedList<EmployeeListItemViewModel>>? result = null;
 
             try
@@ -31,9 +31,7 @@ namespace Awc.Services.Company.API.Endpoints.Employee
                 (
                     SearchField,
                     SearchCriteria,
-                    OrderBy,
-                    PageNumber,
-                    PageSize,
+                    string.IsNullOrEmpty(OrderBy) ? "[LastName]" : OrderBy,
                     Skip,
                     Take
                 );
@@ -41,8 +39,8 @@ namespace Awc.Services.Company.API.Endpoints.Employee
                 GetEmployeesQuery request = new(SearchCriteria: criteria);
 
                 result = await sender.Send(request);
-                        
-                return result.IsSuccess ? Results.Ok(result.Value) : 
+
+                return result.IsSuccess ? Results.Ok(result.Value) :
                                           result.ToInternalServerErrorProblemDetails(result.Error.Message);
             }
             catch (Exception ex)
@@ -50,6 +48,6 @@ namespace Awc.Services.Company.API.Endpoints.Employee
                 logger.LogError(ex, "{Message}", Helpers.GetInnerExceptionMessage(ex));
                 return result!.ToInternalServerErrorProblemDetails(ex.Message);
             }
-        }        
+        }
     }
 }

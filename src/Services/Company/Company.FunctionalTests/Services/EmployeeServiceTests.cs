@@ -40,7 +40,7 @@ namespace Company.FunctionalTests.Services
         public async Task GetEmployeeListItems_EmployeeService_ValidCriteria_ShouldSucceed()
         {
             // Arrange
-            StringSearchCriteria criteria = new("[LastName]", "Du", "[LastName]", 1, 10, 0, 10);
+            StringSearchCriteria criteria = new("[LastName]", "Du", "[LastName]", 0, 10);
             EmployeeService service = new(_dapperCtx, new NullLogger<EmployeeService>());
 
             // Act
@@ -49,15 +49,15 @@ namespace Company.FunctionalTests.Services
 
             // Assert
             Assert.True(result.IsSuccess);
-            int employees = result.Value.Count;
-            Assert.Equal(1, employees);            
-        } 
+            int employees = result.Value.Data.Count;
+            Assert.Equal(1, employees);
+        }
 
         [Fact]
         public async Task GetEmployeeListItems_EmployeeService_NoSearchCriteria_ShouldSucceed()
         {
             // Arrange
-            StringSearchCriteria criteria = new("[LastName]", string.Empty, "[LastName]", 1, 10, 0, 10);
+            StringSearchCriteria criteria = new("[LastName]", string.Empty, "[LastName]", 0, 10);
             EmployeeService service = new(_dapperCtx, new NullLogger<EmployeeService>());
 
             // Act
@@ -66,8 +66,8 @@ namespace Company.FunctionalTests.Services
 
             // Assert
             Assert.True(result.IsSuccess);
-            int employees = result.Value.Count;
-            Assert.Equal(7, employees);            
-        }                        
+            int employees = result.Value.Data.Count;
+            Assert.Equal(7, employees);
+        }
     }
 }

@@ -44,8 +44,6 @@ namespace WebUI.Services.Repositories.Company
             string searchField,
             string searchCriteria,
             string orderBy,
-            int pageNumber,
-            int pageSize,
             int skip,
             int take
         )
@@ -55,8 +53,6 @@ namespace WebUI.Services.Repositories.Company
                 ["searchField"] = searchField,
                 ["searchCriteria"] = searchCriteria,
                 ["orderBy"] = orderBy,
-                ["pageNumber"] = pageNumber.ToString(),
-                ["pageSize"] = pageSize.ToString(),
                 ["skip"] = skip.ToString(),
                 ["take"] = take.ToString()
             };
@@ -74,7 +70,6 @@ namespace WebUI.Services.Repositories.Company
             }
             else
             {
-                // Throw exception for other failure responses 
                 throw new Exception("Opps! Something went wrong");
             }
         }

@@ -10,8 +10,6 @@ namespace Awc.Services.Company.API.Application.Features.GetEmployees
         string? SearchField,
         string? SearchCriteria,
         string? OrderBy,
-        int PageNumber,
-        int PageSize,
         int Skip,
         int Take
     );

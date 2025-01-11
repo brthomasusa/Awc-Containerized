@@ -11,8 +11,6 @@ namespace WebUI.Services.Repositories.Company
             string searchField,
             string searchCriteria,
             string orderBy,
-            int pageNumber,
-            int pageSize,
             int skip,
             int take
         );
