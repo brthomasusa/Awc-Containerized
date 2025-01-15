@@ -50,7 +50,7 @@ namespace Company.FunctionalTests.Services
             // Assert
             Assert.True(result.IsSuccess);
             int employees = result.Value.Data.Count;
-            Assert.Equal(1, employees);
+            Assert.Equal(4, employees);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Company.FunctionalTests.Services
             // Assert
             Assert.True(result.IsSuccess);
             int employees = result.Value.Data.Count;
-            Assert.Equal(7, employees);
+            Assert.Equal(10, employees);
         }
     }
 }

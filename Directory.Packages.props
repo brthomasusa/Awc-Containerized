@@ -109,6 +109,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.11" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.11.0" />
     <PackageVersion Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.11.0" />
+    <PackageVersion Include="Radzen.Blazor" Version="5.7.4" />
 
     <PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.7" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="8.0.11" />

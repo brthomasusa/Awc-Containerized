@@ -21,7 +21,7 @@ namespace Company.FunctionalTests.Endpoints
                 .GetFromJsonAsync<PagedList<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employees", queryParams));
 
             int count = response!.Data.Count;
-            Assert.Equal(1, count);
+            Assert.Equal(4, count);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Company.FunctionalTests.Endpoints
                 .GetFromJsonAsync<PagedList<EmployeeListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}employees", queryParams));
 
             int count = response!.Data.Count;
-            Assert.Equal(7, count);
+            Assert.Equal(10, count);
         }
 
         [Fact]

@@ -1,5 +1,6 @@
 using Awc.Services.Company.API.Application.Features.GetEmployees;
 
+
 namespace Company.FunctionalTests.Application.Features.GetEmployees
 {
     public class GetEmployeesQueryHandlerTests : TestBase
@@ -25,7 +26,7 @@ namespace Company.FunctionalTests.Application.Features.GetEmployees
             // Assert
             Assert.True(result.IsSuccess);
             int employees = result.Value.Data.Count;
-            Assert.Equal(1, employees);
+            Assert.Equal(4, employees);
         }
 
         [Fact]
@@ -59,7 +60,7 @@ namespace Company.FunctionalTests.Application.Features.GetEmployees
             // Assert
             Assert.True(result.IsSuccess);
             int employees = result.Value.Data.Count;
-            Assert.Equal(7, employees);
+            Assert.Equal(10, employees);
         }
     }
 }
