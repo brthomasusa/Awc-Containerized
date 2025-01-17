@@ -58,5 +58,10 @@ namespace Awc.Services.Company.API.Services.Queries
         @"SELECT 
             COUNT(*)               
         FROM HumanResources.vEmployeeListItems";
+
+        public const string GetDepartmentMemberViewModelsCount =
+        @"SELECT 
+            COUNT(*)               
+        FROM HumanResources.vEmployeeListItemsWithDeptShiftOrgInfo";               
     }
 }

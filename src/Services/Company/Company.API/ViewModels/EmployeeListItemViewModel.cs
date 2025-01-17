@@ -13,7 +13,5 @@ namespace Awc.Services.Company.API.ViewModels
         public string? Shift { get; set; }
         public string? ManagerName { get; set; }
         public string? EmploymentStatus { get; set; }
-
-
     }
 }

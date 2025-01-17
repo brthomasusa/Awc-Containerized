@@ -1,6 +1,3 @@
-using Dapper;
-using Awc.Services.Company.API.ViewModels;
-
 namespace Awc.Services.Company.API.Services
 {
     public sealed class CompanyService(DapperContext dapperContext, ILogger<CompanyService> logger) : ICompanyService
@@ -39,6 +36,21 @@ namespace Awc.Services.Company.API.Services
             company.Shifts = getShifts.Value;
 
             return company;
+        }
+
+        public async Task<Result<PagedList<DepartmentMemberViewModel>>> GetDepartmentMemberViewModels(int departmentId, int skip, int take)
+        {
+            Result<PagedList<DepartmentMemberViewModel>> result =
+                await GetDepartmentMemberViewModelsQuery.DoQuery(_dapperContext, departmentId, skip, take);
+
+            if (result.IsFailure)
+            {
+                return Result<PagedList<DepartmentMemberViewModel>>.Failure<PagedList<DepartmentMemberViewModel>>(
+                    new Error("EmployeeService.GetEmployeeListItems", result.Error.Message)
+                );
+            }
+
+            return result;            
         }
 
         private async Task<Result<CompanyViewModel>> GetCompanyById(int id)

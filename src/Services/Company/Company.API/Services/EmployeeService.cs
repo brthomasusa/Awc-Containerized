@@ -1,6 +1,4 @@
 using Awc.Services.Company.API.Application.Features.GetEmployees;
-using Awc.Services.Company.API.ViewModels;
-using Awc.Services.Company.API.Services.Queries;
 
 namespace Awc.Services.Company.API.Services
 {
