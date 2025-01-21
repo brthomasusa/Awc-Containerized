@@ -9,18 +9,22 @@ namespace Company.FunctionalTests.Services
         {
             // Arrange
             int departmentId = 7;
+            string lastName = "Du";
             int skip = 0;
             int take = 10;
             
             CompanyService service = new(_dapperCtx, new NullLogger<CompanyService>());
 
             // Act
-            Result<PagedList<DepartmentMemberViewModel>> result = await service.GetDepartmentMemberViewModels(departmentId, skip, take);
+            Result<PagedList<DepartmentMemberViewModel>> result = await service.GetDepartmentMemberViewModels(departmentId, lastName, skip, take);
 
             // Assert
             Assert.True(result.IsSuccess);
             int members = result.Value.Data.Count;
-            Assert.Equal(10, members);            
+            Assert.Equal(2, members);            
         }
+
+
+
     }
 }

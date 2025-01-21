@@ -13,6 +13,7 @@ namespace Awc.Services.Company.API.Endpoints.Company
         public static async Task<IResult> GetDepartmentMembers
         (
             [FromQuery] int DepartmentId,
+            [FromQuery] string LastName,
             [FromQuery] int Skip,
             [FromQuery] int Take,
             ISender sender,
@@ -23,7 +24,7 @@ namespace Awc.Services.Company.API.Endpoints.Company
 
             try
             {
-                GetDepartmentMembersQuery request = new(DepartmentId, Skip, Take);
+                GetDepartmentMembersQuery request = new(DepartmentId, LastName, Skip, Take);
 
                 result = await sender.Send(request);
 

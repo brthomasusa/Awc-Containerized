@@ -9,6 +9,7 @@ namespace Awc.Services.Company.API.Services.Queries
         (
             DapperContext context, 
             int departmentId,
+            string lastName,
             int skip,
             int take
         )
@@ -19,10 +20,13 @@ namespace Awc.Services.Company.API.Services.Queries
             {
                 var parameters = new DynamicParameters();
                 parameters.Add("departmentId", departmentId, DbType.Int32);
+                parameters.Add("lastName", lastName, DbType.String);
                 parameters.Add("skip", skip, DbType.Int32);
                 parameters.Add("take", take, DbType.Int32);
 
-                string countSql = EmployeeViewModelQuerySql.GetDepartmentMemberViewModelsCount + " WHERE DepartmentID = @departmentId";
+                string countSql = !string.IsNullOrEmpty(lastName) ?                                 
+                    $"{EmployeeViewModelQuerySql.GetDepartmentMemberViewModelsCount} WHERE DepartmentID = @departmentId AND LastName LIKE '%'+IsNull(@lastName, LastName)+'%'" :
+                    $"{EmployeeViewModelQuerySql.GetDepartmentMemberViewModelsCount} WHERE DepartmentID = @departmentId";
 
                 using var connection = context.CreateConnection();
                 var items = await connection.QueryAsync<DepartmentMemberViewModel>("HumanResources.spGetEmployeeListIemsByDepartment", 

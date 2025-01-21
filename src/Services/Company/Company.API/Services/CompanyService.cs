@@ -38,10 +38,10 @@ namespace Awc.Services.Company.API.Services
             return company;
         }
 
-        public async Task<Result<PagedList<DepartmentMemberViewModel>>> GetDepartmentMemberViewModels(int departmentId, int skip, int take)
+        public async Task<Result<PagedList<DepartmentMemberViewModel>>> GetDepartmentMemberViewModels(int departmentId, string lastName, int skip, int take)
         {
             Result<PagedList<DepartmentMemberViewModel>> result =
-                await GetDepartmentMemberViewModelsQuery.DoQuery(_dapperContext, departmentId, skip, take);
+                await GetDepartmentMemberViewModelsQuery.DoQuery(_dapperContext, departmentId, lastName, skip, take);
 
             if (result.IsFailure)
             {

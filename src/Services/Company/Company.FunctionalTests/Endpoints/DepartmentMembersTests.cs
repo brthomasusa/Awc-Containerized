@@ -11,15 +11,16 @@ namespace Company.FunctionalTests.Endpoints
             var queryParams = new Dictionary<string, string?>
             {
                 ["DepartmentID"] = "7",
+                ["LastName"] = "Du",
                 ["Skip"] = "0",
-                ["Take"] = "10"
+                ["Take"] = "5"
             };
 
             PagedList<DepartmentMemberViewModel>? response = await _client
                 .GetFromJsonAsync<PagedList<DepartmentMemberViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}companies/departmentmembers", queryParams));
 
             int count = response!.Data.Count;
-            Assert.Equal(10, count);
+            Assert.Equal(2, count);
         }        
     }
 }

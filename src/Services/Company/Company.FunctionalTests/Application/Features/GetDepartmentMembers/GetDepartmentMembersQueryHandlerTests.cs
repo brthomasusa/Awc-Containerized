@@ -17,9 +17,10 @@ namespace Company.FunctionalTests.Application.Features.GetDepartmentMembers
         {
             // Arrange
             int departmentId = 7;
+            string lastName = string.Empty;
             int skip = 0;
             int take = 10;
-            GetDepartmentMembersQuery request = new(departmentId, skip, take);
+            GetDepartmentMembersQuery request = new(departmentId, lastName, skip, take);
             GetDepartmentMembersQueryHandler handler = new(_service);
 
             // Act

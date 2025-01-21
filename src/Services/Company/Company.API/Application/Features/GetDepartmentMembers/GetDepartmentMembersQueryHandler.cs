@@ -10,7 +10,10 @@ namespace Awc.Services.Company.API.Application.Features.GetDepartmentMembers
             CancellationToken cancellationToken
         )
         {
-            Result<PagedList<DepartmentMemberViewModel>> result = await _service.GetDepartmentMemberViewModels(request.DepartmentId, request.Skip, request.Take);
+            Result<PagedList<DepartmentMemberViewModel>> result = await _service.GetDepartmentMemberViewModels(request.DepartmentId, 
+                                                                                                               request.LastName, 
+                                                                                                               request.Skip, 
+                                                                                                               request.Take);
 
             if (result.IsFailure)
             {
