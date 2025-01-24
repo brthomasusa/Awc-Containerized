@@ -11,14 +11,13 @@ namespace Awc.Services.Company.API.Services.Queries
 
             try
             {
-
                 var parameters = new DynamicParameters();
                 parameters.Add("EmployeeID", employeeId, DbType.Int32);
 
                 using var conn = context.CreateConnection();
                 var model = await conn.QueryFirstOrDefaultAsync<EmployeeDetailViewModel>("HumanResources.spGetEmployeeDetails", 
-                                                                                   parameters, 
-                                                                                   commandType: CommandType.StoredProcedure);
+                                                                                         parameters, 
+                                                                                         commandType: CommandType.StoredProcedure);
 
                 if (model is null)
                 {

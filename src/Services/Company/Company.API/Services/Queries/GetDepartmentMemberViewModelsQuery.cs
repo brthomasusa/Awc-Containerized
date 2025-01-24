@@ -25,7 +25,7 @@ namespace Awc.Services.Company.API.Services.Queries
                 parameters.Add("take", take, DbType.Int32);
 
                 string countSql = !string.IsNullOrEmpty(lastName) ?                                 
-                    $"{EmployeeViewModelQuerySql.GetDepartmentMemberViewModelsCount} WHERE DepartmentID = @departmentId AND LastName LIKE '%'+IsNull(@lastName, LastName)+'%'" :
+                    $"{EmployeeViewModelQuerySql.GetDepartmentMemberViewModelsCount} WHERE DepartmentID = @departmentId AND LastName LIKE CONCAT(@lastName,'%')" : 
                     $"{EmployeeViewModelQuerySql.GetDepartmentMemberViewModelsCount} WHERE DepartmentID = @departmentId";
 
                 using var connection = context.CreateConnection();

@@ -21,7 +21,7 @@ namespace Awc.Services.Company.API.Services.Queries
                 {
                     sb.Append(" WHERE ")
                       .Append(criteria.SearchField)
-                      .Append(" LIKE CONCAT('%',@CRITERIA,'%') ");
+                      .Append(" LIKE CONCAT(@CRITERIA,'%') ");
                 }
 
                 if (!string.IsNullOrEmpty(criteria.OrderBy))
@@ -37,7 +37,7 @@ namespace Awc.Services.Company.API.Services.Queries
 
                 string countSql = !string.IsNullOrEmpty(criteria.SearchCriteria) &&
                                   !string.IsNullOrEmpty(criteria.SearchField) ?
-                    $"{EmployeeViewModelQuerySql.GetEmployeeListItemsCount} WHERE {criteria.SearchField} LIKE CONCAT('%',@Criteria,'%')" :
+                    $"{EmployeeViewModelQuerySql.GetEmployeeListItemsCount} WHERE {criteria.SearchField} LIKE CONCAT(@Criteria,'%')" :
                     EmployeeViewModelQuerySql.GetEmployeeListItemsCount;
 
                 using var connection = context.CreateConnection();

@@ -10,7 +10,7 @@ namespace Awc.Services.Company.API.ViewModels
         public string? JobTitle { get; set; }
         public string? PhoneNumber { get; set; }
         public string? EmailAddress { get; set; }
-        public string? EmailPromotionPreference { get; set; }
+        public string? EmailPromotion { get; set; }
         public string? NationalIDNumber { get; set; }
         public string? LoginID { get; set; }
         public string? FullAddress { get; set; }
@@ -24,7 +24,7 @@ namespace Awc.Services.Company.API.ViewModels
         public decimal PayRate { get; set; }
         public string? PayFrequency { get; set; }
         public string? EmploymentStatus { get; set; }
-        public string? ManagerFullName { get; set; }
+        public string? ManagerName { get; set; }
         public string? Department { get; set; }
         public string? Shift { get; set; }        
         public List<DepartmentHistoryViewModel>? DepartmentHistories { get; set; } = [];

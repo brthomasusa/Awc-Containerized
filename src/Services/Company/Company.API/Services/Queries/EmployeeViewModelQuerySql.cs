@@ -5,8 +5,8 @@ namespace Awc.Services.Company.API.Services.Queries
         public const string GetDepartmentHistoryViewModel =
             @"SELECT
                 BusinessEntityID
-                ,Shift
                 ,Department
+                ,Shift
                 ,StartDate
                 ,EndDate
             FROM HumanResources.vDepartmentHistoryViewModel
