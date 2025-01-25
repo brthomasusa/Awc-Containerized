@@ -38,5 +38,19 @@ services:
     hostname: "web-gateway"
     container_name: "web-gateway"      
     volumes:
-      - ~/.aspnet/https:/https:ro      
+      - ~/.aspnet/https:/https:ro 
+
+  webui:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Info99Gum
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    ports:
+      - "5056:80"
+      - "7126:443"
+    hostname: "webui"
+    container_name: "webui"      
+    volumes:
+      - ~/.aspnet/https:/https:ro            
 

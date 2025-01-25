@@ -1,0 +1,117 @@
+@page "/Pages/Company/ViewCompanyDetailPage"
+
+@using WebUI.Components
+@using WebUI.Models.CompanyApi
+
+<PageTitle>Company Data</PageTitle>
+
+<ErrorBoundary>
+
+    <div class="d-flex flex-row" style="height: 100%;">
+        <div class="col">
+            @if (_company is null)
+            {
+                <LoadingComponent />
+            }
+            else
+            {
+                <h5 style="margin-left: 0.10rem; margin-top: 0.50rem; margin-bottom: 0.50rem;">@_company!.CompanyName</h5>
+
+                @* Row one        *@
+                <div class="row" style="margin-bottom: 1.00rem;">
+                    <div class="col-4">
+                        <RadzenFormField Text="Company Name" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company!.CompanyName" />
+                        </RadzenFormField>
+                    </div>
+                    <div class="col-4">
+                        <RadzenFormField Text="Legal Name" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company!.LegalName" />
+                        </RadzenFormField>
+                    </div>
+                    <div class="col-4">
+                        <RadzenFormField Text="Employer Identification Number" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company!.EIN" />
+                        </RadzenFormField>
+                    </div>
+                </div>
+
+                @* Row two        *@
+                <div class="row" style="margin-bottom: 1.00rem;">
+                    <div class="col-4">
+                        <RadzenFormField Text="Website URL" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company!.WebsiteUrl" />
+                        </RadzenFormField>
+                    </div>
+                    <div class="col-4">
+                        <RadzenFormField Text="Telephone" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company!.Telephone" />
+                        </RadzenFormField>
+                    </div>
+                    <div class="col-4">
+                        <RadzenFormField Text="Fax" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company!.Fax" />
+                        </RadzenFormField>
+                    </div>
+                </div>
+
+                @* Row three       *@
+                <div class="row" style="margin-bottom: 1.00rem;">
+                    <div class="col-6">
+                        <RadzenFormField Text="Mailing Address" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company.FullMailAddress" />
+                        </RadzenFormField>
+                    </div>
+                    <div class="col-6">
+                        <RadzenFormField Text="Delivery Address" Variant="Variant.Flat" style="width: 100%;">
+                            <RadzenTextBox Disabled="true" @bind-Value="@_company.FullDeliveryAddress" />
+                        </RadzenFormField>
+                    </div>
+                </div>
+
+                @* Row four       *@
+                <div class="row">
+                    <div class="col-6">
+                        <RadzenText>Departments</RadzenText>
+
+                        <RadzenDataGrid IsLoading=@isDepartmentDataLoading Data="@_departments"
+                            TItem="DepartmentViewModel" LoadData="@LoadDepartmentData" style="height: 400px;">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="DepartmentViewModel" Property="DepartmentID" Title="ID"
+                                    Width="20px" />
+                                <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Name" Title="Name"
+                                    Width="75px" />
+                                <RadzenDataGridColumn TItem="DepartmentViewModel" Property="GroupName" Title="Group Name"
+                                    Width="125px" />
+                                <RadzenDataGridColumn TItem="DepartmentViewModel" Sortable="false" Filterable="false" Width="20px">
+                                    <Template Context="item">
+                                        <RadzenButton Click="() => ViewDepartmentMembers(item)" Icon="visibility" 
+                                            Size="ButtonSize.ExtraSmall" class="rz-border-radius-10 rz-shadow-6" ButtonStyle="ButtonStyle.Primary" />                                            
+                                    </Template>
+                                </RadzenDataGridColumn>                             
+                            </Columns>
+                        </RadzenDataGrid>
+                    </div>
+                    <div class="col-6">
+                        <RadzenText>Shifts</RadzenText>
+
+                        <RadzenDataGrid IsLoading=@isShiftDataLoading Data="@_shifts"
+                            TItem="ShiftViewModel" LoadData="@LoadShiftData">
+
+                            <Columns>
+                                <RadzenDataGridColumn TItem="ShiftViewModel" Property="Name" Title="Shift" Width="75px" />
+                                <RadzenDataGridColumn TItem="ShiftViewModel" Property="StartTime" Title="Start Time"
+                                    FormatString="{0:t}" Width="75px" />
+                                <RadzenDataGridColumn TItem="ShiftViewModel" Property="EndTime" Title="End Time"
+                                    FormatString="{0:t}" Width="75px" />    
+                            </Columns>
+                        </RadzenDataGrid>
+                    </div>
+                </div>
+
+            } @* End of if statement  *@
+        </div>
+    </div>
+
+@* style="background-color: rgba(216, 215, 211, 0.615); height: 100%;"  *@
+</ErrorBoundary>

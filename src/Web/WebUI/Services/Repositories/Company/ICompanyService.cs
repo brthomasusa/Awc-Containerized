@@ -14,6 +14,15 @@ namespace WebUI.Services.Repositories.Company
             int skip,
             int take
         );
+
         Task<CompanyViewModel> GetCompanyByIdAsync(int companyId);
+
+        Task<DocumentPage<DepartmentMemberViewModel>> GetDepartmentMembersAsync
+        (
+            int departmentId,
+            string lastName,
+            int skip,
+            int take
+        );
     }
 }

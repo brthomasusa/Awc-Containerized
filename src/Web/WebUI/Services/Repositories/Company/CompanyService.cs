@@ -97,5 +97,43 @@ namespace WebUI.Services.Repositories.Company
                 throw new Exception("Opps! Something went wrong");
             }
         }
+
+        public async Task<DocumentPage<DepartmentMemberViewModel>> GetDepartmentMembersAsync
+        (
+            int departmentId,
+            string lastName,
+            int skip,
+            int take
+        )
+        {
+            var queryParams = new Dictionary<string, string?>
+            {
+                ["DepartmentID"] = departmentId.ToString(),
+                ["LastName"] = lastName,
+                ["Skip"] = skip.ToString(),
+                ["Take"] = take.ToString()
+            };
+
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString("companies/departmentmembers", queryParams));
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<DocumentPage<DepartmentMemberViewModel>>();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                var error = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new ApiResponseException(new ApiErrorResponse(error!.Detail!));
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+            {
+                var error = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new Exception(error!.Detail);
+            }
+            else
+            {
+                throw new Exception("Opps! Something went wrong");
+            }
+        }
     }
 }

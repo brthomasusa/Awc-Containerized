@@ -1,27 +1,23 @@
-﻿@page "/"
-@using Microsoft.AspNetCore.Components.WebAssembly.Hosting
-@using WebUI.Components
-@inject IWebAssemblyHostEnvironment Host
-@inject IConfiguration Configuration
+@page "/"
 
 <PageTitle>Home</PageTitle>
 
-<FluentGrid>
-    <FluentGridItem xs="12">
-        <div class="row" style="text-align: center;width: 100%;margin-top: 5px;">
-            <h2 class="mb-5">AdventureWorks Cycles Admin Portal</h2>
-        </div>
-    </FluentGridItem>
-    <FluentGridItem xs="12">
-        <div class="card">
-            <img src="/accountant 2.svg" style="width: 100%; height: 500px;" />
-        </div>
-    </FluentGridItem>
-</FluentGrid>
+<RadzenRow>
+    <RadzenColumn Size="12" JustifyContent="JustifyContent.Center">
+        <RadzenText Text="AdventureWorks Cycles, Back Office System" TextStyle="TextStyle.H6"
+            TextAlign="TextAlign.Center" class="rz-my-0">
+        </RadzenText>
+    </RadzenColumn>
+</RadzenRow>
 
-<p></p>
+<RadzenRow>
+    <RadzenColumn Size="12" JustifyContent="JustifyContent.Center" class="rz-p-0">
+        <RadzenImage Path="/assets/accountant 2.svg" style="width: 100%; height: 600px;"></RadzenImage>
+    </RadzenColumn>
+</RadzenRow>
 
-@if (Host.IsDevelopment())
-{
-    <p>Api Url: @Configuration!["CompanyApiUrl"]</p>
-}
+@* <p style="text-align:center;">
+<img src="/assets/accountant 2.svg" class="homelogo" alt="background image for the Home component" />
+</p> *@
+
+@* <RadzenImage Path="/assets/accountant 2.svg" style="width: 100%; height: 600px;"></RadzenImage> *@

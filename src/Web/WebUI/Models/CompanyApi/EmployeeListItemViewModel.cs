@@ -4,7 +4,7 @@ namespace WebUI.Models.CompanyApi
 {
     public class EmployeeListItemViewModel
     {
-        [JsonPropertyName("businessEntityID")]
+        [JsonPropertyName("businessEntityId")]
         public int BusinessEntityID { get; set; }
 
         [JsonPropertyName("lastName")]
@@ -30,7 +30,5 @@ namespace WebUI.Models.CompanyApi
 
         [JsonPropertyName("employmentStatus")]
         public string? EmploymentStatus { get; set; }
-
-
     }
 }

@@ -19,6 +19,14 @@ services:
       dockerfile: src/ApiGateways/Web.Api.Gateway/Dockerfile     
     depends_on:
       - company.api
-      - product.api  
+      - product.api
+
+  webui:
+    image: webui:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: src/Web/WebUI/Dockerfile     
+    depends_on:
+      - web.gateway        
      
      

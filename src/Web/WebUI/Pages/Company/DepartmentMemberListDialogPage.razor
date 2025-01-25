@@ -1,0 +1,52 @@
+@page "/Pages/Company/DepartmentMemberListDialogPage/{DepartmentID:int}"
+@using WebUI.Components
+@using WebUI.Models.CompanyApi
+
+<ErrorBoundary>
+    <RadzenStack Gap="1rem" Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween"
+        Style="height: 100%;">
+        <RadzenRow>
+            <RadzenColumn Size="12" class="rz-p-4 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
+                <RadzenStack>
+                    @if (_members! is null)
+                    {
+                        <LoadingComponent />
+                    }
+                    else
+                    {
+                        <RadzenDataGrid TItem="DepartmentMemberViewModel" Data="@(_members!.Data)" IsLoading="@isLoading" LoadData="@GetDepartmentMembers"
+                            Count="@(_members.MetaData!.TotalRecords)" AllowFiltering="true" FilterMode="FilterMode.Simple"
+                            AllowPaging="true" AllowSorting="false" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                            Density="Density.Compact" AllowAlternatingRows="false" PageSize="20" PageSizeOptions="@pageSizeOptions"
+                            PageSizeText="Rows per page" 
+                            ShowPagingSummary="true" PagerHorizontalAlign="HorizontalAlign.Center">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="LastName"
+                                    Title="Last Name" Filterable="true" Width="100px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="FirstName"
+                                    Title="First Name" Filterable="false" Width="75px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="MiddleName" Title="MI"
+                                    Filterable="false" Width="50px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="JobTitle"
+                                    Title="Job Title" Filterable="false" Width="125px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="PhoneNumber"
+                                    Title="Telephone" Filterable="false" Width="70px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="Shift" Title="Shift"
+                                    Filterable="false" Width="70px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="EmploymentStatus"
+                                    Title="Status" Filterable="false" Width="70px" />
+                                <RadzenDataGridColumn TItem="DepartmentMemberViewModel" Property="ManagerName"
+                                    Title="Manager" Filterable="false" Width="100px" />
+                            </Columns>
+                        </RadzenDataGrid>
+                        <RadzenStack Visible="@ShowClose" Orientation="Orientation.Horizontal"
+                            JustifyContent="JustifyContent.End" Gap="0.5rem">
+                            <RadzenButton Click="@((args) => DialogService!.Close(true))" Variant="Variant.Flat"
+                                class="rz-border-radius-10 rz-shadow-6" Text="Close" Style="width: 120px" />
+                        </RadzenStack>
+                    }
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</ErrorBoundary>

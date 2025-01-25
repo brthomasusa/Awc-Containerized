@@ -1,32 +1,32 @@
-@inject IDialogService DialogService
 @inject ILogger<ErrorHandler> Logger
+@inject NotificationService NotificationService
+@using WebUI.Utilities
 
 <CascadingValue Value="this" IsFixed="true">
-	@ChildContent
+    @ChildContent
 </CascadingValue>
 
-@code {	
-	[Parameter] public RenderFragment? ChildContent { get; set; }
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
-	private async Task ShowErrorMessageAsync(string message)
-	{
-        var dialog = await DialogService!.ShowErrorAsync(message);
-        await dialog.Result;
-	}
+    private void ShowErrorMessageAsync(string message)
+    {
+        ShowErrorNotification.ShowError(NotificationService!, message);
+    }
 
-	public async Task HandleExceptionAsync(Exception ex)
-	{
-		Logger.LogError(ex, ex.Message);
-        
-		switch (ex)
-		{
-			// TODO: Handle more specific exception
-			case HttpRequestException _:
-				await ShowErrorMessageAsync("Failed to connect to the server.");
-				break;               
-			default:
-				await ShowErrorMessageAsync("Something went wrong!");
-				break;
-		}
-	}
+    public void HandleExceptionAsync(Exception ex)
+    {
+        Logger.LogError(ex, ex.Message);
+
+        switch (ex)
+        {
+            // TODO: Handle more specific exception
+            case HttpRequestException _:
+                ShowErrorMessageAsync("Failed to connect to the server.");
+                break;
+            default:
+                ShowErrorMessageAsync("Something went wrong!");
+                break;
+        }
+    }
 }

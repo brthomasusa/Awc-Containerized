@@ -1,0 +1,57 @@
+@page "/Pages/Company/ViewEmployeeListItemPage"
+@using WebUI.Components
+@using WebUI.Models.CompanyApi
+
+<PageTitle>Employee List</PageTitle>
+
+<RadzenText TextStyle="TextStyle.Subtitle1">Employees</RadzenText>
+
+<ErrorBoundary>
+    <RadzenStack Gap="1rem" Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween"
+        Style="height: 100%;">
+        <RadzenRow>
+            <RadzenColumn Size="12" class="rz-p-4 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
+                @if (_employees! is null)
+                {
+                    <LoadingComponent />
+                }
+                else
+                {
+                    <RadzenDataGrid TItem="EmployeeListItemViewModel" Data="@(_employees!.Data)" IsLoading="@isLoading"
+                        LoadData="@GetEmployeeListItems" Count="@(_employees.MetaData!.TotalRecords)" AllowFiltering="true"
+                        FilterMode="FilterMode.Simple" AllowPaging="true" AllowSorting="false"
+                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Density="Density.Compact"
+                        AllowAlternatingRows="true" PageSize="20" PageSizeOptions="@pageSizeOptions"
+                        PageSizeText="Rows per page" ShowPagingSummary="true" PagerHorizontalAlign="HorizontalAlign.Center">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="LastName" Title="Last Name"
+                                Filterable="true" Width="72px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="FirstName" Title="First Name"
+                                Filterable="false" Width="58px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="MiddleName" Title="MI"
+                                Filterable="false" Width="25px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="JobTitle" Title="Job Title"
+                                Filterable="false" Width="155px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="Department" Title="Department"
+                                Filterable="false" Width="100px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="Shift" Title="Shift"
+                                Filterable="false" Width="43px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="ManagerName" Title="Manager"
+                                Filterable="false" Width="95px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Property="EmploymentStatus"
+                                Title="Status" Filterable="false" Width="48px" />
+                            <RadzenDataGridColumn TItem="EmployeeListItemViewModel" Sortable="false" Filterable="false"
+                                Width="20px">
+                                <Template Context="item">
+                                    <RadzenButton Click="() => ViewEmployeeDetails(item)" Icon="visibility"
+                                        Size="ButtonSize.ExtraSmall" class="rz-border-radius-10 rz-shadow-6"
+                                        ButtonStyle="ButtonStyle.Primary" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                }
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</ErrorBoundary>

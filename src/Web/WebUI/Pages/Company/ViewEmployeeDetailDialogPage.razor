@@ -1,0 +1,179 @@
+@page "/Pages/Company/ViewEmployeeDetailDialogPage/{EmployeeID:int}"
+@using WebUI.Components
+@using WebUI.Models.CompanyApi
+
+<PageTitle>Employee Detail</PageTitle>
+
+<ErrorBoundary>
+    <RadzenStack Gap="1rem" Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween"
+        Style="height: 100%;">
+        <RadzenRow>
+            <RadzenColumn Size="12" class="rz-p-4 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
+                <RadzenStack>
+                    @if (_employee is null)
+                    {
+                        <LoadingComponent />
+                    }
+                    else
+                    {
+                        @* Row one        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col-2">
+                                <RadzenFormField Text="Employee ID" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="@_employee!.BusinessEntityID" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col-3">
+                                <RadzenFormField Text="Telephone" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.PhoneNumber" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col-3">
+                                <RadzenFormField Text="Email" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.EmailAddress" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col-4">
+                                <RadzenFormField Text="Address" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="@_employee!.FullAddress" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row two        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="National ID" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.NationalIDNumber" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Login" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.LoginID" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Date of Birth" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenDatePicker DateFormat="MMMM dd, yyyy" Disabled="true"
+                                        @bind-Value="@_employee!.BirthDate" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Date of Hire" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenDatePicker DateFormat="MMMM dd, yyyy" Disabled="true"
+                                        @bind-Value="@_employee!.HireDate" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row three        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Marital Status" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.MaritalStatus" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Gender" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.Gender" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Job Classification" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.JobClassification" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row four        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Vacation Hours" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="@_employee!.VacationHours" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Sickleave Hours" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="@_employee!.SickLeaveHours" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Rate of Pay" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric TValue="decimal" Format="c" Disabled="true"
+                                        @bind-Value="@_employee!.PayRate" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Pay Frequency" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.PayFrequency" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row five        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Manager" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.ManagerName" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Department" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.Department" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Shift" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.Shift" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Employment Status" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="@_employee!.EmploymentStatus" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row six       *@
+                        <div class="row">
+                            <div class="col-6">
+                                <RadzenText>Department History</RadzenText>
+
+                                <RadzenDataGrid Data="@_employee.DepartmentHistories" TItem="DepartmentHistoryViewModel">
+                                    <Columns>
+                                        <RadzenDataGridColumn TItem="DepartmentHistoryViewModel" Property="Department"
+                                            Title="Department" Width="100px" />
+                                        <RadzenDataGridColumn TItem="DepartmentHistoryViewModel" Property="Shift"
+                                            Title="Shift" Width="50px" />
+                                        <RadzenDataGridColumn TItem="DepartmentHistoryViewModel" Property="StartDate"
+                                            Title="Start Date" FormatString="{0:d}" Width="50px" />
+                                        <RadzenDataGridColumn TItem="DepartmentHistoryViewModel" Property="EndDate"
+                                            Title="End Date" FormatString="{0:d}" Width="50px" />
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </div>
+                            <div class="col-6">
+                                <RadzenText>Pay History</RadzenText>
+
+                                <RadzenDataGrid Data="@_employee.PayHistories" TItem="PayHistoryViewModel">
+                                    <Columns>
+                                        <RadzenDataGridColumn TItem="PayHistoryViewModel" Property="RateChangeDate"
+                                            Title="Date Rate Changed" FormatString="{0:d}" Width="75px" />
+                                        <RadzenDataGridColumn TItem="PayHistoryViewModel" Property="PayRate"
+                                            Title="Pay Rate" FormatString="{0:c}" Width="75px" />
+                                    </Columns>
+                                </RadzenDataGrid>
+                            </div>
+                        </div>
+
+                        <RadzenStack Visible="@ShowClose" Orientation="Orientation.Horizontal"
+                            JustifyContent="JustifyContent.End" Gap="0.5rem">
+                            <RadzenButton Click="@((args) => DialogService!.Close(true))" Variant="Variant.Flat"
+                                class="rz-border-radius-10 rz-shadow-6" Text="Close" Style="width: 120px" />
+                        </RadzenStack>
+                    }
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</ErrorBoundary>
