@@ -76,26 +76,35 @@ namespace WebUI.Services.Repositories.Company
 
         public async Task<CompanyViewModel> GetCompanyByIdAsync(int companyId)
         {
-            var response = await _httpClient.GetAsync($"companies/{companyId}");
+            try
+            {
+                var response = await _httpClient.GetAsync($"companies/{companyId}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<CompanyViewModel>();
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<CompanyViewModel>();
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    var errorResponse = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                    throw new ApiResponseException(new ApiErrorResponse(errorResponse!.Detail!));
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+                {
+                    string errorMsg = $"We are sorry, the api server was unable to process this request due to an internal error.!";
+                    throw new Exception(errorMsg);
+                }
+                else
+                {
+                    throw new Exception("Opps! Something went wrong");
+                }
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            catch (Exception ex)
             {
-                var errorResponse = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
-                throw new ApiResponseException(new ApiErrorResponse(errorResponse!.Detail!));
+                throw new Exception($"Opps! Something went wrong: {ex.Message}");
             }
-            else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-            {
-                string errorMsg = $"We are sorry, the api server was unable to process this request due to an internal error.!";
-                throw new Exception(errorMsg);
-            }
-            else
-            {
-                throw new Exception("Opps! Something went wrong");
-            }
+
+
         }
 
         public async Task<DocumentPage<DepartmentMemberViewModel>> GetDepartmentMembersAsync

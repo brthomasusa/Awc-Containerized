@@ -1,10 +1,10 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-ARG NET_IMAGE=8.0
-FROM mcr.microsoft.com/dotnet/aspnet:${NET_IMAGE} AS base
+FROM nginx:alpine as base
+EXPOSE 443
+EXPOSE 80
 
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:${NET_IMAGE} AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Create this "restore-solution" section by running ./Create-DockerfileSolutionRestore.ps1, to optimize build cache reuse
@@ -34,9 +34,9 @@ COPY . .
 WORKDIR "/src/src/Web/WebUI"
 
 FROM build AS publish
-RUN dotnet publish --no-restore "WebUI.csproj" -c Debug -o /app/publish
+RUN dotnet publish --no-restore "WebUI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "WebUI.dll"]
+WORKDIR /usr/share/nginx/html
+COPY --from=publish /app/publish/wwwroot .
+COPY src/Web/WebUI/nginx.conf /etc/nginx/nginx.conf
