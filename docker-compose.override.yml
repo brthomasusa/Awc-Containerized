@@ -1,30 +1,39 @@
 # The default docker-compose.override file can use the "localhost" as the external name for testing web apps within the same dev machine.
 
 services:
-    
+
+  redis:
+    ports:
+      - "6279:6379"
+    command: --port 6279
+    hostname: "redis"
+    container_name: "redis"
+
   company.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=3000        
+      - ASPNETCORE_HTTP_PORTS=3000
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+      - Redis__Host=redis
+      - Redis__Port=6279
     ports:
       - "3000:80"
     extra_hosts:
-      - "ubuntu-2404:192.168.1.16"      
+      - "ubuntu-2404:192.168.1.16"
     hostname: "company-api-svc"
-    container_name: "company-api-svc"             
+    container_name: "company-api-svc"
 
   product.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=3100         
+      - ASPNETCORE_HTTP_PORTS=3100
       - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
     ports:
       - "3100:80"
     extra_hosts:
-      - "ubuntu-2404:192.168.1.16"       
+      - "ubuntu-2404:192.168.1.16"
     hostname: "product-api-svc"
-    container_name: "product-api-svc"      
+    container_name: "product-api-svc"
 
   web.gateway:
     environment:
@@ -36,15 +45,15 @@ services:
       - "5259:80"
       - "7125:443"
     extra_hosts:
-      - "ubuntu-2404:192.168.1.16"       
+      - "ubuntu-2404:192.168.1.16"
     hostname: "web-gateway"
-    container_name: "web-gateway"      
+    container_name: "web-gateway"
     volumes:
-      - ~/.aspnet/https:/https:ro 
+      - ~/.aspnet/https:/https:ro
 
   webui:
     container_name: "webui"
     extra_hosts:
-      - "ubuntu-2404:192.168.1.16"        
+      - "ubuntu-2404:192.168.1.16"
     ports:
-      - "5056:80"    
+      - "5056:80"

@@ -12,7 +12,7 @@ const string appName = "Company API Service";
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 try
-{ 
+{
     builder.Configuration.Sources.Clear();
     builder.Configuration
         .AddJsonFile("appsettings.json", false, true)
@@ -24,12 +24,12 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    string? connectionString = builder.Configuration["ConnectionStrings:AdventureWorksCycles"] 
+    string? connectionString = builder.Configuration["ConnectionStrings:AdventureWorksCycles"]
         ?? ArgumentNullException("Connection string from environment is null.");
 
-    observabilityOptions.DbConnectionString = connectionString!;    
+    observabilityOptions.DbConnectionString = connectionString!;
 
-    builder.AddObservability();        
+    builder.AddObservability();
     builder.Services.AddHealthChecks(observabilityOptions);
 
     builder.Services.AddEndpointsApiExplorer();
@@ -43,22 +43,23 @@ try
     {
         options.GroupNameFormat = "'v'V";
         options.SubstituteApiVersionInUrl = true;
-    });    
+    });
     builder.Services.AddEndpoints(typeof(Program).Assembly);
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
     builder.AddCustomDatabase();
+    builder.Services.AddScoped<ICacheService, CacheService>();
 
     WebApplication app = builder.Build();
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-    app.UseSerilogRequestLogging(opts => 
+    app.UseSerilogRequestLogging(opts =>
         {
             opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
             opts.GetLevel = LogHelper.ExcludeHealthChecks;
         }
-    );             
+    );
 
     ApiVersionSet apiVersionSet = app.NewApiVersionSet()
         .HasApiVersion(new ApiVersion(1))

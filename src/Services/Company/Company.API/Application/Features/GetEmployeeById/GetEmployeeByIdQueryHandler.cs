@@ -4,9 +4,11 @@ using Awc.Services.Company.API.Services;
 
 namespace Awc.Services.Company.API.Application.Features.GetEmployeeById
 {
-    public sealed class GetEmployeeByIdQueryHandler(IEmployeeService service) : IQueryHandler<GetEmployeeByIdQuery, EmployeeDetailViewModel>
+    public sealed class GetEmployeeByIdQueryHandler(IEmployeeService service, ICacheService cacheService)
+        : IQueryHandler<GetEmployeeByIdQuery, EmployeeDetailViewModel>
     {
         private readonly IEmployeeService _service = service;
+        private readonly ICacheService _cacheService = cacheService;
 
         public async Task<Result<EmployeeDetailViewModel>> Handle
         (
@@ -14,6 +16,13 @@ namespace Awc.Services.Company.API.Application.Features.GetEmployeeById
             CancellationToken cancellationToken
         )
         {
+            var cacheData = _cacheService.GetData<EmployeeDetailViewModel>($"employee{request.EmployeeId}");
+
+            if (cacheData is not null)
+            {
+                return cacheData;
+            }
+
             Result<EmployeeDetailViewModel> result = await _service.GetEmployeeViewModelWithChildren(request.EmployeeId);
 
             if (result.IsFailure)
@@ -23,7 +32,10 @@ namespace Awc.Services.Company.API.Application.Features.GetEmployeeById
                 );
             }
 
-            return result.Value;            
+            var expireyTime = DateTimeOffset.Now.AddSeconds(60);
+            _cacheService.SetData<EmployeeDetailViewModel>($"employee{result.Value.BusinessEntityID}", result.Value, expireyTime);
+
+            return result.Value;
         }
     }
 }

@@ -39,7 +39,8 @@
     <PackageReference Include="Microsoft.Data.SqlClient" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />    
-    <PackageReference Include="Swashbuckle.AspNetCore" />    
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+    <PackageReference Include="StackExchange.Redis" />    
 
   </ItemGroup>
 
