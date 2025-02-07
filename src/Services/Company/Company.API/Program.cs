@@ -24,7 +24,7 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    string? connectionString = builder.Configuration["ConnectionStrings:AdventureWorksCycles"]
+    string? connectionString = builder.Configuration["ConnectionStrings:CompanyDbAzure"]
         ?? ArgumentNullException("Connection string from environment is null.");
 
     observabilityOptions.DbConnectionString = connectionString!;

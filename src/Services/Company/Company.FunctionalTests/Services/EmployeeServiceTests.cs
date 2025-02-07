@@ -48,7 +48,7 @@ namespace Company.FunctionalTests.Services
             // Assert
             Assert.True(result.IsSuccess);
             int employees = result.Value.Data.Count;
-            Assert.Equal(4, employees);
+            Assert.Equal(3, employees);
         }
 
         [Fact]

@@ -13,9 +13,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=3000
-      - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+      - ConnectionStrings__CompanyDbAzure=Server=tcp:awc-db-server.database.windows.net,1433;Initial Catalog=company-api-db;Persist Security Info=False;User ID=awc-dba;Password=Info99Gum;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30
       - Redis__Host=redis
-      - Redis__Port=6279
+      - Redis__Port=6279      
     ports:
       - "3000:80"
     extra_hosts:
@@ -27,7 +27,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=3100
-      - ConnectionStrings__AdventureWorksCycles=Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True
+      - ConnectionStrings__CompanyDbAzure=Server=tcp:awc-db-server.database.windows.net,1433;Initial Catalog=company-api-db;Persist Security Info=False;User ID=awc-dba;Password=Info99Gum;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30
     ports:
       - "3100:80"
     extra_hosts:
@@ -56,4 +56,5 @@ services:
     extra_hosts:
       - "ubuntu-2404:192.168.1.16"
     ports:
-      - "5056:80"
+      - "5056:80"    
+      - "7126:443"

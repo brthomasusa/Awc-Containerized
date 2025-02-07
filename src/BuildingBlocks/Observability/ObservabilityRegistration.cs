@@ -27,14 +27,14 @@ namespace Awc.BuildingBlocks.Observability
 
             builder.AddSerilog(observabilityOptions);
 
-            builder.Services.AddOpenTelemetry()                
+            builder.Services.AddOpenTelemetry()
                 .ConfigureResource(resource => resource.AddService(observabilityOptions.ServiceName))
                 .AddMetrics(observabilityOptions)
                 .AddTracing(observabilityOptions);
 
             return builder;
         }
-        
+
         private static OpenTelemetryBuilder AddTracing(this OpenTelemetryBuilder builder, ObservabilityOptions observabilityOptions)
         {
             if (!observabilityOptions.EnabledTracing) return builder;
@@ -44,11 +44,11 @@ namespace Awc.BuildingBlocks.Observability
                 tracing
                     .SetErrorStatusOnException()
                     .SetSampler(new AlwaysOnSampler())
-                    .AddAspNetCoreInstrumentation(options => options.RecordException = true)                                                                   
+                    .AddAspNetCoreInstrumentation(options => options.RecordException = true)
                     .AddHttpClientInstrumentation(options => options.RecordException = true)
                     .AddSqlClientInstrumentation(options => options.RecordException = true)
                     .AddEntityFrameworkCoreInstrumentation()
-                    .AddSource("observabilityOptions.ServiceName");                    
+                    .AddSource("observabilityOptions.ServiceName");
 
                 tracing
                     .AddOtlpExporter(_ =>
@@ -82,7 +82,7 @@ namespace Awc.BuildingBlocks.Observability
         }
 
         private static WebApplicationBuilder AddSerilog(this WebApplicationBuilder builder, ObservabilityOptions observabilityOptions)
-        {            
+        {
             var services = builder.Services;
             var configuration = builder.Configuration;
 
@@ -114,8 +114,8 @@ namespace Awc.BuildingBlocks.Observability
                                                         };
                     });
             });
-            
+
             return builder;
-        }        
+        }
     }
 }

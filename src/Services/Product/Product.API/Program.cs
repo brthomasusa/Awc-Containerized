@@ -10,7 +10,7 @@ const string appName = "Product API Service";
 var builder = WebApplication.CreateBuilder(args);
 
 try
-{ 
+{
     builder.Configuration.Sources.Clear();
     builder.Configuration
         .AddJsonFile("appsettings.json", false, true)
@@ -22,12 +22,12 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    string? connectionString = builder.Configuration["ConnectionStrings:AdventureWorksCycles"] 
+    string? connectionString = builder.Configuration["ConnectionStrings:CompanyDbAzure"]
         ?? ArgumentNullException("Connection string from environment is null.");
 
     observabilityOptions.DbConnectionString = connectionString!;
 
-    builder.AddObservability();        
+    builder.AddObservability();
 
     builder.Services.AddHealthChecks(observabilityOptions);
     builder.Services.AddCustomSwagger();
@@ -41,13 +41,13 @@ try
         app.UseCustomSwagger();
     }
 
-    app.UseSerilogRequestLogging(opts => 
+    app.UseSerilogRequestLogging(opts =>
         {
             opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
             opts.GetLevel = LogHelper.ExcludeHealthChecks;
         }
     );
-    
+
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     app.MapGet("/", () => Results.LocalRedirect("~/swagger"));

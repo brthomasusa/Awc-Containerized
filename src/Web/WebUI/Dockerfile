@@ -1,4 +1,4 @@
-FROM nginx:alpine as base
+FROM nginx:alpine AS base
 EXPOSE 443
 EXPOSE 80
 

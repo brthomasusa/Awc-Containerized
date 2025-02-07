@@ -3,22 +3,31 @@ services:
   redis:
     image: redis:latest
 
+  awc.seq:
+    image: datalust/seq:latest
+    container_name: awc-seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8081:80    
+
   company.api:
-    image: company.api:${TAG:-latest}
+    image: brthomasusa/company.api:${TAG:-latest}
     build:
       context: .
       dockerfile: src/Services/Company/Company.API/Dockerfile
     depends_on:
-      - redis
+      - redis      
 
   product.api:
-    image: product.api:${TAG:-latest}
+    image: brthomasusa/product.api:${TAG:-latest}
     build:
       context: .
       dockerfile: src/Services/Product/Product.API/Dockerfile
 
   web.gateway:
-    image: web-gateway:${TAG:-latest}
+    image: brthomasusa/web-gateway:${TAG:-latest}
     build:
       context: .
       dockerfile: src/ApiGateways/Web.Api.Gateway/Dockerfile
@@ -27,7 +36,7 @@ services:
       - product.api
 
   webui:
-    image: webui:${TAG:-latest}
+    image: brthomasusa/webui:${TAG:-latest}
     build:
       context: .
       dockerfile: src/Web/WebUI/Dockerfile

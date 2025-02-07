@@ -8,11 +8,11 @@ namespace Company.FunctionalTests
     public abstract class TestBase : IDisposable
     {
         protected readonly CompanyDbContext _dbContext;
-        protected readonly DapperContext _dapperCtx;   
+        protected readonly DapperContext _dapperCtx;
 
         protected TestBase()
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AdventureWorksCycles");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDbAzure");
             var optionsBuilder = new DbContextOptionsBuilder<CompanyDbContext>();
 
             optionsBuilder.UseSqlServer(
@@ -33,6 +33,6 @@ namespace Company.FunctionalTests
         {
             _dbContext.Dispose();
             GC.SuppressFinalize(this);
-        }             
+        }
     }
 }

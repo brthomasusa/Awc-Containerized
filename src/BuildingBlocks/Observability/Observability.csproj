@@ -18,7 +18,8 @@
     <PackageReference Include="Serilog.Sinks.Debug" />
     <PackageReference Include="Serilog.Sinks.OpenTelemetry" />
     <PackageReference Include="Serilog.Sinks.PeriodicBatching" />
-    <PackageReference Include="Serilog.Sinks.Seq" />    
+    <PackageReference Include="Serilog.Sinks.Seq" />
+    <PackageReference Include="SerilogTracing" />    
 
     <PackageReference Include="OpenTelemetry" />
     <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />

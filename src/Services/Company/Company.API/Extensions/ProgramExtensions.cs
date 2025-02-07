@@ -39,7 +39,7 @@ namespace Awc.Services.Company.API.Extentions
             }
 
             return app;
-        } 
+        }
 
         public static void AddMediatr(this IServiceCollection services)
         {
@@ -63,7 +63,7 @@ namespace Awc.Services.Company.API.Extentions
 
         public static void AddCustomDatabase(this WebApplicationBuilder builder)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__AdventureWorksCycles");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDbAzure");
             Guard.Against.NullOrEmpty(connectionString!);
 
             builder.Services.AddDbContext<CompanyDbContext>(options =>
