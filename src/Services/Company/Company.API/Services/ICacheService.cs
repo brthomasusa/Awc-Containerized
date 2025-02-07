@@ -2,10 +2,7 @@ namespace Awc.Services.Company.API.Services
 {
     public interface ICacheService
     {
-        T GetData<T>(string key);
-
-        bool SetData<T>(string key, T value, DateTimeOffset expirationTime);
-
-        object RemoveData(string key);
+        Task SetCacheValueAsync<T>(string key, T value, TimeSpan expiration);
+        Task<T> GetCacheValueAsync<T>(string key);
     }
 }

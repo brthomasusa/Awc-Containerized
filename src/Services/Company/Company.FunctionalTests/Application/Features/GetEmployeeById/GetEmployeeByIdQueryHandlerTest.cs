@@ -1,4 +1,6 @@
 using Awc.Services.Company.API.Application.Features.GetEmployeeById;
+using Awc.Services.Company.API.Infrastructure;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace Company.FunctionalTests.Application.Features.GetEmployeeById
@@ -6,10 +8,15 @@ namespace Company.FunctionalTests.Application.Features.GetEmployeeById
     public class GetEmployeeByIdQueryHandlerTest : TestBase
     {
         private readonly EmployeeService _service;
+        private readonly DatabaseRetryService _databaseRetryService;
 
         public GetEmployeeByIdQueryHandlerTest()
         {
             _service = new(_dapperCtx, new NullLogger<EmployeeService>());
+
+            DatabaseReconnectSettings settings = new() { RetryCount = 5, RetryWaitPeriodInSeconds = 5 };
+            IOptions<DatabaseReconnectSettings> databaseReconnectSettingsOptions = Options.Create(settings);
+            _databaseRetryService = new DatabaseRetryService(databaseReconnectSettingsOptions);
         }
 
         [Fact]
@@ -18,18 +25,18 @@ namespace Company.FunctionalTests.Application.Features.GetEmployeeById
             // Arrange
             var mockCacheService = new Mock<ICacheService>();
 
-            mockCacheService.Setup(x => x.GetData<EmployeeDetailViewModel>(
+            mockCacheService.Setup(x => x.GetCacheValueAsync<EmployeeDetailViewModel>(
                     It.IsAny<string>()
-                )).Returns(GetEmployeeDetailViewModel());
+                )).ReturnsAsync(GetEmployeeDetailViewModel());
 
-            mockCacheService.Setup(x => x.SetData<EmployeeDetailViewModel>(
+            mockCacheService.Setup(x => x.SetCacheValueAsync<EmployeeDetailViewModel>(
                     It.IsAny<string>(),
                     new EmployeeDetailViewModel(),
-                    It.IsAny<DateTimeOffset>()
-                )).Returns(true);
+                    It.IsAny<TimeSpan>()
+                ));
 
             GetEmployeeByIdQuery request = new(EmployeeId: 16);
-            GetEmployeeByIdQueryHandler handler = new(_service, mockCacheService.Object);
+            GetEmployeeByIdQueryHandler handler = new(_service, mockCacheService.Object, _databaseRetryService);
 
             // Act
             Result<EmployeeDetailViewModel> result = await handler.Handle(request, new CancellationToken());
@@ -48,18 +55,18 @@ namespace Company.FunctionalTests.Application.Features.GetEmployeeById
 
             var mockCacheService = new Mock<ICacheService>();
 
-            mockCacheService.Setup(x => x.GetData<EmployeeDetailViewModel>(
+            mockCacheService.Setup(x => x.GetCacheValueAsync<EmployeeDetailViewModel>(
                     It.IsAny<string>()
-                )).Returns(model!);
+                )).ReturnsAsync(model!);
 
-            mockCacheService.Setup(x => x.SetData<EmployeeDetailViewModel>(
+            mockCacheService.Setup(x => x.SetCacheValueAsync<EmployeeDetailViewModel>(
                     It.IsAny<string>(),
                     new EmployeeDetailViewModel(),
-                    It.IsAny<DateTimeOffset>()
-                )).Returns(true);
+                    It.IsAny<TimeSpan>()
+                ));
 
             GetEmployeeByIdQuery request = new(EmployeeId: -16);
-            GetEmployeeByIdQueryHandler handler = new(_service, mockCacheService.Object);
+            GetEmployeeByIdQueryHandler handler = new(_service, mockCacheService.Object, _databaseRetryService);
 
             // Act
             Result<EmployeeDetailViewModel> result = await handler.Handle(request, new CancellationToken());

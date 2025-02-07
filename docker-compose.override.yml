@@ -14,8 +14,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=3000
       - ConnectionStrings__CompanyDbAzure=Server=tcp:awc-db-server.database.windows.net,1433;Initial Catalog=company-api-db;Persist Security Info=False;User ID=awc-dba;Password=Info99Gum;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30
-      - Redis__Host=redis
-      - Redis__Port=6279      
+      - ConnectionStrings__Redis=redis:6279      
     ports:
       - "3000:80"
     extra_hosts:

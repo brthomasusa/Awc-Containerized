@@ -3,9 +3,11 @@ using Asp.Versioning;
 using System.Text;
 using System.Text.Json;
 using Awc.Services.Company.API.Extentions;
+using Awc.Services.Company.API.Infrastructure;
 using Awc.Services.Company.API.Middleware;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
+using StackExchange.Redis;
 
 const string appName = "Company API Service";
 
@@ -24,10 +26,22 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    string? connectionString = builder.Configuration["ConnectionStrings:CompanyDbAzure"]
-        ?? ArgumentNullException("Connection string from environment is null.");
+    // Add Redis configuration
+    var redisConfiguration = builder.Configuration["ConnectionStrings:Redis"];
+    var redis = ConnectionMultiplexer.Connect(redisConfiguration);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+    builder.Services.AddSingleton<ICacheService, CacheService>();
 
-    observabilityOptions.DbConnectionString = connectionString!;
+    string? dbConnectionString = builder.Configuration["ConnectionStrings:CompanyDbAzure"];
+    if (dbConnectionString is null)
+    {
+        throw new ArgumentNullException("Database connection string is null!");
+    }
+
+    builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
+    builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
+
+    observabilityOptions.DbConnectionString = dbConnectionString!;
 
     builder.AddObservability();
     builder.Services.AddHealthChecks(observabilityOptions);
@@ -48,7 +62,6 @@ try
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
     builder.AddCustomDatabase();
-    builder.Services.AddScoped<ICacheService, CacheService>();
 
     WebApplication app = builder.Build();
 
@@ -153,11 +166,6 @@ catch (Exception ex)
 finally
 {
     Serilog.Log.CloseAndFlush();
-}
-
-string? ArgumentNullException(string v)
-{
-    throw new NotImplementedException();
 }
 
 namespace Awc.Services.Company.API

@@ -1,14 +1,21 @@
 using Awc.Services.Company.API.Application.Features.GetDepartmentMembers;
+using Awc.Services.Company.API.Infrastructure;
+using Microsoft.Extensions.Options;
 
 namespace Company.FunctionalTests.Application.Features.GetDepartmentMembers
 {
     public class GetDepartmentMembersQueryHandlerTests : TestBase
     {
         private readonly CompanyService _service;
+        private readonly DatabaseRetryService _databaseRetryService;
 
         public GetDepartmentMembersQueryHandlerTests()
         {
             _service = new(_dapperCtx, new NullLogger<CompanyService>());
+
+            DatabaseReconnectSettings settings = new() { RetryCount = 5, RetryWaitPeriodInSeconds = 5 };
+            IOptions<DatabaseReconnectSettings> databaseReconnectSettingsOptions = Options.Create(settings);
+            _databaseRetryService = new DatabaseRetryService(databaseReconnectSettingsOptions);
         }
 
 
@@ -21,7 +28,7 @@ namespace Company.FunctionalTests.Application.Features.GetDepartmentMembers
             int skip = 0;
             int take = 10;
             GetDepartmentMembersQuery request = new(departmentId, lastName, skip, take);
-            GetDepartmentMembersQueryHandler handler = new(_service);
+            GetDepartmentMembersQueryHandler handler = new(_service, _databaseRetryService);
 
             // Act
             Result<PagedList<DepartmentMemberViewModel>> result = await handler.Handle(request, new CancellationToken());

@@ -1,40 +1,27 @@
+#pragma warning disable CS8613
+
 using StackExchange.Redis;
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Awc.Services.Company.API.Services
 {
-    public sealed class CacheService : ICacheService
+    public sealed class CacheService(IConnectionMultiplexer redis) : ICacheService
     {
-        private readonly IDatabase _cacheDb;
+        private readonly IConnectionMultiplexer _redis = redis;
 
-        public CacheService(IConfiguration config)
+        public async Task SetCacheValueAsync<T>(string key, T value, TimeSpan expiration)
         {
-            var redisHost = config["Redis:Host"];
-            var redisPort = config["Redis:Port"];
-            var redis = ConnectionMultiplexer.Connect($"{redisHost}:{redisPort}");
-            _cacheDb = redis.GetDatabase();
+            var db = _redis.GetDatabase();
+            var json = JsonSerializer.Serialize(value);
+            await db.StringSetAsync(key, json, expiration);
         }
 
-        public T GetData<T>(string key)
+        public async Task<T?> GetCacheValueAsync<T>(string key)
         {
-            var value = _cacheDb.StringGet(key);
-            if (!string.IsNullOrWhiteSpace(value))
-                return JsonSerializer.Deserialize<T>(value!)!;
-
-            return default!;
-        }
-
-        public object RemoveData(string key)
-        {
-            if (_cacheDb.KeyExists(key))
-                return _cacheDb.KeyDelete(key);
-            return false;
-        }
-
-        public bool SetData<T>(string key, T value, DateTimeOffset expirationTime)
-        {
-            var expiryTime = expirationTime.DateTime.Subtract(DateTime.Now);
-            return _cacheDb.StringSet(key, JsonSerializer.Serialize(value), expiryTime);
+            var db = _redis.GetDatabase();
+            var json = await db.StringGetAsync(key);
+            return json.HasValue ? JsonSerializer.Deserialize<T>(json!) : default;
         }
     }
 }
