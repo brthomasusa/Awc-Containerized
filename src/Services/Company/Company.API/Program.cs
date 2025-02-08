@@ -2,12 +2,14 @@ using Asp.Versioning.Builder;
 using Asp.Versioning;
 using System.Text;
 using System.Text.Json;
+using Awc.Services.Company.API;
 using Awc.Services.Company.API.Extentions;
-using Awc.Services.Company.API.Infrastructure;
 using Awc.Services.Company.API.Middleware;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
 using StackExchange.Redis;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Azure.AppConfiguration.AspNetCore;
 
 const string appName = "Company API Service";
 
@@ -20,28 +22,32 @@ try
         .AddJsonFile("appsettings.json", false, true)
         .AddEnvironmentVariables();
 
-    ObservabilityOptions observabilityOptions = new();
+    // Retrieve the Azure App Configuration connection string
+    string? appConfigConnectString =
+        builder.Configuration["ConnectionStrings:AppConfiguration"] ??
+            throw new ArgumentNullException("Application config connection string is missing!");
 
+    // Load configuration from Azure App Configuration into SettingsOptions
+    builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
+
+    SettingsOptions settingsOptions = new();
     builder.Configuration
-        .GetRequiredSection(nameof(ObservabilityOptions))
-        .Bind(observabilityOptions);
+        .GetSection("Awc:Settings")
+        .Bind(settingsOptions);
 
-    // Add Redis configuration
-    var redisConfiguration = builder.Configuration["ConnectionStrings:Redis"];
-    var redis = ConnectionMultiplexer.Connect(redisConfiguration);
+    var redis = ConnectionMultiplexer.Connect(settingsOptions.RedisConnectionString);
     builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
     builder.Services.AddSingleton<ICacheService, CacheService>();
-
-    string? dbConnectionString = builder.Configuration["ConnectionStrings:CompanyDbAzure"];
-    if (dbConnectionString is null)
-    {
-        throw new ArgumentNullException("Database connection string is null!");
-    }
 
     builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
     builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
 
-    observabilityOptions.DbConnectionString = dbConnectionString!;
+    ObservabilityOptions observabilityOptions = new();
+    builder.Configuration
+        .GetRequiredSection(nameof(ObservabilityOptions))
+        .Bind(observabilityOptions);
+
+    observabilityOptions.DbConnectionString = settingsOptions.CompanyDbConnectionString!;
 
     builder.AddObservability();
     builder.Services.AddHealthChecks(observabilityOptions);

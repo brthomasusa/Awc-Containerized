@@ -22,10 +22,11 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    string? connectionString = builder.Configuration["ConnectionStrings:CompanyDbAzure"]
-        ?? ArgumentNullException("Connection string from environment is null.");
+    string? dbConnectionString =
+        builder.Configuration["ConnectionStrings:CompanyDbAzure"] ??
+            throw new ArgumentNullException("Database connection string is missing!");
 
-    observabilityOptions.DbConnectionString = connectionString!;
+    observabilityOptions.DbConnectionString = dbConnectionString!;
 
     builder.AddObservability();
 
@@ -135,11 +136,6 @@ catch (Exception ex)
 finally
 {
     Serilog.Log.CloseAndFlush();
-}
-
-string? ArgumentNullException(string v)
-{
-    throw new NotImplementedException();
 }
 
 namespace Awc.Services.Product.Product.API
