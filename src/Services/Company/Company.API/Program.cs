@@ -8,8 +8,6 @@ using Awc.Services.Company.API.Middleware;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
 using StackExchange.Redis;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Azure.AppConfiguration.AspNetCore;
 
 const string appName = "Company API Service";
 
