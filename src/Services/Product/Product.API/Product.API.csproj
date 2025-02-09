@@ -38,7 +38,9 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
     <PackageReference Include="Microsoft.Data.SqlClient" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />    
-    <PackageReference Include="Swashbuckle.AspNetCore" />    
+    <PackageReference Include="Swashbuckle.AspNetCore" /> 
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" />
+    <PackageReference Include="Azure.Identity" />         
 
   </ItemGroup>
 

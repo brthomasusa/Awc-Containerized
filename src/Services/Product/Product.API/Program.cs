@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using Awc.Services.Product.Product.API;
 using Awc.Services.Product.Product.API.Middleware;
 using Awc.Services.Product.Product.API.Extentions;
 using Awc.BuildingBlocks.Observability;
@@ -16,17 +17,26 @@ try
         .AddJsonFile("appsettings.json", false, true)
         .AddEnvironmentVariables();
 
+    // Retrieve the Azure App Configuration connection string
+    string? appConfigConnectString =
+        builder.Configuration["ConnectionStrings:AppConfiguration"] ??
+            throw new ArgumentNullException("Application config connection string is missing!");
+
+    // Load configuration from Azure App Configuration into SettingsOptions
+    builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
+
+    SettingsOptions settingsOptions = new();
+    builder.Configuration
+        .GetSection("Awc:Settings")
+        .Bind(settingsOptions);
+
     ObservabilityOptions observabilityOptions = new();
 
     builder.Configuration
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    string? dbConnectionString =
-        builder.Configuration["ConnectionStrings:CompanyDbAzure"] ??
-            throw new ArgumentNullException("Database connection string is missing!");
-
-    observabilityOptions.DbConnectionString = dbConnectionString!;
+    observabilityOptions.DbConnectionString = settingsOptions.CompanyDbConnectionString!;
 
     builder.AddObservability();
 
