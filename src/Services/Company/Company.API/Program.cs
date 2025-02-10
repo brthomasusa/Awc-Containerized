@@ -22,7 +22,7 @@ try
 
     // Retrieve the Azure App Configuration connection string
     string? appConfigConnectString =
-        builder.Configuration["ConnectionStrings:AppConfiguration"] ??
+        builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
             throw new ArgumentNullException("Application config connection string is missing!");
 
     // Load configuration from Azure App Configuration into SettingsOptions
@@ -65,7 +65,7 @@ try
     builder.Services.AddEndpoints(typeof(Program).Assembly);
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
-    builder.AddCustomDatabase();
+    builder.AddCustomDatabase(settingsOptions.CompanyDbConnectionString!);
 
     WebApplication app = builder.Build();
 

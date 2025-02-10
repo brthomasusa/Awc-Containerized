@@ -17,8 +17,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:3000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "ConnectionStrings__AdventureWorksCycles": "Server=tcp:ubuntu-2404,1433;Database=CompanyAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Docker": {

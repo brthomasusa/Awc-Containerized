@@ -61,11 +61,8 @@ namespace Awc.Services.Company.API.Extentions
             services.AddScoped<IMapper, ServiceMapper>();
         }
 
-        public static void AddCustomDatabase(this WebApplicationBuilder builder)
+        public static void AddCustomDatabase(this WebApplicationBuilder builder, string connectionString)
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDbAzure");
-            Guard.Against.NullOrEmpty(connectionString!);
-
             builder.Services.AddDbContext<CompanyDbContext>(options =>
                 options.UseSqlServer(
                     connectionString,
