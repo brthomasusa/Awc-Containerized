@@ -29,8 +29,6 @@ try
 
     var app = builder.Build();
 
-    app.UseHttpsRedirection();
-
     app.Logger.LogInformation("Starting web host ({ApplicationName})...", appName);
     app.UseMiddleware<ExceptionHandlingMiddleware>();
     app.UseCors("CorsPolicy");

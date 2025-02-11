@@ -1,5 +1,4 @@
 FROM nginx:alpine AS base
-EXPOSE 443
 EXPOSE 80
 
 WORKDIR /app
