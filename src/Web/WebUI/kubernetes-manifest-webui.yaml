@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: webui
+    labels:
+        app: web-gateway
+spec:
+    selector:
+        matchLabels:
+            app: webui
+    replicas: 1
+    template:
+        metadata:
+            labels:
+                app: webui
+        spec:
+            containers:
+              - name: webui
+                image: awcacrbrthomasusa.azurecr.io/webui:latest
+                resources:
+                    requests:
+                        cpu: 100m
+                        memory: 100Mi
+                    limits:
+                        cpu: 200m
+                        memory: 200Mi
+                ports:
+                  - containerPort: 5056
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: webui
+spec:
+    type: LoadBalancer
+    ports:
+      - port: 5056
+    selector:
+        app: webui
+---
+
+

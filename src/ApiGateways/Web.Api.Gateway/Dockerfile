@@ -25,6 +25,7 @@ COPY ["src/BuildingBlocks/WebHostCustomization/WebHost.Customization/WebHost.Cus
 COPY ["src/Services/Company/Company.API/Company.API.csproj", "src/Services/Company/Company.API/"]
 COPY ["src/Services/Company/Company.FunctionalTests/Company.FunctionalTests.csproj", "src/Services/Company/Company.FunctionalTests/"]
 COPY ["src/Services/Product/Product.API/Product.API.csproj", "src/Services/Product/Product.API/"]
+COPY ["src/Services/Product/Product.FunctionalTests/Product.FunctionalTests.csproj", "src/Services/Product/Product.FunctionalTests/"]
 COPY ["Directory.Build.props", "./"]
 COPY ["Directory.Packages.props", "./"]
 COPY ["Awc.Containerized.sln", "./"]

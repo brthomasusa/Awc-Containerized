@@ -10,6 +10,7 @@ try
     builder.Configuration
           .SetBasePath(builder.Environment.ContentRootPath)
           .AddJsonFile("appsettings.json", false, true)
+          .AddJsonFile("appsettings.Development.json", false, true)
           .AddEnvironmentVariables()
           .AddCommandLine(args);
 

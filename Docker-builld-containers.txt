@@ -1,0 +1,21 @@
+ # company-api
+ docker build --tag brthomasusa/company-api:latest . -f src/Services/Company/Company.API/Dockerfile -t company-api:latest
+ docker push brthomasusa/company-api:latest
+ 
+ # product-api
+ docker build --tag brthomasusa/product-api . -f src/Services/Product/Product.API/Dockerfile -t product-api:latest
+ docker push brthomasusa/product-api:latest
+ 
+ # web-gateway
+ docker build --tag brthomasusa/web-gateway:latest . -f src/ApiGateways/Web.Api.Gateway/Dockerfile -t web-gateway:latest
+ docker push brthomasusa/web-gateway:latest
+ 
+ # webui
+ docker build --tag brthomasusa/webui:latest . -f src/Web/WebUI/Dockerfile -t webui:latest
+ docker push brthomasusa/webui:latest
+
+
+docker run --rm -d -p 3000:3000 --name company-api -e 'ConnectionStrings__CompanyDb=Server=tcp:192.168.1.16,1433;Database=CompanyAPI;uid=sa;Password=Info99Gum;TrustServerCertificate=True' -e ASPNETCORE_ENVIRONMENT=Development company-api:latest
+docker run --rm -d -p 3100:3100 --name product-api -e 'ConnectionStrings__ProductDb=Server=tcp:192.168.1.16,1433;Database=ProductAPI;uid=sa;Password=Info99Gum;TrustServerCertificate=True' -e ASPNETCORE_ENVIRONMENT=Development product-api:latest
+docker run --rm -d -p 5259:5259 --name web-gateway -e ASPNETCORE_ENVIRONMENT=Development web-gateway:latest
+docker run --rm -d -p 5056:80 --name webui webui:latest

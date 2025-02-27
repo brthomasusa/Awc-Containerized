@@ -18,24 +18,33 @@ try
     builder.Configuration.Sources.Clear();
     builder.Configuration
         .AddJsonFile("appsettings.json", false, true)
+        .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
-    // Retrieve the Azure App Configuration connection string
-    string? appConfigConnectString =
-        builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
-            throw new ArgumentNullException("Application config connection string is missing!");
+    /*
+        For now, disable the use of Azure Redis Cache and Azure Configuration Services
 
-    // Load configuration from Azure App Configuration into SettingsOptions
-    builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
+        // Retrieve the Azure App Configuration connection string
+        string? appConfigConnectString =
+            builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
+                throw new ArgumentNullException("Application config connection string is missing!");
 
-    SettingsOptions settingsOptions = new();
-    builder.Configuration
-        .GetSection("Awc:Settings")
-        .Bind(settingsOptions);
+        // Load configuration from Azure App Configuration into SettingsOptions
+        builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
 
-    var redis = ConnectionMultiplexer.Connect(settingsOptions.RedisConnectionString);
-    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-    builder.Services.AddSingleton<ICacheService, CacheService>();
+        SettingsOptions settingsOptions = new();
+        builder.Configuration
+            .GetSection("Awc:Settings")
+            .Bind(settingsOptions);
+
+        var redis = ConnectionMultiplexer.Connect(settingsOptions.RedisConnectionString);
+        builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+        builder.Services.AddSingleton<ICacheService, CacheService>();
+
+    */
+
+    string? dbConnectionString = builder.Configuration["ConnectionStrings:CompanyDb"] ?? throw new ArgumentNullException("Db connection string is null.");
+    Console.WriteLine($"Database connection string -> {dbConnectionString}");
 
     builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
     builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
@@ -45,7 +54,7 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    observabilityOptions.DbConnectionString = settingsOptions.CompanyDbConnectionString!;
+    observabilityOptions.DbConnectionString = dbConnectionString;
 
     builder.AddObservability();
     builder.Services.AddHealthChecks(observabilityOptions);
@@ -65,7 +74,7 @@ try
     builder.Services.AddEndpoints(typeof(Program).Assembly);
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
-    builder.AddCustomDatabase(settingsOptions.CompanyDbConnectionString!);
+    builder.AddCustomDatabase(dbConnectionString);
 
     WebApplication app = builder.Build();
 

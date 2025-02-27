@@ -15,20 +15,28 @@ try
     builder.Configuration.Sources.Clear();
     builder.Configuration
         .AddJsonFile("appsettings.json", false, true)
+        .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
-    // Retrieve the Azure App Configuration connection string
-    string? appConfigConnectString =
-        builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
-            throw new ArgumentNullException("Application config connection string is missing!");
+    /*
+        For now, disable the use of Azure Redis Cache and Azure Configuration Services
+    
+        // Retrieve the Azure App Configuration connection string
+        string? appConfigConnectString =
+            builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
+                throw new ArgumentNullException("Application config connection string is missing!");
 
-    // Load configuration from Azure App Configuration into SettingsOptions
-    builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
+        // Load configuration from Azure App Configuration into SettingsOptions
+        builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
 
-    SettingsOptions settingsOptions = new();
-    builder.Configuration
-        .GetSection("Awc:Settings")
-        .Bind(settingsOptions);
+        SettingsOptions settingsOptions = new();
+        builder.Configuration
+            .GetSection("Awc:Settings")
+            .Bind(settingsOptions);
+
+    */
+
+    string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDb"] ?? throw new ArgumentNullException("Db connection string is null.");
 
     ObservabilityOptions observabilityOptions = new();
 
@@ -36,7 +44,7 @@ try
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
-    observabilityOptions.DbConnectionString = settingsOptions.ProductDbConnectionString!;
+    observabilityOptions.DbConnectionString = dbConnectionString;
 
     builder.AddObservability();
 
@@ -141,7 +149,7 @@ try
 }
 catch (Exception ex)
 {
-    Console.WriteLine($"Company API microservice terminated unexpectedly with message: {ex.Message}");
+    Console.WriteLine($"Product API microservice terminated unexpectedly with message: {ex.Message}");
 }
 finally
 {

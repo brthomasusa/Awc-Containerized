@@ -4,13 +4,11 @@ namespace Awc.Services.Company.API.Application.Features.GetCompanyById
     (
         ICompanyService companyService,
         ILogger<GetCompanyByIdQueryHandler> logger,
-        ICacheService cacheService,
         IDatabaseRetryService databaseRetryService
     ) : IQueryHandler<GetCompanyByIdQuery, CompanyViewModel>
     {
         private readonly ICompanyService _companyService = companyService;
         private readonly ILogger<GetCompanyByIdQueryHandler> _logger = logger;
-        private readonly ICacheService _cacheService = cacheService;
         private readonly IDatabaseRetryService _databaseRetryService = databaseRetryService;
         private static readonly TimeSpan _cacheExpiration = TimeSpan.FromDays(1);
 
@@ -22,13 +20,13 @@ namespace Awc.Services.Company.API.Application.Features.GetCompanyById
         {
             try
             {
-                var cacheKey = $"company:{query.CompanyId}";
-                var cacheData = await _cacheService.GetCacheValueAsync<CompanyViewModel>(cacheKey);
+                // var cacheKey = $"company:{query.CompanyId}";
+                // var cacheData = await _cacheService.GetCacheValueAsync<CompanyViewModel>(cacheKey);
 
-                if (cacheData is not null)
-                {
-                    return cacheData;
-                }
+                // if (cacheData is not null)
+                // {
+                //     return cacheData;
+                // }
 
                 Result<CompanyViewModel>? getCompany = null;
 
@@ -44,7 +42,7 @@ namespace Awc.Services.Company.API.Application.Features.GetCompanyById
                     );
                 }
 
-                await _cacheService.SetCacheValueAsync<CompanyViewModel>(cacheKey, getCompany.Value, _cacheExpiration);
+                // await _cacheService.SetCacheValueAsync<CompanyViewModel>(cacheKey, getCompany.Value, _cacheExpiration);
 
                 return getCompany.Value;
             }

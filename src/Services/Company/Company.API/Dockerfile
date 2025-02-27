@@ -23,6 +23,7 @@ COPY ["src/BuildingBlocks/WebHostCustomization/WebHost.Customization/WebHost.Cus
 COPY ["src/Services/Company/Company.API/Company.API.csproj", "src/Services/Company/Company.API/"]
 COPY ["src/Services/Company/Company.FunctionalTests/Company.FunctionalTests.csproj", "src/Services/Company/Company.FunctionalTests/"]
 COPY ["src/Services/Product/Product.API/Product.API.csproj", "src/Services/Product/Product.API/"]
+COPY ["src/Services/Product/Product.FunctionalTests/Product.FunctionalTests.csproj", "src/Services/Product/Product.FunctionalTests/"]
 COPY ["Directory.Build.props", "./"]
 COPY ["Directory.Packages.props", "./"]
 COPY ["Awc.Containerized.sln", "./"]
@@ -38,4 +39,5 @@ RUN dotnet publish --no-restore "Company.API.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+EXPOSE 80
 ENTRYPOINT ["dotnet", "Company.API.dll"]

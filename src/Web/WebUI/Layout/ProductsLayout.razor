@@ -1,0 +1,86 @@
+@inherits LayoutComponentBase
+@using System.Reflection
+
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+
+<RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+    <RadzenHeader>
+        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
+            <RadzenColumn Size="1">
+                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+            </RadzenColumn>
+            <RadzenColumn Size="11">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                    <RadzenMenu Click="OnParentClicked">
+                        <RadzenMenuItem Text="Products" Icon="business" Path="/Pages/Company/ViewCompanyDetailPage" />
+                        <RadzenMenuItem Text="Product Illustrations" Icon="people"
+                            Path="/Pages/Company/ViewEmployeeListItemPage" />
+                        <RadzenMenuItem Text="Maintenance Documents" Icon="people"
+                            Path="/Pages/Company/ViewEmployeeListItemPage" />
+                    </RadzenMenu>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenHeader>
+
+    <RadzenSidebar @bind-Expanded="@sidebarExpanded">
+        <RadzenStack AlignItems="AlignItems.Center" class="rz-py-1 rz-py-lg-2"
+            Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
+            <RadzenImage Path="assets/awc.png" style="width: 48px; height: 48px;"></RadzenImage>
+            <RadzenText Text="Adventure Works Cycles" TextStyle="Radzen.Blazor.TextStyle.Subtitle1" class="rz-mb-0"
+                style="color: var(--rz-primary-light);" />
+        </RadzenStack>
+        <MainMenu />
+        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6"
+            Style="padding: var(--rz-panel-menu-item-padding);">
+            <RadzenText Text="@currentVersion" TextStyle="Radzen.Blazor.TextStyle.Caption"
+                style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P"
+                TextAlign="Radzen.TextAlign.Center" />
+            <RadzenText Text="BTechnical Consulting, Inc." TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"
+                style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P"
+                TextAlign="Radzen.TextAlign.Center" />
+            <RadzenText Text="Copyright Ⓒ 2025" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"
+                style="color: var(--rz-text-disabled-color);" TagName="Radzen.Blazor.TagName.P"
+                TextAlign="Radzen.TextAlign.Center" />
+        </RadzenStack>
+    </RadzenSidebar>
+
+    <RadzenBody Expanded="@sidebarExpanded">
+        <ChildContent>
+            <div class="container-fluid" Name="main">
+                @Body
+            </div>
+        </ChildContent>
+    </RadzenBody>
+</RadzenLayout>
+
+@code {
+    [Inject] private NavigationManager? NavManager { get; set; }
+    private string currentVersion = string.Empty;
+    private bool sidebarExpanded = true;
+
+    protected override void OnInitialized()
+    {
+
+        Assembly currentAssembly = Assembly.GetExecutingAssembly();
+        currentVersion = $"AdventureWorksCycles v{currentAssembly.GetName().Version}";
+
+        base.OnInitialized();
+    }
+
+    void OnParentClicked(MenuItemEventArgs args)
+    {
+        switch (args.Text)
+        {
+            case "Company":
+                NavManager!.NavigateTo("/Pages/Company/ViewCompanyDetailPage");
+                break;
+            case "Employees":
+                NavManager!.NavigateTo("/Pages/Company/ViewEmployeeListItemPage");
+                break;
+        }
+    }
+}
