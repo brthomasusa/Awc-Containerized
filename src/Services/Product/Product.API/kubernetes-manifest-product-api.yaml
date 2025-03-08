@@ -1,48 +1,43 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Pod
 metadata:
-    name: product-api
+    name: product-api-pod
+    namespace: awc-ns
     labels:
         app: product-api
 spec:
-    selector:
-        matchLabels:
-            app: product-api
-    replicas: 1
-    template:
-        metadata:
-            labels:
-                app: product-api
-        spec:
-            containers:
-              - name: product-api
-                image: awcacrbrthomasusa.azurecr.io/product-api:latest
-                env:
-                  - name: "ConnectionStrings__ProductDb"
-                    value: "Server=tcp:awc-db-server.database.windows.net,1433;Initial Catalog=product-api-db;Persist Security Info=False;User ID=awc-dba;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-                  - name: "ASPNETCORE_ENVIRONMENT"
-                    value: "Productions"
-                  - name: "ASPNETCORE_HTTP_PORTS"
-                    value: "3100"
-                resources:
-                    requests:
-                        cpu: 100m
-                        memory: 100Mi
-                    limits:
-                        cpu: 200m
-                        memory: 200Mi
-                ports:
-                  - containerPort: 3100
+    containers:
+      - name: product-api
+        image: brthomasusa/product-api:latest
+        imagePullPolicy: Always
+        env:
+          - name: "ConnectionStrings__ProductDb"
+            value: "Server=tcp:192.168.1.16,1433;Database=ProductAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True;"
+          - name: "ConnectionStrings__Redis"
+            value: "10.96.86.151:6379"
+          - name: "ASPNETCORE_ENVIRONMENT"
+            value: "Productions"
+          - name: "ASPNETCORE_HTTP_PORTS"
+            value: "3100"
+        resources:
+            requests:
+                cpu: 100m
+                memory: 100Mi
+            limits:
+                cpu: 200m
+                memory: 200Mi
+        ports:
+          - containerPort: 3100
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: product-api
+    name: product-api-svc
 spec:
     ports:
-      - port: 3100
+      - name: product-api-url
+        protocol: TCP
+        port: 3100
+        targetPort: 3100
     selector:
         app: product-api
----
-
-

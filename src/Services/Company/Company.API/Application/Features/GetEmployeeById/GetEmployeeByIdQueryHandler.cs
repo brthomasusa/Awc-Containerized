@@ -3,10 +3,12 @@ namespace Awc.Services.Company.API.Application.Features.GetEmployeeById
     public sealed class GetEmployeeByIdQueryHandler
     (
         IEmployeeService service,
+        ICacheService cacheService,
         IDatabaseRetryService databaseRetryService
     ) : IQueryHandler<GetEmployeeByIdQuery, EmployeeDetailViewModel>
     {
         private readonly IEmployeeService _service = service;
+        private readonly ICacheService _cacheService = cacheService;
         private readonly IDatabaseRetryService _databaseRetryService = databaseRetryService;
         private static readonly TimeSpan _cacheExpiration = TimeSpan.FromDays(1);
 
@@ -16,13 +18,13 @@ namespace Awc.Services.Company.API.Application.Features.GetEmployeeById
             CancellationToken cancellationToken
         )
         {
-            // var cacheKey = $"employee:{request.EmployeeId}";
-            // var cacheData = await _cacheService.GetCacheValueAsync<EmployeeDetailViewModel>(cacheKey);
+            var cacheKey = $"employee:{request.EmployeeId}";
+            var cacheData = await _cacheService.GetCacheValueAsync<EmployeeDetailViewModel>(cacheKey);
 
-            // if (cacheData is not null)
-            // {
-            //     return cacheData;
-            // }
+            if (cacheData is not null)
+            {
+                return cacheData;
+            }
 
             Result<EmployeeDetailViewModel>? result = null;
 
@@ -38,8 +40,8 @@ namespace Awc.Services.Company.API.Application.Features.GetEmployeeById
                 );
             }
 
-            // var expireyTime = DateTimeOffset.Now.AddSeconds(60);
-            // await _cacheService.SetCacheValueAsync<EmployeeDetailViewModel>(cacheKey, result.Value, _cacheExpiration);
+            var expireyTime = DateTimeOffset.Now.AddSeconds(60);
+            await _cacheService.SetCacheValueAsync<EmployeeDetailViewModel>(cacheKey, result.Value, _cacheExpiration);
 
             return result.Value;
         }

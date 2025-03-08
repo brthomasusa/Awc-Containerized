@@ -21,30 +21,12 @@ try
         .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
-    /*
-        For now, disable the use of Azure Redis Cache and Azure Configuration Services
-
-        // Retrieve the Azure App Configuration connection string
-        string? appConfigConnectString =
-            builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
-                throw new ArgumentNullException("Application config connection string is missing!");
-
-        // Load configuration from Azure App Configuration into SettingsOptions
-        builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
-
-        SettingsOptions settingsOptions = new();
-        builder.Configuration
-            .GetSection("Awc:Settings")
-            .Bind(settingsOptions);
-
-        var redis = ConnectionMultiplexer.Connect(settingsOptions.RedisConnectionString);
-        builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-        builder.Services.AddSingleton<ICacheService, CacheService>();
-
-    */
-
     string? dbConnectionString = builder.Configuration["ConnectionStrings:CompanyDb"] ?? throw new ArgumentNullException("Db connection string is null.");
-    Console.WriteLine($"Database connection string -> {dbConnectionString}");
+    string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
+
+    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+    builder.Services.AddSingleton<ICacheService, CacheService>();
 
     builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
     builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();

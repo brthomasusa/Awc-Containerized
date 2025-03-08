@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "kubernetes://schema/v1%40service": "file:///home/bthomas/Projects/NetCore/Awc-Containerized/src/ApiGateways/Web.Api.Gateway/kubernetes-manifest-web-gateway.yaml"
+    }
+}

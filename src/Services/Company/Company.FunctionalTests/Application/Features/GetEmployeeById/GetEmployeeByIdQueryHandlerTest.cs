@@ -36,7 +36,7 @@ namespace Company.FunctionalTests.Application.Features.GetEmployeeById
                 ));
 
             GetEmployeeByIdQuery request = new(EmployeeId: 16);
-            GetEmployeeByIdQueryHandler handler = new(_service, _databaseRetryService);
+            GetEmployeeByIdQueryHandler handler = new(_service, mockCacheService.Object, _databaseRetryService);
 
             // Act
             Result<EmployeeDetailViewModel> result = await handler.Handle(request, new CancellationToken());
@@ -66,7 +66,7 @@ namespace Company.FunctionalTests.Application.Features.GetEmployeeById
                 ));
 
             GetEmployeeByIdQuery request = new(EmployeeId: -16);
-            GetEmployeeByIdQueryHandler handler = new(_service, _databaseRetryService);
+            GetEmployeeByIdQueryHandler handler = new(_service, mockCacheService.Object, _databaseRetryService);
 
             // Act
             Result<EmployeeDetailViewModel> result = await handler.Handle(request, new CancellationToken());

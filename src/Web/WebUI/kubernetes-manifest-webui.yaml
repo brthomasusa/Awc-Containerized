@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: webui
+    name: webui-deploy
     labels:
-        app: web-gateway
+        app: webui
 spec:
     selector:
         matchLabels:
@@ -16,7 +16,8 @@ spec:
         spec:
             containers:
               - name: webui
-                image: awcacrbrthomasusa.azurecr.io/webui:latest
+                image: brthomasusa/webui:latest
+                imagePullPolicy: Always
                 resources:
                     requests:
                         cpu: 100m
@@ -25,16 +26,17 @@ spec:
                         cpu: 200m
                         memory: 200Mi
                 ports:
-                  - containerPort: 5056
+                  - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-    name: webui
+    name: webui-svc
 spec:
     type: LoadBalancer
     ports:
       - port: 5056
+        targetPort: 80
     selector:
         app: webui
 ---
