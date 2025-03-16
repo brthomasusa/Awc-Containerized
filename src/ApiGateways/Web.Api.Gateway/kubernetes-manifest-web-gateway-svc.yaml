@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: web-gateway-svc
+    namespace: awc-ns
+spec:
+    type: LoadBalancer
+    ports:
+      - port: 5259
+    selector:
+        app: web-gateway

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: seq-svc
+    namespace: awc-ns
+spec:
+    type: LoadBalancer
+    ports:
+      - name: seq-dashboard-url
+        protocol: TCP
+        port: 5341
+        targetPort: 80
+    selector:
+        app: seq

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: web-gateway-deploy
+    namespace: awc-ns
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: web-gateway
+    template:
+        metadata:
+            namespace: awc-ns
+            labels:
+                app: web-gateway
+        spec:
+            containers:
+              - name: web-gateway
+                image: brthomasusa/web-gateway:latest
+                imagePullPolicy: Always
+                env:
+                  - name: "ASPNETCORE_ENVIRONMENT"
+                    value: "Production"
+                  - name: "ASPNETCORE_HTTP_PORTS"
+                    value: "5259"
+                resources:
+                    requests:
+                        cpu: "2"
+                        memory: 100Mi
+                    limits:
+                        cpu: "4"
+                        memory: 1024Mi
+                ports:
+                  - containerPort: 5259

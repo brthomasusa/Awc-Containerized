@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: seq-deploy
+    namespace: awc-ns
+spec:
+    selector:
+        matchLabels:
+            app: seq
+    template:
+        metadata:
+            namespace: awc-ns
+            labels:
+                app: seq
+        spec:
+            containers:
+              - name: seq-server
+                image: datalust/seq
+                imagePullPolicy: IfNotPresent
+                env:
+                  - name: "ACCEPT_EULA"
+                    value: "Y"
+                  - name: "SEQ_FIRSTRUN_ADMINPASSWORDHASH"
+                    value: "QCLU+y+gkoqb/cBF81brMZ9h8mBGO6NCOtDwPIe1WsYQ1ukSmcHRmDtRgr57wVx00G6oPCXMFQVcNN6UPxL0tDYiuQqkIuJZybI7Qb814eTB"
+                volumeMounts:
+                  - mountPath: "/data"
+                    name: seq-storage-mount
+                resources:
+                    requests:
+                        cpu: "0.5"
+                        memory: 100Mi
+                    limits:
+                        cpu: "1"
+                        memory: 500Mi
+                ports:
+                  - containerPort: 80
+            volumes:
+              - name: seq-storage-mount
+                persistentVolumeClaim:
+                    claimName: seq-pvc

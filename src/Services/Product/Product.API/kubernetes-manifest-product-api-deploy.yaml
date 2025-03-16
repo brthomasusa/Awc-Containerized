@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: product-api-deploy
+    namespace: awc-ns
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: product-api
+    template:
+        metadata:
+            namespace: awc-ns
+            labels:
+                app: product-api
+        spec:
+            containers:
+              - name: product-api
+                image: brthomasusa/product-api:latest
+                imagePullPolicy: Always
+                env:
+                  - name: "ConnectionStrings__ProductDb"
+                    value: "Server=tcp:192.168.1.16,1433;Database=ProductAPI;User Id=sa;Password=Info99Gum;TrustServerCertificate=True;"
+                  - name: "ConnectionStrings__Redis"
+                    value: "redis-svc:6379"
+                  - name: "ASPNETCORE_ENVIRONMENT"
+                    value: "Production"
+                  - name: "ASPNETCORE_HTTP_PORTS"
+                    value: "3100"
+                resources:
+                    requests:
+                        cpu: "0.5"
+                        memory: 100Mi
+                    limits:
+                        cpu: "2"
+                        memory: 500Mi
+                ports:
+                  - containerPort: 3100

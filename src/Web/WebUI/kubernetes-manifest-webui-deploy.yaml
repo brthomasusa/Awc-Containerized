@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: webui-deploy
+    namespace: awc-ns
+spec:
+    selector:
+        matchLabels:
+            app: webui
+    template:
+        metadata:
+            namespace: awc-ns
+            labels:
+                app: webui
+        spec:
+            containers:
+              - name: webui
+                image: brthomasusa/webui:latest
+                imagePullPolicy: Always
+                resources:
+                    requests:
+                        cpu: "0.5"
+                        memory: 100Mi
+                    limits:
+                        cpu: "1"
+                        memory: 200Mi
+                ports:
+                  - containerPort: 80

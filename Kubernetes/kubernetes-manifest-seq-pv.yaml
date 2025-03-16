@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: seq-pv
+    namespace: awc-ns
+    labels:
+        type: localpath
+        env: test
+spec:
+    storageClassName: manual
+    capacity:
+        storage: 2Gi
+    accessModes:
+      - ReadWriteOnce
+    hostPath:
+        path: "/home/bthomas/.minikube/storage/awc-seq"

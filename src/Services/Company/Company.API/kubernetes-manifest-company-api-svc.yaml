@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: company-api-svc
+    namespace: awc-ns
+spec:
+    ports:
+      - name: company-api-url
+        protocol: TCP
+        port: 3000
+        targetPort: 3000
+    selector:
+        app: company-api

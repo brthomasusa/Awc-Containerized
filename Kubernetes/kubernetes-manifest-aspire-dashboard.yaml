@@ -35,6 +35,15 @@ spec:
         protocol: TCP
         port: 18888
         targetPort: 18888
+    selector:
+        app: aspire-dashboard
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: aspire-otpexporter-svc
+spec:
+    ports:
       - name: collector-url
         protocol: TCP
         port: 4317

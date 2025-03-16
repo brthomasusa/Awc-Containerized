@@ -1,23 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-    name: webui-deploy
-    labels:
-        app: webui
+    name: nginx-deployment-example
 spec:
+    replicas: 3
     selector:
         matchLabels:
-            app: webui
-    replicas: 1
+            app: nginx
+            environment: test
+    minReadySeconds: 10
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxUnavailable: 1
+            maxSurge: 1
     template:
         metadata:
             labels:
-                app: webui
+                app: nginx
+                environment: test
         spec:
             containers:
-              - name: webui
-                image: brthomasusa/webui:latest
-                imagePullPolicy: Always
+              - name: nginx
+                image: nginx:1.17
                 resources:
                     requests:
                         cpu: 100m
@@ -27,18 +32,3 @@ spec:
                         memory: 200Mi
                 ports:
                   - containerPort: 80
----
-apiVersion: v1
-kind: Service
-metadata:
-    name: webui-svc
-spec:
-    type: LoadBalancer
-    ports:
-      - port: 5056
-        targetPort: 80
-    selector:
-        app: webui
----
-
-
