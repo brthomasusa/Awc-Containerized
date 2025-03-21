@@ -1,3 +1,6 @@
+using WebUI.Utilities;
+using System.Text.Json.Serialization;
+
 namespace WebUI.Models.ProductApi
 {
     public sealed class ProductDetailViewModel
@@ -5,7 +8,11 @@ namespace WebUI.Models.ProductApi
         public int ProductID { get; set; }
         public string? Name { get; set; }
         public string? ProductNumber { get; set; }
+
+        [JsonConverter(typeof(BitToBooleanJsonConverter))]
         public bool MakeFlag { get; set; }
+
+        [JsonConverter(typeof(BitToBooleanJsonConverter))]
         public bool FinishedGoodsFlag { get; set; }
         public string? Color { get; set; }
         public Int16 SafetyStockLevel { get; set; }
@@ -22,8 +29,14 @@ namespace WebUI.Models.ProductApi
         public string? Style { get; set; }
         public string? ProductSubCategory { get; set; }
         public string? ProductModel { get; set; }
-        public DateTime SellStartDate { get; set; }
-        public DateTime SellEndDate { get; set; }
-        public DateTime DiscontinuedDate { get; set; }
+
+        [JsonConverter(typeof(DateTimeOffsetJsonConverter))]
+        public DateTimeOffset SellStartDate { get; set; }
+
+        [JsonConverter(typeof(DateTimeOffsetJsonConverter))]
+        public DateTimeOffset SellEndDate { get; set; }
+
+        [JsonConverter(typeof(DateTimeOffsetJsonConverter))]
+        public DateTimeOffset DiscontinuedDate { get; set; }
     }
 }

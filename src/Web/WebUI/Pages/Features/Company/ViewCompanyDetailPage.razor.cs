@@ -7,7 +7,7 @@ using WebUI.Services.Repositories.Company;
 using System.Text.Json;
 using Microsoft.JSInterop;
 
-namespace WebUI.Pages.Company
+namespace WebUI.Pages.Features.Company
 {
     public partial class ViewCompanyDetailPage
     {

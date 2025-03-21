@@ -1,0 +1,38 @@
+@page "/Pages/Features/Products/ProductListPage"
+@using WebUI.Models.ProductApi
+
+<PageTitle>Products</PageTitle>
+
+<h4 class="mb-5">Product List</h4>
+
+<RadzenDataGrid TItem="ProductListItemViewModel" AllowFiltering="true" AllowColumnResize="true"
+    AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true"
+    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@_products" ColumnWidth="300px"
+    LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
+    @bind-Value=@_selectedProduct RowDoubleClick="@((args) => OnRowDoubleClicked(args))" Density="Density.Compact">
+    <Columns>
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductID)" Filterable="false" Title="ID"
+            Frozen="true" Width="50px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.Name)" Title="Name" Frozen="true"
+            Width="250px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductNumber)" Title="Product #"
+            Width="120px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.MakeFlag)" Title="Make?" Width="100px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.FinishedGoodsFlag)" Title="Finished Goods?"
+            Width="180px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.StandardCost)" Title="Std Cost"
+            Width="110px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ListPrice)" Title="List Price" Width="110px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.DaysToManufacture)" Title="DaysToManufacture"
+            Width="180px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductSubCategory)" Title="Subcategory"
+            Width="180px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductModel)" Title="Model" Width="150px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.SellStartDate)" Title="Sell Start Date"
+            FormatString="{0:d}" Width="140px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.SellEndDate)" Title="Sell End Date"
+            FormatString="{0:d}" Width="140px" />
+        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.DiscontinuedDate)" Title="Discontinued Date"
+            FormatString="{0:d}" Width="150px" />
+    </Columns>
+</RadzenDataGrid>

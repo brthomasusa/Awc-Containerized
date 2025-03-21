@@ -8,7 +8,7 @@ using WebUI.Models.CompanyApi;
 using WebUI.Services.Repositories.Company;
 using WebUI.Utilities;
 
-namespace WebUI.Pages.Company
+namespace WebUI.Pages.Features.Company
 {
     public partial class ViewEmployeeDetailDialogPage
     {
