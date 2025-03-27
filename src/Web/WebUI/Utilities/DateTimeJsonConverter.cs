@@ -15,7 +15,6 @@ namespace WebUI.Utilities
             DateTime dateValue;
             DateTime.TryParse(dateString, out dateValue);
             return dateValue;
-
         }
 
 

@@ -22,7 +22,7 @@ namespace WebUI.Models.ProductApi
         public string? Size { get; set; }
         public string? SizeUnitOfMeasurement { get; set; }
         public string? WeightUnitOfMeasurement { get; set; }
-        public decimal Weight { get; set; }
+        // public decimal Weight { get; set; }
         public int DaysToManufacture { get; set; }
         public string? ProductLine { get; set; }
         public string? Class { get; set; }
@@ -30,13 +30,13 @@ namespace WebUI.Models.ProductApi
         public string? ProductSubCategory { get; set; }
         public string? ProductModel { get; set; }
 
-        [JsonConverter(typeof(DateTimeOffsetJsonConverter))]
-        public DateTimeOffset SellStartDate { get; set; }
+        [JsonConverter(typeof(DateTimeJsonConverter))]
+        public DateTime SellStartDate { get; set; }
 
-        [JsonConverter(typeof(DateTimeOffsetJsonConverter))]
-        public DateTimeOffset SellEndDate { get; set; }
+        [JsonConverter(typeof(DateTimeJsonConverter))]
+        public DateTime SellEndDate { get; set; }
 
-        [JsonConverter(typeof(DateTimeOffsetJsonConverter))]
-        public DateTimeOffset DiscontinuedDate { get; set; }
+        [JsonConverter(typeof(DateTimeJsonConverter))]
+        public DateTime DiscontinuedDate { get; set; }
     }
 }

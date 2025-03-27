@@ -20,7 +20,7 @@ namespace WebUI.Pages.Features.Company
 
         private DocumentPage<EmployeeListItemViewModel>? _employees;
         private string _lastNameFilter = string.Empty;
-        private readonly IEnumerable<int> pageSizeOptions = new List<int>() { 5, 10, 15, 20 };
+        private readonly IEnumerable<int> pageSizeOptions = [5, 10, 15, 20];
         private bool isLoading;
         private EmployeeDialogSettings? _settings;
 

@@ -1,4 +1,4 @@
-@page "/Pages/Features/Products/ProductListPage"
+@page "/Pages/Features/Products/ViewProduct/ProductListPage"
 @using WebUI.Models.ProductApi
 
 <PageTitle>Products</PageTitle>
@@ -11,6 +11,14 @@
     LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
     @bind-Value=@_selectedProduct RowDoubleClick="@((args) => OnRowDoubleClicked(args))" Density="Density.Compact">
     <Columns>
+        @* <RadzenDataGridColumn TItem="ProductListItemViewModel" Sortable="false" Filterable="false" Frozen="true"
+            Width="20px">
+            <Template Context="item">
+                <RadzenButton Click="() => ViewProductDetailViewModel(item)" Icon="visibility"
+                    Size="ButtonSize.ExtraSmall" class="rz-border-radius-10 rz-shadow-6"
+                    ButtonStyle="ButtonStyle.Primary" />
+            </Template>
+        </RadzenDataGridColumn> *@
         <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductID)" Filterable="false" Title="ID"
             Frozen="true" Width="50px" TextAlign="TextAlign.Center" />
         <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.Name)" Title="Name" Frozen="true"

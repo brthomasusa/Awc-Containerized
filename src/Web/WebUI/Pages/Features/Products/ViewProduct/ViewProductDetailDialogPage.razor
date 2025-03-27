@@ -1,5 +1,173 @@
-@page "/Pages/Features/Products/ViewProduct/ViewProductDetailDialogPage"
+@page "/Pages/Features/Products/ViewProduct/ViewProductDetailDialogPage/{ProductID:int}"
 
+@using WebUI.Components
 @using WebUI.Models.ProductApi
 
 <PageTitle>Product Detail</PageTitle>
+
+<ErrorBoundary>
+    <RadzenStack Gap="1rem" Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween"
+        Style="height: 100%;">
+        <RadzenRow>
+            <RadzenColumn Size="12" class="rz-p-4 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
+                <RadzenStack>
+                    @if (_product is null)
+                    {
+                        <LoadingComponent />
+                    }
+                    else
+                    {
+                        @* Row one        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col-2">
+                                <RadzenFormField Text="Product ID" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="_product!.ProductID" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col-6">
+                                <RadzenFormField Text="Name" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.Name" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col-4">
+                                <RadzenFormField Text="Product Number" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.ProductNumber" />
+                                </RadzenFormField>
+                            </div>
+
+                        </div>
+
+                        @* Row two        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Make?" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value=_makeFlag />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Finished Good?" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_finishGoodsFlag" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Color" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.Color" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Safety Stock Level" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="_product!.SafetyStockLevel" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row three        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Reorder Point" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="_product!.ReorderPoint" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Standard Cost" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="_product!.StandardCost" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="List Price" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="_product!.ListPrice" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Size" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.Size" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row four        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Size Unit Of Measurement" Variant="Variant.Flat"
+                                    style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.SizeUnitOfMeasurement" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Weight Unit Of Measurement" Variant="Variant.Flat"
+                                    style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.WeightUnitOfMeasurement" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Weight" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value=_weight />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Days To Manufacture" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenNumeric Disabled="true" @bind-Value="_product!.DaysToManufacture" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row five        *@
+                        <div class="row" style="margin-bottom: 1.00rem;">
+                            <div class="col">
+                                <RadzenFormField Text="Product Line" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.ProductLine" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Class" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.Class" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Style" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.Style" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Product Subcategory" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.ProductSubCategory" />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+                        @* Row six       *@
+                        <div class="row">
+                            <div class="col">
+                                <RadzenFormField Text="Product Model" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value="_product!.ProductModel" />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Sell StartDate" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value=_sellStartDate />
+                                </RadzenFormField>
+                            </div>
+                            <div class=" col">
+                                <RadzenFormField Text="Sell EndDate" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value=_sellEndDate />
+                                </RadzenFormField>
+                            </div>
+                            <div class="col">
+                                <RadzenFormField Text="Discontinued Date" Variant="Variant.Flat" style="width: 100%;">
+                                    <RadzenTextBox Disabled="true" @bind-Value=_discontinuedDate />
+                                </RadzenFormField>
+                            </div>
+                        </div>
+
+
+                        <RadzenStack Visible="@ShowClose" Orientation="Orientation.Horizontal"
+                            JustifyContent="JustifyContent.End" Gap="0.5rem">
+                            <RadzenButton Click="@((args) => DialogService!.Close(true))" Variant="Variant.Flat"
+                                class="rz-border-radius-10 rz-shadow-6" Text="Close" Style="width: 120px" />
+                        </RadzenStack>
+                    }
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</ErrorBoundary>

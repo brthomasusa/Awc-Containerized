@@ -6,16 +6,26 @@ using WebUI.Services.Repositories.Product;
 using WebUI.Utilities;
 using WebUI;
 using Radzen;
+using Polly;
+using Polly.Extensions.Http;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+Uri awcBaseApiAddress = new(builder.Configuration["WebGatewayUrl"]!);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-builder.Services.AddScoped<IProductService, ProductService>();
-// builder.Services.AddHttpClient<ICompanyService, CompanyService>(client =>
-//     client.BaseAddress = new Uri(builder.Configuration["WebGatewayUrl"]!)
-// );
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+// CompanyService
+builder.Services.AddHttpClient<ICompanyService, CompanyService>(client =>
+    client.BaseAddress = awcBaseApiAddress!
+)
+.SetHandlerLifetime(TimeSpan.FromMinutes(5))
+.AddPolicyHandler(GetRetryPolicy());
+
+// ProductService
+builder.Services.AddHttpClient<IProductService, ProductService>(client =>
+    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
+);
 
 builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<DialogService>();
@@ -24,3 +34,11 @@ builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
 
 await builder.Build().RunAsync();
+
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .OrResult(msg => msg.StatusCode == System.Net.HttpStatusCode.NotFound)
+        .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+}

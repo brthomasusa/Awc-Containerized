@@ -14,7 +14,8 @@
     <PackageReference Include="Radzen.Blazor" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Razor" />    
+    <PackageReference Include="Microsoft.CodeAnalysis.Razor" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" />    
   </ItemGroup>
 
 </Project>

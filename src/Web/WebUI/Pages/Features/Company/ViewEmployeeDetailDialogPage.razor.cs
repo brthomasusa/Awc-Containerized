@@ -1,9 +1,6 @@
-using System.Text.Json;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
 using Radzen;
 using WebUI.Exceptions;
-using WebUI.Models;
 using WebUI.Models.CompanyApi;
 using WebUI.Services.Repositories.Company;
 using WebUI.Utilities;
@@ -48,7 +45,5 @@ namespace WebUI.Pages.Features.Company
 
             }
         }
-
-
     }
 }
