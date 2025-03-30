@@ -19,7 +19,8 @@
   <ItemGroup>        
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" /> 
-
+    <PackageReference Include="Asp.Versioning.Http" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
@@ -34,13 +35,14 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="MediatR" />
     <PackageReference Include="Mapster" />
-    <PackageReference Include="Mapster.DependencyInjection" /> 
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Mapster.DependencyInjection" />     
     <PackageReference Include="Microsoft.Data.SqlClient" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" />    
-    <PackageReference Include="Swashbuckle.AspNetCore" /> 
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />    
+    <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" />
-    <PackageReference Include="Azure.Identity" />         
+    <PackageReference Include="Azure.Identity" />          
 
   </ItemGroup>
 
@@ -49,12 +51,14 @@
   </ItemGroup>
 
 <ItemGroup>
+    <ProjectReference Include="../../../BuildingBlocks/Devspaces.Support/Devspaces.Support.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBus/EventBus.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/EventBusServiceBus/EventBusServiceBus.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/EventBus/IntegrationEventLogEF/IntegrationEventLogEF.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/Shared.Kernel/Shared.Kernel.csproj" />
     <ProjectReference Include="../../../BuildingBlocks/Observability/Observability.csproj" />
+    <ProjectReference Include="../../../BuildingBlocks/WebHostCustomization/WebHost.Customization/WebHost.Customization.csproj" />
 </ItemGroup>
 
 </Project>

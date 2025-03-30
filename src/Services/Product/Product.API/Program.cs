@@ -1,10 +1,15 @@
+using Asp.Versioning.Builder;
+using Asp.Versioning;
 using System.Text;
 using System.Text.Json;
 using Awc.Services.Product.Product.API;
+using Awc.Services.Product.Product.API.Infrastructure;
 using Awc.Services.Product.Product.API.Middleware;
 using Awc.Services.Product.Product.API.Extentions;
+using Awc.Services.Product.Product.API.Services;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
+using StackExchange.Redis;
 
 const string appName = "Product API Service";
 
@@ -18,25 +23,15 @@ try
         .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
-    /*
-        For now, disable the use of Azure Redis Cache and Azure Configuration Services
-    
-        // Retrieve the Azure App Configuration connection string
-        string? appConfigConnectString =
-            builder.Configuration["APP_CONFIG_CONNECTION_STRING"] ??
-                throw new ArgumentNullException("Application config connection string is missing!");
-
-        // Load configuration from Azure App Configuration into SettingsOptions
-        builder.Configuration.AddAzureAppConfiguration(appConfigConnectString);
-
-        SettingsOptions settingsOptions = new();
-        builder.Configuration
-            .GetSection("Awc:Settings")
-            .Bind(settingsOptions);
-
-    */
-
     string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDb"] ?? throw new ArgumentNullException("Db connection string is null.");
+    string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
+
+    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+    builder.Services.AddSingleton<ICacheService, CacheService>();
+
+    builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
+    builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
 
     ObservabilityOptions observabilityOptions = new();
 
@@ -49,9 +44,25 @@ try
     builder.AddObservability();
 
     builder.Services.AddHealthChecks(observabilityOptions);
+    builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddCustomSwagger();
 
-    builder.Services.AddControllers();
+    // builder.Services.AddControllers();
+
+    builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1);
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    }).AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'V";
+        options.SubstituteApiVersionInUrl = true;
+    });
+
+    builder.Services.AddEndpoints(typeof(Program).Assembly);
+    builder.Services.AddMappings();
+    builder.Services.AddMediatr();
+    builder.AddCustomDatabase(dbConnectionString);
 
     var app = builder.Build();
 
@@ -69,10 +80,14 @@ try
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-    app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
-    app.MapControllers();
+    ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+        .HasApiVersion(new ApiVersion(1))
+        .ReportApiVersions()
+        .Build();
 
-    Serilog.Log.Information("Starting web host {ApplicationName}...", appName);
+    RouteGroupBuilder versionedGroup = app
+        .MapGroup("api/v{version:apiVersion}")
+        .WithApiVersionSet(apiVersionSet);
 
     app.MapHealthChecks(
         "/hc",
@@ -91,9 +106,7 @@ try
     .WithName("HealthCheck")
     .WithOpenApi();
 
-    app.MapGet("/hello-world", () => "Hello, World!")
-    .WithName("GetGreeting")
-    .WithOpenApi();
+    Serilog.Log.Information("Starting web host {ApplicationName}...", appName);
 
     app.Run();
 

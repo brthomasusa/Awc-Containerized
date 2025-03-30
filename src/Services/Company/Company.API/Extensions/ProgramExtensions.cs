@@ -2,8 +2,6 @@
 
 using Awc.Services.Company.API.Application.Behaviors;
 using Awc.Services.Company.API.Endpoints;
-using Awc.Services.Company.API.Services;
-using AWC.Shared.Kernel.Guards;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
 

@@ -1,4 +1,4 @@
-namespace Awc.Services.Product.Product.API.Domain.Entities.Products
+namespace Awc.Services.Product.Product.API.Models.Products
 {
     public sealed class Product
     {

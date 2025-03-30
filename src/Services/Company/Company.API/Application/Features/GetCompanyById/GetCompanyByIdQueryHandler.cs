@@ -58,7 +58,5 @@ namespace Awc.Services.Company.API.Application.Features.GetCompanyById
                 );
             }
         }
-
-
     }
 }

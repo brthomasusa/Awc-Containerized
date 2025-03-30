@@ -1,12 +1,11 @@
 using System.Data.SqlClient;
-
-namespace Company.FunctionalTests
+namespace Product.FunctionalTests
 {
     public static class ReseedTestDatabase
     {
         public static Result<bool> ReseedDatabase()
         {
-            string? _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDb");
+            string? _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ProductDb");
             try
             {
                 using SqlConnection connection = new(_connectionString);

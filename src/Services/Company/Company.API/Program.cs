@@ -53,6 +53,7 @@ try
         options.GroupNameFormat = "'v'V";
         options.SubstituteApiVersionInUrl = true;
     });
+
     builder.Services.AddEndpoints(typeof(Program).Assembly);
     builder.Services.AddMappings();
     builder.Services.AddMediatr();

@@ -1,4 +1,4 @@
-namespace Awc.Services.Product.Product.API.Application.QueryResponse
+namespace Awc.Services.Product.Product.API.ViewModels
 {
     public sealed class ProductListItemViewModel
     {

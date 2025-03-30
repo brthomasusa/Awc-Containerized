@@ -1,29 +1,28 @@
-using Awc.Services.Company.API.Infrastructure;
+using Awc.Services.Product.Product.API.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace Company.FunctionalTests
+namespace Product.FunctionalTests
 {
     public abstract class TestBase : IDisposable
     {
-        protected readonly CompanyDbContext _dbContext;
+        protected readonly ProductDbContext _dbContext;
         protected readonly DapperContext _dapperCtx;
 
         protected TestBase()
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__CompanyDb");
-            var optionsBuilder = new DbContextOptionsBuilder<CompanyDbContext>();
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ProductDb");
+            var optionsBuilder = new DbContextOptionsBuilder<ProductDbContext>();
 
             optionsBuilder.UseSqlServer(
                 connectionString!,
-                msSqlOptions => msSqlOptions.MigrationsAssembly(typeof(CompanyDbContext).Assembly.FullName)
+                msSqlOptions => msSqlOptions.MigrationsAssembly(typeof(ProductDbContext).Assembly.FullName)
             )
             .EnableSensitiveDataLogging()
             .EnableDetailedErrors();
 
-            _dbContext = new CompanyDbContext(optionsBuilder.Options);
+            _dbContext = new ProductDbContext(optionsBuilder.Options);
             _dapperCtx = new DapperContext(connectionString!);
 
-            // Company.FunctionalTests is only testing queries so no need to reset the database.
             // _dbContext.Database.ExecuteSqlRaw("EXEC dbo.usp_InitializeTestDb");
         }
 
