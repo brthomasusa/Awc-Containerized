@@ -6,7 +6,7 @@ namespace Awc.Services.Product.Product.API.Application.Features.Products.GetProd
         ILogger<GetPrductDetailViewModelByIdQueryHandler> logger,
         IDatabaseRetryService databaseRetryService,
         DapperContext context
-    )
+    ) : IQueryHandler<GetProductViewModelByIdQuery, ProductDetailViewModel>
     {
         private readonly ICacheService _cacheService = cacheService;
         private readonly ILogger<GetPrductDetailViewModelByIdQueryHandler> _logger = logger;
@@ -91,12 +91,10 @@ namespace Awc.Services.Product.Product.API.Application.Features.Products.GetProd
             }
             catch (Exception ex)
             {
-                {
-                    _logger.LogError("An error occurred: {ErrorMessage}", Helpers.GetInnerExceptionMessage(ex));
+                _logger.LogError("An error occurred: {ErrorMessage}", Helpers.GetInnerExceptionMessage(ex));
 
-                    return Result<ProductDetailViewModel>.Failure<ProductDetailViewModel>(
-                        new Error("GetPrductDetailViewModelByIdQueryHandler.Handle", Helpers.GetInnerExceptionMessage(ex)));
-                }
+                return Result<ProductDetailViewModel>.Failure<ProductDetailViewModel>(
+                    new Error("GetPrductDetailViewModelByIdQueryHandler.Handle", Helpers.GetInnerExceptionMessage(ex)));
             }
         }
     }

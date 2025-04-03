@@ -24,6 +24,7 @@ namespace Company.FunctionalTests.Endpoints
             Assert.Equal(3, count);
         }
 
+
         [Fact]
         public async Task GetEmployeesByLastNameTest_EmployeesByLastName_EmptySearchCriteria_ShouldReturnSevenRecords()
         {

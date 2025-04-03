@@ -1,7 +1,4 @@
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Company.FunctionalTests.Endpoints
 {
@@ -22,6 +19,6 @@ namespace Company.FunctionalTests.Endpoints
             Assert.Equal("David M Bradley", employee!.EmployeeName);
             Assert.NotEmpty(employee!.DepartmentHistories!);
             Assert.NotEmpty(employee!.PayHistories!);
-        }        
+        }
     }
 }

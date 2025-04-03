@@ -89,6 +89,10 @@ try
         .MapGroup("api/v{version:apiVersion}")
         .WithApiVersionSet(apiVersionSet);
 
+    app.MapEndpoints(versionedGroup);
+
+    app.MapGet("/", () => Results.LocalRedirect("~/swagger"));
+
     app.MapHealthChecks(
         "/hc",
         new HealthCheckOptions
