@@ -23,16 +23,19 @@ try
         .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
-    string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDb"] ?? throw new ArgumentNullException("Db connection string is null.");
+    // Configure Redis cache
     string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
-
     var redis = ConnectionMultiplexer.Connect(redisConnectionString);
     builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
     builder.Services.AddSingleton<ICacheService, CacheService>();
 
+    // Configure db connection retry policy, efcore, and dapper
+    string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDb"] ?? throw new ArgumentNullException("Db connection string is null.");
     builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
     builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
+    builder.AddCustomDatabase(dbConnectionString);
 
+    // Configure OpenTelemetry
     ObservabilityOptions observabilityOptions = new();
 
     builder.Configuration
@@ -47,8 +50,6 @@ try
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddCustomSwagger();
 
-    // builder.Services.AddControllers();
-
     builder.Services.AddApiVersioning(options =>
     {
         options.DefaultApiVersion = new ApiVersion(1);
@@ -62,7 +63,7 @@ try
     builder.Services.AddEndpoints(typeof(Program).Assembly);
     builder.Services.AddMappings();
     builder.Services.AddMediatr();
-    builder.AddCustomDatabase(dbConnectionString);
+
 
     var app = builder.Build();
 
