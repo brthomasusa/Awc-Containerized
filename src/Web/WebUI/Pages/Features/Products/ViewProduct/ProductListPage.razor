@@ -1,46 +1,69 @@
 @page "/Pages/Features/Products/ViewProduct/ProductListPage"
+@using WebUI.Components
 @using WebUI.Models.ProductApi
-
+@using System.Globalization
 <PageTitle>Products</PageTitle>
 
-<h4 class="mb-5">Product List</h4>
+<RadzenText TextStyle="TextStyle.Subtitle1">Product List</RadzenText>
 
-<RadzenDataGrid TItem="ProductListItemViewModel" AllowFiltering="true" AllowColumnResize="true"
-    AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="20" AllowPaging="true"
-    PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true" Data="@_products" ColumnWidth="300px"
-    LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single"
-    @bind-Value=@_selectedProduct RowDoubleClick="@((args) => OnRowDoubleClicked(args))" Density="Density.Compact">
-    <Columns>
-        @* <RadzenDataGridColumn TItem="ProductListItemViewModel" Sortable="false" Filterable="false" Frozen="true"
-            Width="20px">
-            <Template Context="item">
-                <RadzenButton Click="() => ViewProductDetailViewModel(item)" Icon="visibility"
-                    Size="ButtonSize.ExtraSmall" class="rz-border-radius-10 rz-shadow-6"
-                    ButtonStyle="ButtonStyle.Primary" />
-            </Template>
-        </RadzenDataGridColumn> *@
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductID)" Filterable="false" Title="ID"
-            Frozen="true" Width="50px" TextAlign="TextAlign.Center" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.Name)" Title="Name" Frozen="true"
-            Width="250px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductNumber)" Title="Product #"
-            Width="120px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.MakeFlag)" Title="Make?" Width="100px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.FinishedGoodsFlag)" Title="Finished Goods?"
-            Width="180px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.StandardCost)" Title="Std Cost"
-            Width="110px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ListPrice)" Title="List Price" Width="110px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.DaysToManufacture)" Title="DaysToManufacture"
-            Width="180px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductSubCategory)" Title="Subcategory"
-            Width="180px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductModel)" Title="Model" Width="150px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.SellStartDate)" Title="Sell Start Date"
-            FormatString="{0:d}" Width="140px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.SellEndDate)" Title="Sell End Date"
-            FormatString="{0:d}" Width="140px" />
-        <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.DiscontinuedDate)" Title="Discontinued Date"
-            FormatString="{0:d}" Width="150px" />
-    </Columns>
-</RadzenDataGrid>
+<ErrorBoundary>
+    <RadzenStack Gap="1rem" Orientation="Orientation.Vertical" JustifyContent="JustifyContent.SpaceBetween"
+        Style="height: 100%;">
+
+        <RadzenRow>
+            <RadzenColumn Size="12" class="rz-p-4 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
+                @if (_products! is null)
+                {
+                    <LoadingComponent />
+                }
+                else
+                {
+                    <RadzenDataGrid TItem="ProductListItemViewModel" Data="@_products.Data" IsLoading="@isLoading" 
+                        LoadData="@GetProductListItemViewModel" Count="@(_products.MetaData!.TotalRecords)" AllowFiltering="true"
+                        FilterMode="FilterMode.Simple" AllowPaging="true" AllowSorting="false"	
+                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Density="Density.Compact"
+                        AllowAlternatingRows="true" PageSize="20" PageSizeOptions="@pageSizeOptions"
+                        PageSizeText="Rows per page" ShowPagingSummary="true" PagerHorizontalAlign="HorizontalAlign.Center"    
+                        SelectionMode="DataGridSelectionMode.Single"
+                        @bind-Value=@_selectedProduct RowDoubleClick="@((args) => OnRowDoubleClicked(args))"> 
+                        <Columns>
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductID)" Filterable="false" Title="ID"
+                                Frozen="true" Width="50px" TextAlign="TextAlign.Center" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.Name)" Title="Name" Frozen="true" Width="250px"
+                                Filterable="true" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductNumber)" Title="Product #" Width="120px"
+                                Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.MakeFlag)" Title="Make?" Width="100px"
+                                Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.FinishedGoodsFlag)" Title="Finished Goods?"
+                                Width="180px" Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.StandardCost)" Title="Std Cost" Width="110px"
+                                FormatString="{0:0.0000}" TextAlign="TextAlign.End" Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ListPrice)" Title="List Price" Width="110px"
+                                FormatString="{0:0.00}" TextAlign="TextAlign.End" Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.DaysToManufacture)" Title="DaysToManufacture"
+                                Width="180px" Filterable="false" TextAlign="TextAlign.Center" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductSubCategory)" Title="Subcategory"
+                                Width="180px" Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductModel)" Title="Model" Width="150px"
+                                Filterable="false" />
+                            <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.SellStartDate)" Title="Sell Start Date"
+                                FormatString="{0:d}" Width="140px" Filterable="false" TextAlign="TextAlign.Center" />
+                            <RadzenDataGridColumn Width="140px" Filterable="false" TextAlign="TextAlign.Center" Title="Sell End Date" >                               
+                                <Template Context="data">
+                                    <RadzenText TextStyle="TextStyle.Body2">@( data.SellEndDate == default ? string.Empty : data.SellEndDate.ToString("d") )</RadzenText>    
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn Width="140px" Filterable="false" TextAlign="TextAlign.Center" Title="Discontinued Date" >                               
+                                <Template Context="data">
+                                    <RadzenText>@( data.DiscontinuedDate == default ? string.Empty : data.DiscontinuedDate.ToString("d") )</RadzenText>    
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>                    
+                }
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenStack>
+</ErrorBoundary>
+

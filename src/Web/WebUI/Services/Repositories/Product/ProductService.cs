@@ -1,4 +1,4 @@
-#pragma warning disable CS9124
+#pragma warning disable CS9124, CS8603
 
 using System.Text.Json;
 using System.Net.Http.Json;
@@ -16,7 +16,7 @@ namespace WebUI.Services.Repositories.Product
         private readonly HttpClient _httpClient = httpClient;
         private readonly JsonSerializerOptions _options = new() { PropertyNameCaseInsensitive = true };
 
-        public Task<DocumentPage<ProductListItemViewModel>> GetProductsFilteredByNameAsync
+        public async Task<DocumentPage<ProductListItemViewModel>> GetProductsFilteredByNameAsync
         (
             string searchField,
             string searchCriteria,
@@ -34,22 +34,45 @@ namespace WebUI.Services.Repositories.Product
                 ["take"] = take.ToString()
             };
 
-            throw new NotImplementedException();
-        }
+            var response = await _httpClient.GetAsync(QueryHelpers.AddQueryString("products", queryParams));
 
-        public async Task<IQueryable<ProductListItemViewModel>> GetProductsListItemsAync()
-        {
-            var products = await _httpClient.GetFromJsonAsync<List<ProductListItemViewModel>>("sample-data/ProductListItemsByName.json");
-            return products!.AsQueryable();
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<DocumentPage<ProductListItemViewModel>>();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+            {
+                var error = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new Exception(error!.Detail);
+            }
+            else
+            {
+                throw new Exception("Opps! Something went wrong");
+            }
         }
 
         public async Task<ProductDetailViewModel> GetProductByIdAync(int productId)
         {
-            List<ProductDetailViewModel>? products = await _httpClient.GetFromJsonAsync<List<ProductDetailViewModel>>("sample-data/ProductDetailViewModel.json");
+            var response = await _httpClient.GetAsync($"products/{productId}");
 
-            var product = products!.FirstOrDefault(p => p.ProductID == productId);
-
-            return product!;
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<ProductDetailViewModel>();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                var error = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new ApiResponseException(new ApiErrorResponse(error!.Detail!));
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+            {
+                var error = await response.Content.ReadFromJsonAsync<ProblemDetailResponse>();
+                throw new Exception(error!.Detail);
+            }
+            else
+            {
+                throw new Exception("Opps! Something went wrong");
+            }
         }
     }
 }

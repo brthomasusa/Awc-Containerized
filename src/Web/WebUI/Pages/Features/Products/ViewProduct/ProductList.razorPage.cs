@@ -17,12 +17,12 @@ namespace WebUI.Pages.Features.Products.ViewProduct
         [Inject] private NotificationService? NotificationService { get; set; }
         [Inject] private NavigationManager? Navigation { get; set; }
         [Inject] private IJSRuntime? JSRuntime { get; set; }
-        private IQueryable<ProductListItemViewModel>? _products;
+        private DocumentPage<ProductListItemViewModel>? _products;
         private IList<ProductListItemViewModel>? _selectedProduct;
         private string _productNameFilter = string.Empty;
         private readonly IEnumerable<int> pageSizeOptions = [5, 10, 15, 20];
         private ProductDialogSettings? _settings;
-        // private bool isLoading;
+        private bool isLoading;
 
         private ProductDialogSettings Settings
         {
@@ -42,8 +42,8 @@ namespace WebUI.Pages.Features.Products.ViewProduct
         {
             try
             {
-                _products ??= await ProductService!.GetProductsListItemsAync();
-                _selectedProduct = [_products.FirstOrDefault()!];
+                _products = await ProductService!.GetProductsFilteredByNameAsync("Name", _productNameFilter, string.Empty, 0, 20);
+                _selectedProduct = [_products.Data.FirstOrDefault()!];
             }
             catch (ApiResponseException ex)
             {
@@ -65,6 +65,58 @@ namespace WebUI.Pages.Features.Products.ViewProduct
             }
         }
 
+        private async Task GetProductListItemViewModel(LoadDataArgs args)
+        {
+            try
+            {
+                if (args.Filters is not null)
+                {
+                    List<FilterDescriptor> descriptors = [.. args.Filters];
+                    FilterDescriptor? filterDescriptor
+                        = descriptors.Find(x => !string.IsNullOrEmpty(x.Property) && !string.IsNullOrEmpty(x.FilterValue.ToString()));
+
+                    if (filterDescriptor is not null)
+                    {
+                        _productNameFilter = filterDescriptor.FilterValue.ToString()!;
+                    }
+                    else
+                    {
+                        _productNameFilter = string.Empty;
+                    }
+                }
+                else
+                {
+                    _productNameFilter = string.Empty;
+                }
+
+                isLoading = true;
+
+                _products = await ProductService!.GetProductsFilteredByNameAsync("Name", _productNameFilter, string.Empty, args.Skip ?? default, args.Top ?? default);
+                _selectedProduct = [_products.Data.FirstOrDefault()!];
+
+                isLoading = false;
+
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (ApiResponseException ex)
+            {
+                ShowErrorNotification.ShowError(
+                    NotificationService!,
+                    ex.Message
+                );
+
+                Navigation?.NavigateTo("/");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorNotification.ShowError(
+                    NotificationService!,
+                    ex.Message
+                );
+
+                Navigation?.NavigateTo("/");
+            }
+        }
 
         private async void ViewProductDetailViewModel(ProductListItemViewModel model)
         {

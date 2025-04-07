@@ -5,9 +5,11 @@ using WebUI.Services.Repositories.Company;
 using WebUI.Services.Repositories.Product;
 using WebUI.Utilities;
 using WebUI;
+using Fluxor;
 using Radzen;
 using Polly;
 using Polly.Extensions.Http;
+using Fluxor.Blazor.Web.ReduxDevTools;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -24,9 +26,15 @@ builder.Services.AddHttpClient<ICompanyService, CompanyService>(client =>
 
 // ProductService
 builder.Services.AddHttpClient<IProductService, ProductService>(client =>
-    client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
-);
+    client.BaseAddress = awcBaseApiAddress!
+)
+.SetHandlerLifetime(TimeSpan.FromMinutes(5))
+.AddPolicyHandler(GetRetryPolicy());
 
+builder.Services.AddFluxor(o => o
+    .ScanAssemblies(typeof(Program).Assembly)
+    .UseReduxDevTools()
+);
 builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();

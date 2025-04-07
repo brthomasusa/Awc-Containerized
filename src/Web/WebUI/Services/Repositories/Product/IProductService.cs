@@ -14,7 +14,6 @@ namespace WebUI.Services.Repositories.Product
             int take
         );
 
-        Task<IQueryable<ProductListItemViewModel>> GetProductsListItemsAync();
         Task<ProductDetailViewModel> GetProductByIdAync(int productId);
     }
 }

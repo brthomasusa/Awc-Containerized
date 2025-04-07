@@ -15,7 +15,10 @@
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" />
     <PackageReference Include="Microsoft.CodeAnalysis.Razor" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" />    
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" /> 
+    <PackageReference Include="Fluxor" />
+    <PackageReference Include="Fluxor.Blazor.Web" />
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" />       
   </ItemGroup>
 
 </Project>

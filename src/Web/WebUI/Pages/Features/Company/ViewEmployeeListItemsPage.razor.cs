@@ -54,6 +54,7 @@ namespace WebUI.Pages.Features.Company
         {
             try
             {
+                Console.WriteLine($"ViewEmployeeListItemsPag.GetEmployeeListItems: args: {args.ToJson()}");
                 if (args.Filters is not null)
                 {
                     List<FilterDescriptor> descriptors = args.Filters.ToList();
