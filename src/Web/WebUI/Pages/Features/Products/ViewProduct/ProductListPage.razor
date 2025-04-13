@@ -1,7 +1,8 @@
 @page "/Pages/Features/Products/ViewProduct/ProductListPage"
 @using WebUI.Components
 @using WebUI.Models.ProductApi
-@using System.Globalization
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
 <PageTitle>Products</PageTitle>
 
 <RadzenText TextStyle="TextStyle.Subtitle1">Product List</RadzenText>
@@ -12,20 +13,20 @@
 
         <RadzenRow>
             <RadzenColumn Size="12" class="rz-p-4 rz-border-radius-1" Style="border: var(--rz-grid-cell-border)">
-                @if (_products! is null)
+                @if (_products is null)
                 {
                     <LoadingComponent />
                 }
                 else
                 {
-                    <RadzenDataGrid TItem="ProductListItemViewModel" Data="@_products.Data" IsLoading="@isLoading" 
+                    <RadzenDataGrid TItem="ProductListItemViewModel" Data="@_products!.Data" IsLoading="@isLoading" 
                         LoadData="@GetProductListItemViewModel" Count="@(_products.MetaData!.TotalRecords)" AllowFiltering="true"
                         FilterMode="FilterMode.Simple" AllowPaging="true" AllowSorting="false"	
                         FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Density="Density.Compact"
                         AllowAlternatingRows="true" PageSize="20" PageSizeOptions="@pageSizeOptions"
                         PageSizeText="Rows per page" ShowPagingSummary="true" PagerHorizontalAlign="HorizontalAlign.Center"    
-                        SelectionMode="DataGridSelectionMode.Single"
-                        @bind-Value=@_selectedProduct RowDoubleClick="@((args) => OnRowDoubleClicked(args))"> 
+                        SelectionMode="DataGridSelectionMode.Single" @bind-Value=@_selectedProduct RowDoubleClick="@((args) => OnRowDoubleClicked(args))">
+                         
                         <Columns>
                             <RadzenDataGridColumn Property="@nameof(ProductListItemViewModel.ProductID)" Filterable="false" Title="ID"
                                 Frozen="true" Width="50px" TextAlign="TextAlign.Center" />

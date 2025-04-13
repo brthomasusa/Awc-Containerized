@@ -1,13 +1,8 @@
 #pragma warning disable CS9124, CS8603
 
 using System.Text.Json;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using WebUI.Exceptions;
-using WebUI.Models;
-using WebUI.Models.ProductApi;
-using WebUI.Utilities;
-using System.Linq;
 
 namespace WebUI.Services.Repositories.Product
 {

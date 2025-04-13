@@ -1,0 +1,10 @@
+global using System.Net.Http.Json;
+global using Microsoft.AspNetCore.Components.Web;
+global using Radzen;
+global using Fluxor;
+global using Microsoft.JSInterop;
+global using WebUI;
+global using WebUI.Models;
+global using WebUI.Models.CompanyApi;
+global using WebUI.Models.ProductApi;
+global using WebUI.Utilities;

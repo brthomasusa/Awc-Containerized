@@ -1,16 +1,12 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
-using Radzen;
 using WebUI.Exceptions;
-using WebUI.Models;
-using WebUI.Models.ProductApi;
 using WebUI.Services.Repositories.Product;
-using WebUI.Utilities;
+using WebUI.Store.Features.Products.ViewProductListItems;
 
 namespace WebUI.Pages.Features.Products.ViewProduct
 {
-    public partial class ProductListPage
+    public partial class ProductListPage : Fluxor.Blazor.Web.Components.FluxorComponent
     {
         [Inject] private IProductService? ProductService { get; set; }
         [Inject] public DialogService? DialogService { get; set; }
@@ -42,8 +38,11 @@ namespace WebUI.Pages.Features.Products.ViewProduct
         {
             try
             {
+                await base.OnInitializedAsync();
+
                 _products = await ProductService!.GetProductsFilteredByNameAsync("Name", _productNameFilter, string.Empty, 0, 20);
                 _selectedProduct = [_products.Data.FirstOrDefault()!];
+
             }
             catch (ApiResponseException ex)
             {
@@ -69,6 +68,9 @@ namespace WebUI.Pages.Features.Products.ViewProduct
         {
             try
             {
+                isLoading = true;
+                await Task.Yield();
+
                 if (args.Filters is not null)
                 {
                     List<FilterDescriptor> descriptors = [.. args.Filters];
@@ -88,15 +90,10 @@ namespace WebUI.Pages.Features.Products.ViewProduct
                 {
                     _productNameFilter = string.Empty;
                 }
-
-                isLoading = true;
-
                 _products = await ProductService!.GetProductsFilteredByNameAsync("Name", _productNameFilter, string.Empty, args.Skip ?? default, args.Top ?? default);
                 _selectedProduct = [_products.Data.FirstOrDefault()!];
 
                 isLoading = false;
-
-                await InvokeAsync(StateHasChanged);
             }
             catch (ApiResponseException ex)
             {

@@ -13,7 +13,7 @@ namespace WebUI.Utilities
                 new NotificationMessage
                 {
                     Severity = NotificationSeverity.Error,
-                    Summary = $"Error",
+                    Summary = "The following error occured:",
                     Detail = errorMessage,
                     Duration = 40000
                 }
