@@ -1,12 +1,7 @@
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using WebUI.Models.CompanyApi;
 using WebUI.Services.Repositories.Company;
 using WebUI.Services.Repositories.Product;
-using WebUI.Utilities;
-using WebUI;
-using Fluxor;
-using Radzen;
+using WebUI.Store.Features.Products.ViewProductListItems;
 using Polly;
 using Polly.Extensions.Http;
 using Fluxor.Blazor.Web.ReduxDevTools;
@@ -40,6 +35,7 @@ builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
+builder.Services.AddSingleton<ProductListItemsGridState>();
 
 await builder.Build().RunAsync();
 
