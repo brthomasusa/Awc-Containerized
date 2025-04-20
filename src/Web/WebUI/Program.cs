@@ -26,6 +26,7 @@ builder.Services.AddHttpClient<IProductService, ProductService>(client =>
 .SetHandlerLifetime(TimeSpan.FromMinutes(5))
 .AddPolicyHandler(GetRetryPolicy());
 
+builder.Services.AddSingleton<ProductListItemsGridState>();
 builder.Services.AddFluxor(o => o
     .ScanAssemblies(typeof(Program).Assembly)
     .UseReduxDevTools()
@@ -35,7 +36,6 @@ builder.Services.AddScoped<DialogService>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<TooltipService>();
 builder.Services.AddScoped<ContextMenuService>();
-builder.Services.AddSingleton<ProductListItemsGridState>();
 
 await builder.Build().RunAsync();
 

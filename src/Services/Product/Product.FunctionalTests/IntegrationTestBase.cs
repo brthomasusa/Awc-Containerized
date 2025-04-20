@@ -17,7 +17,7 @@ namespace Product.FunctionalTests
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            // _ = ReseedTestDatabase.ReseedDatabase();
+            _ = ReseedTestDatabase.ReseedDatabase();
         }
     }
 }

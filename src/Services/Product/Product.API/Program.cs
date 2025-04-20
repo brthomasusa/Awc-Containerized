@@ -30,7 +30,7 @@ try
     builder.Services.AddSingleton<ICacheService, CacheService>();
 
     // Configure db connection retry policy, efcore, and dapper
-    string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDb"] ?? throw new ArgumentNullException("Db connection string is null.");
+    string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDbTest"] ?? throw new ArgumentNullException("Db connection string is null.");
     builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
     builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
     builder.AddCustomDatabase(dbConnectionString);

@@ -18,7 +18,7 @@ namespace Product.FunctionalTests.Application.GetProductViewModelById
         public async Task Handle_GetPrductDetailViewModelByIdQueryHandler_ValidIdInCache_ShouldSucceed()
         {
             // Arrange
-            int productId = 771;
+            int productId = 316;
             var mockCacheService = new Mock<ICacheService>();
 
             mockCacheService.Setup(x => x.GetCacheValueAsync<ProductDetailViewModel>(

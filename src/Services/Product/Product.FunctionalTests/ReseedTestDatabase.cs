@@ -5,7 +5,8 @@ namespace Product.FunctionalTests
     {
         public static Result<bool> ReseedDatabase()
         {
-            string? _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ProductDb");
+            string? _connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ProductDbTest");
+
             try
             {
                 using SqlConnection connection = new(_connectionString);

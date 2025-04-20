@@ -23,7 +23,7 @@ namespace Product.FunctionalTests.Endpoints
                 .GetFromJsonAsync<PagedList<ProductListItemViewModel>>(QueryHelpers.AddQueryString($"{_urlRoot}products", queryParams));
 
             int count = response!.Data.Count;
-            Assert.Equal(8, count);
+            Assert.Equal(1, count);
         }
     }
 }

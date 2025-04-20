@@ -10,7 +10,7 @@ namespace Product.FunctionalTests
 
         protected TestBase()
         {
-            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ProductDb");
+            string? connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__ProductDbTest");
             var optionsBuilder = new DbContextOptionsBuilder<ProductDbContext>();
 
             optionsBuilder.UseSqlServer(
@@ -24,6 +24,7 @@ namespace Product.FunctionalTests
             _dapperCtx = new DapperContext(connectionString!);
 
             // _dbContext.Database.ExecuteSqlRaw("EXEC dbo.usp_InitializeTestDb");
+            _ = ReseedTestDatabase.ReseedDatabase();
         }
 
         public void Dispose()

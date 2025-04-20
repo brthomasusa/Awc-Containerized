@@ -9,7 +9,7 @@ namespace Product.FunctionalTests.Endpoints
         [Fact]
         public async Task ProductById_GetProductById_ShouldSucceed()
         {
-            const int productId = 399;
+            const int productId = 344;
             using var response = await _client.GetAsync($"{_urlRoot}products/{productId}",
                                                         HttpCompletionOption.ResponseHeadersRead);
 
@@ -18,7 +18,7 @@ namespace Product.FunctionalTests.Endpoints
             var jsonResponse = await response.Content.ReadAsStreamAsync();
             var product = await JsonSerializer.DeserializeAsync<ProductDetailViewModel>(jsonResponse, _options);
 
-            Assert.Equal("Head Tube", product!.Name);
+            Assert.Equal("Flat Washer 9", product!.Name);
         }
     }
 }

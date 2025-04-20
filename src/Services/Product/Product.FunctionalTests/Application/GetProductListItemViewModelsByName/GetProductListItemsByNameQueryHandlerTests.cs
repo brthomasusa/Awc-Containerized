@@ -32,8 +32,8 @@ namespace Product.FunctionalTests.Application.GetProductListItemViewModelsByName
             int products = result.Value.Data.Count;
             int totalRecords = result.Value.MetaData!.TotalRecords;
 
-            Assert.Equal(8, products);
-            Assert.Equal(8, totalRecords);
+            Assert.Equal(1, products);
+            Assert.Equal(1, totalRecords);
         }
 
         [Fact]
@@ -52,8 +52,8 @@ namespace Product.FunctionalTests.Application.GetProductListItemViewModelsByName
             int products = result.Value.Data.Count;
             int totalRecords = result.Value.MetaData!.TotalRecords;
 
-            Assert.Equal(30, products);
-            Assert.Equal(504, totalRecords);
+            Assert.Equal(26, products);
+            Assert.Equal(26, totalRecords);
         }
 
         [Fact]
