@@ -21,28 +21,37 @@ try
         .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
+    // Get db connection string from env. for retry policy, efcore, and dapper
     string? dbConnectionString = builder.Configuration["ConnectionStrings:CompanyDb"] ?? throw new ArgumentNullException("Db connection string is null.");
-    string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
 
-    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-    builder.Services.AddSingleton<ICacheService, CacheService>();
-
-    builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
-    builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
-
+    // Configure OpenTelemetry
     ObservabilityOptions observabilityOptions = new();
+
     builder.Configuration
         .GetRequiredSection(nameof(ObservabilityOptions))
         .Bind(observabilityOptions);
 
     observabilityOptions.DbConnectionString = dbConnectionString;
 
-    builder.AddObservability();
-    builder.Services.AddHealthChecks(observabilityOptions);
+    builder.AddObservability(observabilityOptions);
 
+    // Configure Redis cache
+    string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
+    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+    builder.Services.AddSingleton<ICacheService, CacheService>();
+
+    // Configure db connection retry policy (Polly) and Dapper context
+    builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
+    builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
+    builder.AddCustomDatabase(dbConnectionString);
+
+    builder.Services.AddHealthChecks(observabilityOptions);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+    builder.Services.AddEndpoints(typeof(Program).Assembly);
+    builder.Services.AddMappings();
+    builder.Services.AddMediatr();
 
     builder.Services.AddApiVersioning(options =>
     {
@@ -53,11 +62,6 @@ try
         options.GroupNameFormat = "'v'V";
         options.SubstituteApiVersionInUrl = true;
     });
-
-    builder.Services.AddEndpoints(typeof(Program).Assembly);
-    builder.Services.AddMappings();
-    builder.Services.AddMediatr();
-    builder.AddCustomDatabase(dbConnectionString);
 
     WebApplication app = builder.Build();
 

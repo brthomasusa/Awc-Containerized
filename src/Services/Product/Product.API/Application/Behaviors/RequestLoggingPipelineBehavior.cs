@@ -29,7 +29,10 @@ namespace Awc.Services.Product.Product.API.Application.Behaviors
             {
                 using (LogContext.PushProperty("Error", result.Error, true))
                 {
-                    _logger.LogError("Completed request {@RequestName} with error: {@ErrorMessage} ", requestName, result.Error.Message);
+                    if (result.Error.Message.Contains("Not Found:", StringComparison.OrdinalIgnoreCase))
+                        _logger.LogWarning("Completed request {RequestName} with warning: {ErrorMessage} ", requestName, result.Error.Message);
+                    else
+                        _logger.LogError("Completed request {RequestName} with error: {ErrorMessage} ", requestName, result.Error.Message);
                 }
             }
 

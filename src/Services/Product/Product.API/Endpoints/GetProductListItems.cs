@@ -1,6 +1,7 @@
 using Awc.Services.Product.Product.API.Application.Features.Products.GetProductListItemsByName;
 using Awc.Services.Product.Product.API.Application.Abstractions;
 using Awc.Services.Product.Product.API.Extensions;
+using Serilog.Context;
 
 namespace Awc.Services.Product.Product.API.Endpoints
 {
@@ -22,29 +23,50 @@ namespace Awc.Services.Product.Product.API.Endpoints
             ILogger<GetProductListItems> logger
         )
         {
-            Result<PagedList<ProductListItemViewModel>>? result = null;
-
-            try
+            using (LogContext.PushProperty("EndpointName", nameof(GetProductListItemsByName)))
             {
-                StringSearchCriteria criteria = new
-                (
-                    SearchField,
-                    SearchCriteria,
-                    string.IsNullOrEmpty(OrderBy) ? "[Name]" : OrderBy,
-                    Skip,
-                    Take
-                );
+                Result<PagedList<ProductListItemViewModel>>? result = null;
 
-                result = await sender.Send(new GetProductListItemsByNameQuery(SearchCriteria: criteria));
+                try
+                {
+                    StringSearchCriteria criteria = new
+                    (
+                        SearchField,
+                        SearchCriteria,
+                        string.IsNullOrEmpty(OrderBy) ? "[Name]" : OrderBy,
+                        Skip,
+                        Take
+                    );
 
-                return result.IsSuccess ? Results.Ok(result.Value) :
-                                          result.ToInternalServerErrorProblemDetails(result.Error.Message);
+                    result = await sender.Send(new GetProductListItemsByNameQuery(SearchCriteria: criteria));
+
+                    if (result.IsSuccess)
+                    {
+                        if (result.Value.Data.Count > 0)
+                        {
+                            logger.LogInformation("Returning {ProductCount} of {TotalRecords} products found  where search field '{SearchField}' was equal to '{SearchCriteria}'.",
+                                result.Value.Data.Count, result.Value.MetaData!.TotalRecords, criteria.SearchField, criteria.SearchCriteria);
+                        }
+                        else
+                        {
+                            logger.LogWarning("No products found where search field '{SearchField}' was equal to '{SearchCriteria}'.", criteria.SearchField, criteria.SearchCriteria);
+                        }
+
+                        return Results.Ok(result.Value);
+                    }
+                    else
+                    {
+                        logger.LogError("An error occurred: {Message}", result.Error.Message);
+                        return result.ToInternalServerErrorProblemDetails(result.Error.Message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "The following error occurred: {Message}", Helpers.GetInnerExceptionMessage(ex));
+                    return result!.ToInternalServerErrorProblemDetails(Helpers.GetInnerExceptionMessage(ex));
+                }
             }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{Message}", Helpers.GetInnerExceptionMessage(ex));
-                return result!.ToInternalServerErrorProblemDetails(ex.Message);
-            }
+
         }
     }
 }

@@ -75,8 +75,8 @@ namespace Awc.Services.Product.Product.API.Application.Features.Products.GetProd
 
                 if (model is null)
                 {
-                    string errMsg = $"Unable to retrieve details for product with ID: {query.ProductId}.";
-                    _logger.LogWarning("Warning: {@MSG}", errMsg);
+                    string errMsg = $"Not Found: Unable to retrieve details for product with ID: {query.ProductId}.";
+                    // _logger.LogWarning("Warning: {Message}", errMsg);
 
                     return Result<ProductDetailViewModel>.Failure<ProductDetailViewModel>(
                         new Error("GetPrductDetailViewModelByIdQueryHandler.Handle", errMsg)

@@ -1,6 +1,5 @@
 using Awc.BuildingBlocks.Observability.Options;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry;
@@ -15,15 +14,8 @@ namespace Awc.BuildingBlocks.Observability
 {
     public static class ObservabilityRegistration
     {
-        public static WebApplicationBuilder AddObservability(this WebApplicationBuilder builder)
+        public static WebApplicationBuilder AddObservability(this WebApplicationBuilder builder, ObservabilityOptions observabilityOptions)
         {
-            var configuration = builder.Configuration;
-
-            ObservabilityOptions observabilityOptions = new();
-
-            configuration
-                .GetRequiredSection(nameof(ObservabilityOptions))
-                .Bind(observabilityOptions);
 
             builder.AddSerilog(observabilityOptions);
 

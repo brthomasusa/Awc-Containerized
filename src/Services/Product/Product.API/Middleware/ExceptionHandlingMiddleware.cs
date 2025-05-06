@@ -17,7 +17,7 @@ public class ExceptionHandlingMiddleware(
         }
         catch (Exception exception)
         {
-            if (exception is ValidationException validationException)
+            if (exception is AWC.Shared.Kernel.Exceptions.ValidationException validationException)
             {
                 _logger.LogError(
                     exception,
@@ -56,7 +56,8 @@ public class ExceptionHandlingMiddleware(
     {
         return exception switch
         {
-            ValidationException validationException => new ExceptionDetails(
+            // Use FluentValidation.ValidationException for FluentValidation exception
+            AWC.Shared.Kernel.Exceptions.ValidationException validationException => new ExceptionDetails(
                 StatusCodes.Status400BadRequest,
                 "ValidationFailure",
                 "Validation error",

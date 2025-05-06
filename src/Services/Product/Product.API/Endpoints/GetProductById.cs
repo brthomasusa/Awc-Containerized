@@ -1,5 +1,6 @@
 using Awc.Services.Product.Product.API.Application.Features.Products.GetProductViewModelById;
 using Awc.Services.Product.Product.API.Extensions;
+using Serilog.Context;
 
 namespace Awc.Services.Product.Product.API.Endpoints
 {
@@ -12,18 +13,30 @@ namespace Awc.Services.Product.Product.API.Endpoints
 
         public static async Task<IResult> GetProductById(int productId, ISender sender, ILogger<ProductById> logger)
         {
-            Result<ProductDetailViewModel>? result = null;
-
-            try
+            using (LogContext.PushProperty("EndpointName", nameof(GetProductById)))
             {
-                result = await sender.Send(new GetProductViewModelByIdQuery(ProductId: productId));
+                Result<ProductDetailViewModel>? result = null;
 
-                return result.IsSuccess ? Results.Ok(result.Value) : result.ToNotFoundProblemDetails();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "{Message}", Helpers.GetInnerExceptionMessage(ex));
-                return result!.ToInternalServerErrorProblemDetails(ex.Message);
+                try
+                {
+                    result = await sender.Send(new GetProductViewModelByIdQuery(ProductId: productId));
+
+                    if (result.IsSuccess)
+                    {
+                        logger.LogInformation("Returning product with ID: {ProductId} and name: {ProductName}.", result.Value.ProductID, result.Value.Name);
+                        return Results.Ok(result.Value);
+                    }
+                    else
+                    {
+                        // logger.LogWarning("Product with ID: {ProductId} could not be found.", result.Value.ProductID);
+                        return result.ToNotFoundProblemDetails();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "The following error occurred: {Message}", Helpers.GetInnerExceptionMessage(ex));
+                    return result!.ToInternalServerErrorProblemDetails(Helpers.GetInnerExceptionMessage(ex));
+                }
             }
         }
     }

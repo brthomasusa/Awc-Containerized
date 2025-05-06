@@ -3,8 +3,6 @@
 using System.Reflection;
 using Awc.Services.Product.Product.API.Application.Behaviors;
 using Awc.Services.Product.Product.API.Endpoints;
-using Awc.Services.Product.Product.API.Infrastructure;
-using Awc.Services.Product.Product.API.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Awc.Services.Product.Product.API.Extentions
@@ -12,6 +10,16 @@ namespace Awc.Services.Product.Product.API.Extentions
     public static class ProgramExtensions
     {
         private const string AppName = "Product API Service";
+
+        public static void ConfigureCors(this IServiceCollection services) =>
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                );
+            });
 
         public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
         {

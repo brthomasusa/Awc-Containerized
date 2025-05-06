@@ -19,6 +19,7 @@ global using Awc.Services.Product.Product.API.Infrastructure;
 global using Awc.Services.Product.Product.API.Services;
 global using Awc.Services.Product.Product.API.ViewModels;
 global using Dapper;
+global using FluentValidation;
 global using Mapster;
 global using MapsterMapper;
 global using MediatR;

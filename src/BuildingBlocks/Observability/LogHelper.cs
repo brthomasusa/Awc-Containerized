@@ -3,7 +3,7 @@ using Serilog.Events;
 
 namespace Awc.BuildingBlocks.Observability
 {
-    public static class LogHelper 
+    public static class LogHelper
     {
         public static void EnrichFromRequest(Serilog.IDiagnosticContext diagnosticContext, HttpContext httpContext)
         {
@@ -13,9 +13,10 @@ namespace Awc.BuildingBlocks.Observability
             diagnosticContext.Set("Host", request.Host);
             diagnosticContext.Set("Protocol", request.Protocol);
             diagnosticContext.Set("Scheme", request.Scheme);
-            
+            diagnosticContext.Set("ClientIP", httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown");
+
             // Only set it if available. You're not sending sensitive data in a querystring right?!
-            if(request.QueryString.HasValue)
+            if (request.QueryString.HasValue)
             {
                 diagnosticContext.Set("QueryString", request.QueryString.Value);
             }
@@ -25,7 +26,7 @@ namespace Awc.BuildingBlocks.Observability
 
             // Retrieve the IEndpointFeature selected for the request
             var endpoint = httpContext.GetEndpoint();
-            if (endpoint is object) // endpoint != null
+            if (endpoint is not null) // endpoint != null
             {
                 diagnosticContext.Set("EndpointName", endpoint.DisplayName);
             }
@@ -37,21 +38,21 @@ namespace Awc.BuildingBlocks.Observability
 
             if (endpoint is not null)
             {
-                return string.Equals(endpoint.DisplayName, "Health checks", StringComparison.Ordinal);                                                             
+                return string.Equals(endpoint.DisplayName, "Health checks", StringComparison.Ordinal);
             }
 
             // No endpoint, so not a health check endpoint
             return false;
-        } 
+        }
 
-    public static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception? ex) => 
-        ex != null
-            ? LogEventLevel.Error 
-            : ctx.Response.StatusCode > 499 
-                ? LogEventLevel.Error 
-                : IsHealthCheckEndpoint(ctx)        // Not an error, check if it was a health check
-                    ? LogEventLevel.Verbose         // Was a health check, use Verbose
-                    : LogEventLevel.Information;
-        }                           
-    
+        public static LogEventLevel ExcludeHealthChecks(HttpContext ctx, double _, Exception? ex) =>
+            ex != null
+                ? LogEventLevel.Error
+                : ctx.Response.StatusCode > 499
+                    ? LogEventLevel.Error
+                    : IsHealthCheckEndpoint(ctx)        // Not an error, check if it was a health check
+                        ? LogEventLevel.Verbose         // Was a health check, use Verbose
+                        : LogEventLevel.Information;
+    }
+
 }

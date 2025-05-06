@@ -2,11 +2,8 @@ using Asp.Versioning.Builder;
 using Asp.Versioning;
 using System.Text;
 using System.Text.Json;
-using Awc.Services.Product.Product.API;
-using Awc.Services.Product.Product.API.Infrastructure;
 using Awc.Services.Product.Product.API.Middleware;
 using Awc.Services.Product.Product.API.Extentions;
-using Awc.Services.Product.Product.API.Services;
 using Awc.BuildingBlocks.Observability;
 using Awc.BuildingBlocks.Observability.Options;
 using StackExchange.Redis;
@@ -18,22 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 try
 {
     builder.Configuration.Sources.Clear();
+
     builder.Configuration
         .AddJsonFile("appsettings.json", false, true)
         .AddJsonFile("appsettings.Development.json", false, true)
         .AddEnvironmentVariables();
 
-    // Configure Redis cache
-    string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
-    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
-    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
-    builder.Services.AddSingleton<ICacheService, CacheService>();
-
-    // Configure db connection retry policy, efcore, and dapper
+    // Get db connection string from env. for retry policy, efcore, and dapper
     string? dbConnectionString = builder.Configuration["ConnectionStrings:ProductDbTest"] ?? throw new ArgumentNullException("Db connection string is null.");
-    builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
-    builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
-    builder.AddCustomDatabase(dbConnectionString);
 
     // Configure OpenTelemetry
     ObservabilityOptions observabilityOptions = new();
@@ -44,11 +33,23 @@ try
 
     observabilityOptions.DbConnectionString = dbConnectionString;
 
-    builder.AddObservability();
+    builder.AddObservability(observabilityOptions);
+
+    // Configure db connection retry policy (Polly) and Dapper context
+    builder.Services.Configure<DatabaseReconnectSettings>(builder.Configuration.GetSection("DatabaseReconnectSettings"));
+    builder.Services.AddSingleton<IDatabaseRetryService, DatabaseRetryService>();
+    builder.AddCustomDatabase(dbConnectionString);
+
+    // Configure Redis cache
+    string? redisConnectionString = builder.Configuration["ConnectionStrings:Redis"] ?? throw new ArgumentNullException("Redis connection string is null.");
+    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+    builder.Services.AddSingleton<ICacheService, CacheService>();
 
     builder.Services.AddHealthChecks(observabilityOptions);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddCustomSwagger();
+    builder.Services.ConfigureCors();
 
     builder.Services.AddApiVersioning(options =>
     {
@@ -80,6 +81,8 @@ try
     );
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+    app.UseCors("CorsPolicy");
 
     ApiVersionSet apiVersionSet = app.NewApiVersionSet()
         .HasApiVersion(new ApiVersion(1))
@@ -168,6 +171,7 @@ try
 catch (Exception ex)
 {
     Console.WriteLine($"Product API microservice terminated unexpectedly with message: {ex.Message}");
+    Serilog.Log.Fatal(ex, $"Product API microservice terminated unexpectedly with message: {ex.Message}");
 }
 finally
 {
