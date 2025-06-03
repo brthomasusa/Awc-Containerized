@@ -28,7 +28,6 @@ namespace Awc.Services.Product.Product.API.Endpoints
                     }
                     else
                     {
-                        // logger.LogWarning("Product with ID: {ProductId} could not be found.", result.Value.ProductID);
                         return result.ToNotFoundProblemDetails();
                     }
                 }
