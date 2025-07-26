@@ -9,6 +9,7 @@ using Fluxor.Blazor.Web.ReduxDevTools;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 Uri awcBaseApiAddress = new(builder.Configuration["WebGatewayUrl"]!);
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 

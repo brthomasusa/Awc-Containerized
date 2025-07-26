@@ -1,12 +1,8 @@
 #pragma warning disable CS8603
 
 using System.Text.Json;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.WebUtilities;
 using WebUI.Exceptions;
-using WebUI.Models;
-using WebUI.Models.CompanyApi;
-using WebUI.Utilities;
 
 namespace WebUI.Services.Repositories.Company
 {
